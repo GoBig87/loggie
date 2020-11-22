@@ -3,15 +3,23 @@ import Fireplace from "../assets/videos/Fireplace.mp4"
 import logo from "../assets/images/logo.png"
 import { Button } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
-import {Redirect} from 'react-router-dom';
-import { IconButton } from "@material-ui/core";
-import { ShoppingCart } from "@material-ui/icons";
+import axios from "axios";
 
 class HomePage extends Component  {
     constructor(props) {
         super(props);
         this.state = {
         }
+    }
+    refreshList = () => {
+        axios
+            .get("http://localhost:8000/api/loggies/")
+            .then(res => this.sayHello(res.data))
+            .catch(err => console.log(err));
+    };
+    sayHello = (data) => {
+        console.log('hello')
+        console.log(data)
     }
     render() {
         const { user } = this.props.state;
@@ -63,6 +71,9 @@ class HomePage extends Component  {
                          </Button>
                         <Button style={styles.loginBtn} onClick={() => switchScreen(this.props, '/menu')}>
                             Purchase Wood
+                        </Button>
+                        <Button style={styles.loginBtn} onClick={() => this.refreshList()}>
+                            Test get request
                         </Button>
                     </div>
                 </Container>

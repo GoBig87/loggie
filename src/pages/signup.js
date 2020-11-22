@@ -6,12 +6,15 @@ import { IconButton, InputBase, InputAdornment } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 
 import {Facebook, Apple, Email, Visibility, ArrowBack} from '@material-ui/icons';
+import { GoogleLogin } from 'react-google-login';
+import FacebookAuth from 'react-facebook-auth';
 
 
 class SignupPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
+            foo: '',
             icon: 'facebook',
             settings:  {
                 clientId: 'com.react.apple.login',
@@ -38,6 +41,29 @@ class SignupPage extends Component{
 
         }
     };
+    // Google sign in
+    responseGoogleSuccess = (response) => {
+        console.log('Success')
+        console.log(response)
+    }
+    responseGoogleFailure = (response) => {
+        console.log('Failure')
+        console.log(response)
+    }
+    // Facebook sign in
+    myFacebookButton = ({ onClick }) => (
+        <IconButton style={styles.facebookBtn} onClick={onClick}>
+            <Facebook style={styles.icon}/>
+            Login with Facebook
+        </IconButton>
+    );
+    myFacebookAuthenticate = (response) => {
+        console.log(response);
+        // Api call to server so we can validate the token
+    };
+
+    // Apple Sign in
+
 
     render() {
         const { user } = this.props.state;
@@ -89,18 +115,26 @@ class SignupPage extends Component{
                     </body>
                     <hr style={styles.coloredLine} />
                 </div>
-                    <IconButton className="button" style={styles.googleBtn}>
-                        <img src={google} style={styles.icon} />
-                        <span className="buttonText">Sign in with Google</span>
-                    </IconButton>
+                    <div style={styles.phoneDiv}>
+                    <GoogleLogin
+                        theme='dark'
+                        style={{width: '200%'}}
+                        clientId="613632797540-u18o915kcsju9oj57u7c3m0o6ru0t78q.apps.googleusercontent.com"
+                        buttonText="Sign In With Google"
+                        onSuccess={this.responseGoogleSuccess}
+                        onFailure={this.responseGoogleFailure}
+                        cookiePolicy={'single_host_origin'}
+                    />
+                    </div>
                     <IconButton style={styles.appleBtn} onClick={() => this.switchScreen('/home')}>
                         <Apple style={styles.icon}/>
                         Sign in with Apple
                     </IconButton>
-                    <IconButton style={styles.facebookBtn} onClick={() => this.switchScreen('/home')}>
-                        <Facebook style={styles.icon}/>
-                        Login with Facebook
-                    </IconButton>
+                    <FacebookAuth
+                        appId="<app-id>"
+                        callback={this.myFacebookAuthenticate}
+                        component={this.myFacebookButton}
+                    />
                 </div>
             </Container>
         );
@@ -110,6 +144,12 @@ class SignupPage extends Component{
 export default SignupPage;
 
 let styles = {
+    phoneDiv: {
+        position: 'relative',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        width: "90%",
+    },
     myVideo: {
         objectFit: 'cover',
         position: 'fixed',

@@ -6,7 +6,6 @@ import {IconButton, InputBase, TextField, InputAdornment, Button} from '@materia
 import Container from '@material-ui/core/Container';
 
 import {Facebook, Apple, Email, Visibility, ArrowBack} from '@material-ui/icons';
-import { GoogleLogin } from 'react-google-login';
 
 
 class SigninPage extends Component{

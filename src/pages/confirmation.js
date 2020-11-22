@@ -1,10 +1,8 @@
 import React, { Component, useState } from "react";
-import firewood from "../assets/images/firewood.png"
-import { IconButton, Button, Card } from "@material-ui/core";
-import {Remove, Add, Apple, ShoppingCart, ArrowBack} from "@material-ui/icons";
+import { IconButton, Button } from "@material-ui/core";
+import { ArrowBack } from "@material-ui/icons";
 import Container from "@material-ui/core/Container";
 import Fireplace from "../assets/videos/Fireplace.mp4";
-import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
 import './menu.css'
 
