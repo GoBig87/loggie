@@ -6,7 +6,6 @@ import Container from "@material-ui/core/Container";
 import Fireplace from "../assets/videos/Fireplace.mp4";
 import './menu.css'
 import google from "../assets/images/google.svg";
-import { TextField } from "@material-ui/core";
 import { FieldSet, InputField } from 'fannypack';
 import { usePaymentInputs } from 'react-payment-inputs';
 

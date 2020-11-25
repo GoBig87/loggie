@@ -5,42 +5,43 @@ import google from "../assets/images/google.svg"
 import { IconButton, InputBase, InputAdornment } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 
-import {Facebook, Apple, Email, Visibility, ArrowBack} from '@material-ui/icons';
+import {Facebook, Apple, Email, Visibility, VerifiedUser, ArrowBack, VisibilityOff} from '@material-ui/icons';
 import { GoogleLogin } from 'react-google-login';
 import FacebookAuth from 'react-facebook-auth';
+import axios from "axios";
 
 
 class SignupPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            foo: '',
-            icon: 'facebook',
-            settings:  {
-                clientId: 'com.react.apple.login',
-                redirectURI: 'https://redirectUrl.com',
-                scope: '',
-                state: '',
-                responseType: 'code',
-                responseMode: 'query',
-                nonce: '',
-                designProp: {
-                    height: 30,
-                    width: 140,
-                    color: 'black',
-                    border: false,
-                    type: 'sign-in',
-                    border_radius: 25,
-                    scale: 1,
-                    locale: 'en_US',
-                    alignItems:"center",
-                    justifyContent:"center",
-                    position: 'relative'
-                }
-            }
-
-        }
+            amount: '',
+            password: '',
+            weight: '',
+            weightRange: '',
+            showPassword: false,
+        };
+        this.user = this.props.state.user;
     };
+    createAccount = (email, password) => {
+        this.user.email = email;
+        let data = {
+                      'email': email,
+                      'username': email,
+                      'password1': password,
+                      'password2': password
+                      }
+        axios
+            .post("https://loggie.app/api/rest-auth/registration/", data)
+            .then(res => this.createAccountRsp(res.data))
+            .catch(err => console.log(err));
+    };
+    createAccountRsp = (response) => {
+        this.user.token = response.key;
+        this.user.loggedIn = true;
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home')
+    }
     // Google sign in
     responseGoogleSuccess = (response) => {
         console.log('Success')
@@ -68,6 +69,25 @@ class SignupPage extends Component{
     render() {
         const { user } = this.props.state;
         const { switchScreen } = this.props.state;
+
+        const handleChange = (prop) => (event) => {
+            this.setState({
+                [prop]: event.target.value,
+            })
+        }
+
+        const handleClickShowPassword = () => {
+            this.setState(
+                {
+                    showPassword: !this.state.showPassword
+                }
+            )
+        };
+
+        const handleMouseDownPassword = (event) => {
+            event.preventDefault();
+        };
+
         return(
             <Container component="main" maxWidth="xs">
                 <div className="App" >
@@ -83,6 +103,8 @@ class SignupPage extends Component{
                     </title>
                     <InputBase
                         style={styles.textField}
+                        value={this.state.email}
+                        onChange={handleChange('email')}
                         InputProps={{ 'aria-label': 'naked' }}
                         endAdornment={
                             <InputAdornment position="end">
@@ -93,21 +115,29 @@ class SignupPage extends Component{
                                 </IconButton>
                             </InputAdornment>
                         }/>
-                    {/*<input style={styles.field}>*/}
-                    {/*</input>*/}
                     <InputBase
                         style={styles.textField}
+                        type={this.state.showPassword ? 'text' : 'password'}
+                        value={this.state.password}
+                        onChange={handleChange('password')}
                         InputProps={{ 'aria-label': 'naked' }}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
                                     aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
                                 >
-                                    <Visibility />
+                                    {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
                                 </IconButton>
                             </InputAdornment>
                         }
                     />
+                    <IconButton style={styles.loginBtn}
+                                onClick={() => this.createAccount(this.state.email, this.state.password)}>
+                        <VerifiedUser style={styles.icon}/>
+                        Create Account
+                    </IconButton>
                 <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle'}}>
                     <hr style={styles.coloredLine} />
                     <body style={styles.myTitle}>
@@ -204,7 +234,7 @@ let styles = {
     },
     loginBtn: {
         width:"100%",
-        backgroundColor:"#fb5b5a",
+        backgroundColor:"#FFFFFF",
         borderRadius:25,
         height:50,
         alignItems:"center",

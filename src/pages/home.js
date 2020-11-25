@@ -24,7 +24,7 @@ class HomePage extends Component  {
     render() {
         const { user } = this.props.state;
         const { switchScreen } = this.props.state;
-        if (user.signedIn === false){
+        if (user.loggedIn === false){
             return(
                 <Container component="main" maxWidth="xs">
                 <div className="App" >
