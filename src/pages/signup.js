@@ -53,8 +53,8 @@ class SignupPage extends Component{
         this.user.email = response.email
         let access_token = response.accessToken
         console.log(access_token)
-        let data = {'client_id': "lBXmnLm37OFvPz1luBg38NKPU2Jo6DHMrLSxljLL",
-                    'client_secret': "t1hIPGrW3QKgyrvkg6RgNWcBZpBV92uc9wJoWZRoSzdJdSBH2wuT6qqVOYgDSgZsmCwM7IkEa2vQ38pa33gLs04YeEQZOe49uIChjg1LC6FAifhV1a77s6F7HvBV2pqZ",
+        let data = {'client_id': "lqxytZIcAwU2Pjf5lHetXWg6iQ1OLX5vFQx08W0t",
+                    'client_secret': "Op3NW0ZVuplS6IsTl8l2slPtqjyFRPLlA677BvfqffgANiqKdiq3kTtfinK1mIreHdZDpEafiResgwFdm1pxym89fqY1zOS71swf0NjgPmuD4ztfIQziuFnVraQnBXDu",
                     'backend': 'google-oauth2',
                     'token': access_token,
                     'grant_type': 'convert_token',
@@ -87,8 +87,8 @@ class SignupPage extends Component{
         console.log(response);
         let token = response.accessToken;
         let data = {'grant_type': 'convert_token',
-            'client_id': "OBDGLR3ir6VdRAFE34ja1spf3EwT84sW4IhingBV",
-            'client_secret': "ANuV1LIUTDYppegbOd0NpTP5pH090oHisdJz7ZpwVTJXOseIUlP1bHMM6gGFHoKWCNUqHE2L9HCHC1HNTz153XJi8VPgdr8Ko4YxD8ai9mzv3T9livSCWxaaoxV1WHUF",
+            'client_id': "UXRMw5Izd8Njiy3w0JRQQRsZqiMHVKZsHuUCm8gD",
+            'client_secret': "jdDBzoWB9eZ9feCWlxHDsgwhEolAeVY47EKLnWZ8MFb9D0eNOWYy0XrNvL3bwSLGMdbKbWq3CTYsScTWPhyf0g4rsPBQIU0tP9b1UM0DbSuM5sETfc7ptzriUkCeabpq",
             'backend': 'facebook',
             'token': token
         }
