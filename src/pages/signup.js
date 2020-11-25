@@ -10,6 +10,9 @@ import { GoogleLogin } from 'react-google-login';
 import FacebookAuth from 'react-facebook-auth';
 import axios from "axios";
 
+let clientID = "613632797540-u18o915kcsju9oj57u7c3m0o6ru0t78q.apps.googleusercontent.com";
+let clientSecret = "SVRg51aqXm3wfS7eu2h-l6wK"
+
 
 class SignupPage extends Component{
     constructor(props) {
@@ -23,6 +26,8 @@ class SignupPage extends Component{
         };
         this.user = this.props.state.user;
     };
+
+    // Email account creation
     createAccount = (email, password) => {
         this.user.email = email;
         let data = {
@@ -42,16 +47,36 @@ class SignupPage extends Component{
         const { switchScreen } = this.props.state;
         switchScreen(this.props, '/home')
     }
+
     // Google sign in
-    responseGoogleSuccess = (response) => {
-        console.log('Success')
-        console.log(response)
+    googleSuccess = (response) => {
+        this.user.email = response.email
+        let access_token = response.accessToken
+        console.log(access_token)
+        let data = {'client_id': "lBXmnLm37OFvPz1luBg38NKPU2Jo6DHMrLSxljLL",
+                    'client_secret': "t1hIPGrW3QKgyrvkg6RgNWcBZpBV92uc9wJoWZRoSzdJdSBH2wuT6qqVOYgDSgZsmCwM7IkEa2vQ38pa33gLs04YeEQZOe49uIChjg1LC6FAifhV1a77s6F7HvBV2pqZ",
+                    'backend': 'google-oauth2',
+                    'token': access_token,
+                    'grant_type': 'convert_token',
+                    }
+        console.log(data)
+        axios
+            .post("https://loggie.app/api/auth/convert-token/", data)
+            .then(res => this.googleSuccessRsp(res.data))
+            .catch(err => console.log(err));
     }
-    responseGoogleFailure = (response) => {
+    googleSuccessRsp = (response) => {
+        console.log(response)
+        //this.user.token = response.key;
+        this.user.loggedIn = true;
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home')
+    }
+    googleFailure = (response) => {
         console.log('Failure')
         console.log(response)
     }
-    // Facebook sign in
+    // Facebook sign in code
     myFacebookButton = ({ onClick }) => (
         <IconButton style={styles.facebookBtn} onClick={onClick}>
             <Facebook style={styles.icon}/>
@@ -60,12 +85,29 @@ class SignupPage extends Component{
     );
     myFacebookAuthenticate = (response) => {
         console.log(response);
+        let token = response.accessToken;
+        let data = {'grant_type': 'convert_token',
+            'client_id': "OBDGLR3ir6VdRAFE34ja1spf3EwT84sW4IhingBV",
+            'client_secret': "ANuV1LIUTDYppegbOd0NpTP5pH090oHisdJz7ZpwVTJXOseIUlP1bHMM6gGFHoKWCNUqHE2L9HCHC1HNTz153XJi8VPgdr8Ko4YxD8ai9mzv3T9livSCWxaaoxV1WHUF",
+            'backend': 'facebook',
+            'token': token
+        }
+        console.log(data)
+        axios
+            .post("https://loggie.app/api/auth/convert-token/", data)
+            .then(res => this.myFacebookAuthenticateRsp(res.data))
+            .catch(err => console.log(err));
         // Api call to server so we can validate the token
     };
+    myFacebookAuthenticateRsp = (response) => {
+        console.log(response)
+        //this.user.token = response.key;
+        this.user.loggedIn = true;
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home')
+    };
 
-    // Apple Sign in
-
-
+    // Start Webpage layout
     render() {
         const { user } = this.props.state;
         const { switchScreen } = this.props.state;
@@ -149,10 +191,10 @@ class SignupPage extends Component{
                     <GoogleLogin
                         theme='dark'
                         style={{width: '200%'}}
-                        clientId="613632797540-u18o915kcsju9oj57u7c3m0o6ru0t78q.apps.googleusercontent.com"
+                        clientId={clientID}
                         buttonText="Sign In With Google"
-                        onSuccess={this.responseGoogleSuccess}
-                        onFailure={this.responseGoogleFailure}
+                        onSuccess={this.googleSuccess}
+                        onFailure={this.googleFailure}
                         cookiePolicy={'single_host_origin'}
                     />
                     </div>
@@ -161,7 +203,7 @@ class SignupPage extends Component{
                         Sign in with Apple
                     </IconButton>
                     <FacebookAuth
-                        appId="<app-id>"
+                        appId="383090469469321"
                         callback={this.myFacebookAuthenticate}
                         component={this.myFacebookButton}
                     />
