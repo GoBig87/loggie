@@ -114,7 +114,7 @@ class SignupPage extends Component{
     );
     appleAuthentication = (response) => {
         console.log(response);
-        let token = response.id_token;
+        let token = response.authorization.id_token;
         let data = {'grant_type': 'convert_token',
             'client_id': "dp5ww5H9M6P9bVNrh78BHr294SvA2IPMLvbCBcYu",
             'client_secret': "Geh8FSbgJxPy6THI4vmh4oVmb8UkFnfVU4usgWQdDiJLQ0tEh1S41GNWWIxvpZfJ0AUiJlCIZJbwtxFW3JK0gtYHRgaSGAWmcs6KuYM0epygOLZikFYSqxcdiLaR9kOW",
