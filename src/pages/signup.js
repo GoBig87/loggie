@@ -9,9 +9,10 @@ import {Facebook, Apple, Email, Visibility, VerifiedUser, ArrowBack, VisibilityO
 import { GoogleLogin } from 'react-google-login';
 import FacebookAuth from 'react-facebook-auth';
 import axios from "axios";
+import { appleAuthHelpers } from 'react-apple-signin-auth';
 
 let clientID = "613632797540-u18o915kcsju9oj57u7c3m0o6ru0t78q.apps.googleusercontent.com";
-let clientSecret = "SVRg51aqXm3wfS7eu2h-l6wK"
+//let clientSecret = "SVRg51aqXm3wfS7eu2h-l6wK"
 
 
 class SignupPage extends Component{
@@ -77,13 +78,13 @@ class SignupPage extends Component{
         console.log(response)
     }
     // Facebook sign in code
-    myFacebookButton = ({ onClick }) => (
+    facebookButton = ({ onClick }) => (
         <IconButton style={styles.facebookBtn} onClick={onClick}>
             <Facebook style={styles.icon}/>
             Login with Facebook
         </IconButton>
     );
-    myFacebookAuthenticate = (response) => {
+    facebookAuthenticate = (response) => {
         console.log(response);
         let token = response.accessToken;
         let data = {'grant_type': 'convert_token',
@@ -95,18 +96,65 @@ class SignupPage extends Component{
         console.log(data)
         axios
             .post("https://loggie.app/api/auth/convert-token/", data)
-            .then(res => this.myFacebookAuthenticateRsp(res.data))
+            .then(res => this.facebookAuthenticateRsp(res.data))
             .catch(err => console.log(err));
         // Api call to server so we can validate the token
     };
-    myFacebookAuthenticateRsp = (response) => {
+    facebookAuthenticateRsp = (response) => {
         console.log(response)
         //this.user.token = response.key;
         this.user.loggedIn = true;
         const { switchScreen } = this.props.state;
         switchScreen(this.props, '/home')
     };
-
+    //  Apple Sign in
+    async appleAuthentication() {
+        console.log('got here')
+        const response = await appleAuthHelpers.signIn({
+            authOptions: {
+                /** Client ID - eg: 'com.example.com' */
+                clientId: 'com.loggie.loggie.app',
+                /** Requested scopes, seperated by spaces - eg: 'email name' */
+                scope: 'email',
+                /** Apple's redirectURI - must be one of the URIs you added to the serviceID - the undocumented trick in apple docs is that you should call auth from a page that is listed as a redirectURI, localhost fails */
+                redirectURI: 'https://loggie.app',
+                /** State string that is returned with the apple response */
+                state: 'state',
+                /** Nonce */
+                nonce: 'nonce',
+                /** Uses popup auth instead of redirection */
+                usePopup: true,
+            },
+            onSuccess: (response) => console.log(response),
+            onError: (error) => console.error(error),
+        });
+        console.log('got here1')
+        console.log(response)
+        if (response) {
+            console.log(response);
+            let access_token = response.token
+            let data = {
+                'client_id': '_apple_client_id',
+                'client_secret': '_apple_client_secret',
+                'backend': 'apple-id',
+                'token': access_token,
+                'grant_type': 'convert_token',
+            }
+            axios
+                .post("https://loggie.app/api/auth/convert-token/", data)
+                .then(res => this.appleAuthenticationRsp(res.data))
+                .catch(err => console.log(err));
+        } else {
+            console.error('Error performing apple signin.');
+        }
+    }
+    appleAuthenticationRsp = (response) => {
+        console.log(response)
+        //this.user.token = response.key;
+        this.user.loggedIn = true;
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home')
+    }
     // Start Webpage layout
     render() {
         const { user } = this.props.state;
@@ -198,14 +246,14 @@ class SignupPage extends Component{
                         cookiePolicy={'single_host_origin'}
                     />
                     </div>
-                    <IconButton style={styles.appleBtn} onClick={() => this.switchScreen('/home')}>
+                    <IconButton style={styles.appleBtn} onClick={() => this.appleAuthentication()}>
                         <Apple style={styles.icon}/>
                         Sign in with Apple
                     </IconButton>
                     <FacebookAuth
                         appId="383090469469321"
-                        callback={this.myFacebookAuthenticate}
-                        component={this.myFacebookButton}
+                        callback={this.facebookAuthenticate}
+                        component={this.facebookButton}
                     />
                 </div>
             </Container>
