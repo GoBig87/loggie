@@ -114,13 +114,14 @@ class SignupPage extends Component{
     );
     appleAuthentication = (response) => {
         console.log(response);
-        let token = response.accessToken;
+        let token = response.id_token;
         let data = {'grant_type': 'convert_token',
-            'client_id': "UXRMw5Izd8Njiy3w0JRQQRsZqiMHVKZsHuUCm8gD",
-            'client_secret': "jdDBzoWB9eZ9feCWlxHDsgwhEolAeVY47EKLnWZ8MFb9D0eNOWYy0XrNvL3bwSLGMdbKbWq3CTYsScTWPhyf0g4rsPBQIU0tP9b1UM0DbSuM5sETfc7ptzriUkCeabpq",
+            'client_id': "dp5ww5H9M6P9bVNrh78BHr294SvA2IPMLvbCBcYu",
+            'client_secret': "Geh8FSbgJxPy6THI4vmh4oVmb8UkFnfVU4usgWQdDiJLQ0tEh1S41GNWWIxvpZfJ0AUiJlCIZJbwtxFW3JK0gtYHRgaSGAWmcs6KuYM0epygOLZikFYSqxcdiLaR9kOW",
             'backend': 'apple-id',
             'token': token
         }
+        console.log('Loggie server rsp')
         console.log(data)
         axios
             .post("https://loggie.app/api/auth/convert-token/", data)
