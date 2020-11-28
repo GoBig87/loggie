@@ -8,8 +8,10 @@ import SigninPage from "./pages/signin";
 import MenuPage from "./pages/menu";
 import PaymentPage from "./pages/payment";
 import ConfirmationPage from "./pages/confirmation";
-import DeliveryPage from "./pages/delivery"
-import User from "./util/user"
+import DeliveryPage from "./pages/delivery";
+import User from "./util/user";
+import AboutPage from "./pages/about";
+import AccountPage from "./pages/account";
 
 class App extends Component {
     constructor(props) {
@@ -38,6 +40,8 @@ class App extends Component {
                 <Route exact path="/payment" render={(props) => <PaymentPage state={this.state} {...props}/> }/>
                 <Route exact path="/delivery" render={(props) => <DeliveryPage state={this.state} {...props}/> }/>
                 <Route exact path="/confirmation" render={(props) => <ConfirmationPage state={this.state} {...props}/> }/>
+                <Route exact path="/about" render={(props) => <AboutPage state={this.state} {...props}/> }/>
+                <Route exact path="/account" render={(props) => <AccountPage state={this.state} {...props}/> }/>
             </div>
         </Router>
         );

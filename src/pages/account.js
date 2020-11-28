@@ -5,7 +5,7 @@ import { Button } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 
 
-class AboutPage extends Component {
+class AccountPage extends Component {
     constructor(props) {
         super(props);
         this.state = {}
@@ -13,29 +13,29 @@ class AboutPage extends Component {
 
     render()
 
-        { return(
+    { return(
 
-            <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs">
             <div className="App" >
-            <video autoPlay muted loop muted style={styles.myVideo}>
-            <source src={Fireplace} type="video/mp4"/>
-            </video>
-            <img src={logo} style={styles.myImage} />
-            <title style={styles.myTitle}>
-                About Loggies
-            </title>
-            <p style={styles.myParagraph}>
-                Conact Information
-            </p>
+                <video autoPlay muted loop muted style={styles.myVideo}>
+                    <source src={Fireplace} type="video/mp4"/>
+                </video>
+                <img src={logo} style={styles.myImage} />
+                <title style={styles.myTitle}>
+                    Account Information
+                </title>
+                <p style={styles.myParagraph}>
+                    Here's where you can find your account information
+                </p>
                 <body style={styles.myBody}>
-                    knknknklnkln
+                more account info.
                 </body>
             </div>
-            </Container>
-            );
-        }
+        </Container>
+    );
     }
-export default AboutPage;
+}
+export default AccountPage;
 
 // styles section
 let styles = {
@@ -83,26 +83,6 @@ let styles = {
         fontSize: 16,
         marginTop:10,
         marginBottom:0
-    },
-    learnBtn:{
-        alignItems:"center",
-        justifyContent:"center",
-        marginTop:0,
-        marginBottom:50,
-        textDecorationLine: 'underline'
-    },
-    loginBtn: {
-        width:"80%",
-        backgroundColor:"#FFFFFF",
-        borderRadius:25,
-        height:50,
-        alignItems:"center",
-        justifyContent:"center",
-        marginTop:10,
-        marginBottom:10
-    },
-    loginText:{
-        color:"white"
     },
     myParagraph: {
         position: 'relative',

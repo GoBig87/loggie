@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import Fireplace from "../assets/videos/Fireplace.mp4"
 import logo from "../assets/images/logo.png"
-import { Button } from '@material-ui/core';
+import {Button, IconButton} from '@material-ui/core';
 import Container from '@material-ui/core/Container';
+import {ArrowBack, Person} from "@material-ui/icons";
 
 
 class HomePage extends Component  {
@@ -29,14 +30,14 @@ class HomePage extends Component  {
                         Purchase firewood online and submit your location
                         to have firewood delivered right to your fire pit!
                     </body>
-                    <Button color="secondary" style={styles.learnBtn}>
-                        Learn More
-                    </Button>
                     <Button style={styles.loginBtn} onClick={() => switchScreen(this.props, '/signin')}>
                         Sign in
                     </Button>
                     <Button style={styles.loginBtn} onClick={() => switchScreen(this.props, '/signup')}>
                         Create Account
+                    </Button>
+                    <Button color="secondary" style={styles.learnBtn} onClick={() => switchScreen(this.props, '/about')}>
+                        Learn More
                     </Button>
                 </div>
                 </Container>
@@ -48,6 +49,9 @@ class HomePage extends Component  {
                         <video autoPlay muted loop muted style={styles.myVideo}>
                             <source src={Fireplace} type="video/mp4"/>
                         </video>
+                        <IconButton aria-label="back" style={styles.myIconbutton} onClick={() => switchScreen(this.props, '/account')}>
+                            <Person/>
+                        </IconButton>
                         <img src={logo} style={styles.myImage} />
                         <title style={styles.myTitle}>
                             On-demand fire wood delivery
@@ -56,9 +60,9 @@ class HomePage extends Component  {
                         Purchase firewood online and submit your location
                         to have firewood delivered right to your fire pit!
                         </body>
-                         <Button color="secondary" style={styles.learnBtn}>
-                                Learn More
-                         </Button>
+                        <Button color="secondary" style={styles.learnBtn} onClick={() => switchScreen(this.props, '/about')}>
+                            Learn More
+                        </Button>
                         <Button style={styles.loginBtn} onClick={() => switchScreen(this.props, '/menu')}>
                             Purchase Wood
                         </Button>
@@ -133,6 +137,12 @@ let styles = {
         justifyContent:"center",
         marginTop:10,
         marginBottom:10
+    },
+    myIconbutton: {
+        position: 'fixed',
+        color: 'white',
+        right: 0,
+        top: 0,
     },
     loginText:{
         color:"white"
