@@ -69,7 +69,11 @@ class PaymentPage extends Component{
         this.state = {
             render: true
         }
-    }
+    };
+
+    processApplePay = () => {
+
+    };
 
     render() {
         const { switchScreen } = this.props.state;
@@ -90,7 +94,7 @@ class PaymentPage extends Component{
                         <></>
                         <PaymentInputs/>
                         <Button style={styles.myButton} onClick={() => switchScreen(this.props, '/confirmation')}>
-                            Proceed
+                            Proceed to Confirmation
                         </Button>
                         <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle'}}>
                             <hr style={styles.coloredLine} />
@@ -99,7 +103,7 @@ class PaymentPage extends Component{
                             </body>
                             <hr style={styles.coloredLine} />
                         </div>
-                        <IconButton style={styles.appleBtn} onClick={() => switchScreen(this.props, '/home')}>
+                        <IconButton style={styles.appleBtn} onClick={() => this.processApplePay()}>
                             <Apple style={styles.icon}/>
                             Apple Pay
                         </IconButton>

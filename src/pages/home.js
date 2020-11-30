@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import Fireplace from "../assets/videos/Fireplace.mp4"
 import logo from "../assets/images/logo.png"
-import { Button } from '@material-ui/core';
+import {Button, IconButton} from '@material-ui/core';
 import Container from '@material-ui/core/Container';
+import {Person} from "@material-ui/icons";
 
 
 class HomePage extends Component  {
@@ -48,6 +49,9 @@ class HomePage extends Component  {
                         <video autoPlay muted loop muted style={styles.myVideo}>
                             <source src={Fireplace} type="video/mp4"/>
                         </video>
+                        <IconButton aria-label="back" style={styles.myAccount} onClick={() => switchScreen(this.props, '/account')}>
+                            <Person/>
+                        </IconButton>
                         <img src={logo} style={styles.myImage} />
                         <title style={styles.myTitle}>
                             On-demand fire wood delivery
@@ -80,7 +84,7 @@ let styles = {
         top: 0,
         left: 0
     },
-    myCart: {
+    myAccount: {
         position: 'fixed',
         color: 'white',
         right: 0,

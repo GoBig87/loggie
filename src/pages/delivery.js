@@ -8,6 +8,10 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
 import './menu.css'
 import mapboxgl from 'mapbox-gl';
+import { loadStripe } from '@stripe/stripe-js';
+import axios from "axios";
+
+const stripePromise = loadStripe('pk_test_51HsCWHK9gEiACSgM8PDCldng8tYxigvfIDq09d8510aaSzeEm02BsNfLttTLiNEBOiPcwDd3sJLO71RyukxbpADw00diEeksfU');
 
 
 class DeliveryPage extends Component{
@@ -18,6 +22,7 @@ class DeliveryPage extends Component{
             lat: 32.7764,
             zoom: 11,
         };
+        this.user = this.props.state.user;
         this.mapContainer = React.createRef();
     }
     componentDidMount() {
@@ -35,6 +40,29 @@ class DeliveryPage extends Component{
             });
         });
     }
+
+    handleClick = async (event) => {
+        let data = {'quantity': this.user.quantity}
+        console.log('sending rsp')
+        axios
+            .post("https://loggie.app/api/create-checkout-session", data)
+            .then(res => this.handleClickRsp(res.data))
+            .catch(err => console.log(err));
+    };
+    async handleClickRsp(response) {
+        // Get Stripe.js instance
+        const stripe = await stripePromise;
+        // When the customer clicks on the button, redirect them to Checkout.
+        const result = await stripe.redirectToCheckout({
+            sessionId: response.id,
+        });
+
+        if (result.error) {
+           // If `redirectToCheckout` fails due to a browser or network
+           // error, display the localized error message to your customer
+            console.log(result.error)
+        }
+    };
 
     render() {
         const { switchScreen } = this.props.state;
@@ -76,8 +104,9 @@ class DeliveryPage extends Component{
                        <div style={styles.mapDiv}>
                             <div ref={el => this.mapContainer = el} className="mapContainer" />
                         </div>
+
                         <div style={styles.myRow}>
-                            <Button style={styles.myButton} onClick={() => switchScreen(this.props, '/payment')}>
+                            <Button style={styles.myButton} onClick={this.handleClick}>
                                 Proceed to Payment
                             </Button>
                         </div>
