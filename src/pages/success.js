@@ -7,7 +7,7 @@ import 'react-phone-input-2/lib/style.css'
 import './menu.css'
 
 
-class ConfirmationPage extends Component{
+class SuccessPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -58,7 +58,8 @@ class ConfirmationPage extends Component{
 
 }
 
-export default ConfirmationPage;
+export default SuccessPage;
+
 
 let styles = {
     myPhone: {

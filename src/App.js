@@ -11,7 +11,10 @@ import ConfirmationPage from "./pages/confirmation";
 import DeliveryPage from "./pages/delivery"
 import SuccessPage from "./pages/success"
 import FailurePage from "./pages/failure";
-import User from "./util/user"
+import AboutPage from "./pages/about";
+import AccountPage from "./pages/account";
+import User from "./util/user";
+
 
 class App extends Component {
     constructor(props) {
@@ -42,6 +45,8 @@ class App extends Component {
                 <Route exact path="/confirmation" render={(props) => <ConfirmationPage state={this.state} {...props}/> }/>
                 <Route exact path="/success" render={(props) => <SuccessPage state={this.state} {...props}/> }/>
                 <Route exact path="/failure" render={(props) => <FailurePage state={this.state} {...props}/> }/>
+                <Route exact path="/about" render={(props) => <AboutPage state={this.state} {...props}/> }/>
+                <Route exact path="/account" render={(props) => <AccountPage state={this.state} {...props}/> }/>
             </div>
         </Router>
         );
