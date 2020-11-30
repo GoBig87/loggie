@@ -3,7 +3,7 @@ import Fireplace from "../assets/videos/Fireplace.mp4"
 import logo from "../assets/images/logo.png"
 import {Button, IconButton} from '@material-ui/core';
 import Container from '@material-ui/core/Container';
-import { Person} from "@material-ui/icons";
+import { Person } from "@material-ui/icons";
 
 
 
