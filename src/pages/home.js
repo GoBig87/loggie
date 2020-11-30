@@ -50,11 +50,7 @@ class HomePage extends Component  {
                         <video autoPlay muted loop muted style={styles.myVideo}>
                             <source src={Fireplace} type="video/mp4"/>
                         </video>
-<<<<<<< HEAD
                         <IconButton aria-label="back" style={styles.myAccount} onClick={() => switchScreen(this.props, '/account')}>
-=======
-                        <IconButton aria-label="back" style={styles.myIconbutton} onClick={() => switchScreen(this.props, '/account')}>
->>>>>>> abc02a199443188099a9c700e9b93ff1addf693f
                             <Person/>
                         </IconButton>
                         <img src={logo} style={styles.myImage} />
