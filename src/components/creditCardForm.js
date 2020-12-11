@@ -1,6 +1,7 @@
 import React from 'react';
-import {CardElement,  ElementsConsumer} from '@stripe/react-stripe-js';
+import {CardElement, ElementsConsumer, useElements} from '@stripe/react-stripe-js';
 import './creditCardForm.css';
+import axios from "axios";
 
 
 const CARD_OPTIONS = {
@@ -105,12 +106,14 @@ const DEFAULT_STATE = {
     email: '',
     phone: '',
     name: '',
+    user: '',
 };
 
 class CheckoutForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = DEFAULT_STATE;
+        this.state.user = this.props.user.user
     }
 
     handleSubmit = async (event) => {
@@ -132,33 +135,67 @@ class CheckoutForm extends React.Component {
 
         if (cardComplete) {
             this.setState({processing: true});
+            const data = {
+                total: this.state.user.total,
+                quantity: this.state.user.quantity,
+                lon: this.state.user.lon,
+                lat: this.state.user.lat,
+                name: name,
+                phone: phone,
+                email: email
+            }
+            axios
+                .post("https://loggie.app/api/charge/", data)
+                .then(res => this.paymentIntentRsp(res.data))
+                .catch(err => console.log(err));
         }
-
-        const payload = await stripe.createPaymentMethod({
-            type: 'card',
-            card: elements.getElement(CardElement),
-            billing_details: {
-                email,
-                phone,
-                name,
-            },
-        });
 
         this.setState({processing: false});
 
-        if (payload.error) {
-            this.setState({error: payload.error});
-        } else {
-            this.setState({paymentMethod: payload.paymentMethod});
-        }
     };
-
+    paymentIntentRsp = (response) => {
+        const clientSecret = response.client_secret;
+        const {stripe, elements} = this.props;
+        console.log(response)
+        stripe
+            .confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: elements.getElement(CardElement),
+                    billing_details: {
+                        name: this.state.name,
+                        email: this.state.email
+                    },
+                },
+            })
+            .then(result => this.confirmCardPayment(result))
+            .catch(err => console.log(err));
+    }
+    confirmCardPayment = (result) => {
+        if(result.paymentIntent) {
+            const data = {
+                payment_intent: result.paymentIntent.id,
+                email: this.state.email,
+                lon: this.state.user.lon,
+                lat: this.state.user.lat,
+            }
+            axios
+                .put("https://loggie.app/api/charge/", data)
+                .then(res => this.confirmCardPaymentRsp(res.data))
+                .catch(err => console.log(err));
+        }
+        if(result.error){
+            console.log(result.error)
+        }
+    }
+    confirmCardPaymentRsp = (response) => {
+        console.log(response)
+    }
     reset = () => {
         this.setState(DEFAULT_STATE);
     };
 
     render() {
-        const {error, processing, paymentMethod, name, email, phone} = this.state;
+        const {error, processing, paymentMethod, name, email, phone } = this.state;
         const {stripe} = this.props;
         return paymentMethod ? (
             <div className="Result">
@@ -230,13 +267,13 @@ class CheckoutForm extends React.Component {
     }
 }
 
-const InjectedCheckoutForm = () => (
+const InjectedCheckoutForm = (user => (
     <ElementsConsumer>
         {({stripe, elements}) => (
-            <CheckoutForm stripe={stripe} elements={elements} />
+            <CheckoutForm user={user} stripe={stripe} elements={elements} />
         )}
     </ElementsConsumer>
-);
+));
 
 
 export default InjectedCheckoutForm;

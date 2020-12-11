@@ -6,9 +6,10 @@ class User {
         this.token = ''
         this.payment = '';
         this.loggedIn = true;
-        this.lat = null;
-        this.lng = null;
+        this.lat = '33.333';
+        this.lon = '-117.222';
         this.quantity = 2;
+        this.total = this.quantity*10
     }
 }
 

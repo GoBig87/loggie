@@ -106,7 +106,7 @@ class DeliveryPage extends Component{
                         </div>
 
                         <div style={styles.myRow}>
-                            <Button style={styles.myButton} onClick={this.handleClick}>
+                            <Button style={styles.myButton} onClick={switchScreen(this.props, 'payment')}>
                                 Proceed to Payment
                             </Button>
                         </div>

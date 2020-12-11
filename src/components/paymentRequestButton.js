@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {PaymentRequestButtonElement, useStripe} from '@stripe/react-stripe-js';
+import {loadStripe} from "@stripe/stripe-js";
+
 
 const PaymentRequestButton = () => {
     const stripe = useStripe();
@@ -11,11 +13,12 @@ const PaymentRequestButton = () => {
                 country: 'US',
                 currency: 'usd',
                 total: {
-                    label: 'Demo total',
+                    label: 'Bundles of Wood',
                     amount: 1099,
                 },
                 requestPayerName: true,
                 requestPayerEmail: true,
+                requestPayerPhone: true,
             });
 
             // Check the availability of the Payment Request API.
@@ -28,11 +31,12 @@ const PaymentRequestButton = () => {
     }, [stripe]);
 
     if (paymentRequest) {
-        return <PaymentRequestButtonElement options={{paymentRequest}} />
+        return(<PaymentRequestButtonElement options={{paymentRequest}} />)
     }
 
     // Use a traditional checkout form.
-    return <button style={styles.myButton}>No Digital Wallets</button>;
+    //return <button>No Digital Wallets</button>;
+    return null;
 }
 
 export default PaymentRequestButton;

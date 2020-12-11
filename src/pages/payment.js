@@ -1,174 +1,6 @@
-// import React, { Component, useState } from "react";
-// import firewood from "../assets/images/firewood.png"
-// import { IconButton, Button, Card } from "@material-ui/core";
-// import {Remove, Add, Apple, ShoppingCart, ArrowBack} from "@material-ui/icons";
-// import Container from "@material-ui/core/Container";
-// import Fireplace from "../assets/videos/Fireplace.mp4";
-// import './menu.css'
-// import google from "../assets/images/google.svg";
-// import { FieldSet, InputField } from 'fannypack';
-// import { usePaymentInputs } from 'react-payment-inputs';
-// import {CardElement, ElementsConsumer} from '@stripe/react-stripe-js';
-
-// function PaymentInputs() {
-//     const {
-//         meta,
-//         getCardNumberProps,
-//         getExpiryDateProps,
-//         getCVCProps
-//     } = usePaymentInputs();
-//     const { erroredInputs, touchedInputs } = meta;
-//
-//     return (
-//         <FieldSet isVertical>
-//             <InputField
-//                 // Here is where React Payment Inputs injects itself into the input element.
-//                 {...getCardNumberProps()}
-//                 placeholder="0000 0000 0000 0000"
-//                 label="Card number"
-//                 inputRef={getCardNumberProps().ref}
-//                 // You can retrieve error state by making use of the error & touched attributes in `meta`.
-//                 state={erroredInputs.cardNumber && touchedInputs.cardNumber ? 'danger' : undefined}
-//                 validationText={touchedInputs.cardNumber && erroredInputs.cardNumber}
-//                 maxWidth="16rem"
-//                 margin='auto'
-//                 marginBottom="1rem"
-//                 color="white"
-//             />
-//             <FieldSet isHorizontal marginBottom="1rem">
-//             <InputField
-//                 {...getExpiryDateProps()}
-//                 label="Expiry date"
-//                 inputRef={getExpiryDateProps().ref}
-//                 state={erroredInputs.expiryDate && touchedInputs.expiryDate ? 'danger' : undefined}
-//                 validationText={touchedInputs.expiryDate && erroredInputs.expiryDate}
-//                 maxWidth="8rem"
-//                 margin='auto'
-//                 color="white"
-//
-//             />
-//             <InputField
-//                 {...getCVCProps()}
-//                 placeholder="123"
-//                 label="CVC"
-//                 inputRef={getCVCProps().ref}
-//                 state={erroredInputs.cvc && touchedInputs.cvc ? 'danger' : undefined}
-//                 validationText={touchedInputs.cvc && erroredInputs.cvc}
-//                 maxWidth="5rem"
-//                 margin='auto'
-//                 color="white"
-//             />
-//             </FieldSet>
-//         </FieldSet>
-//     );
-// }
-
-// class PaymentPage extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             render: true
-//         }
-//     };
-//
-//     handleSubmit = async (event) => {
-//         // Block native form submission.
-//         event.preventDefault();
-//
-//         const {stripe, elements} = this.props;
-//
-//         if (!stripe || !elements) {
-//             // Stripe.js has not loaded yet. Make sure to disable
-//             // form submission until Stripe.js has loaded.
-//             return;
-//         }
-//
-//         // Get a reference to a mounted CardElement. Elements knows how
-//         // to find your CardElement because there can only ever be one of
-//         // each type of element.
-//         const cardElement = elements.getElement(CardElement);
-//
-//         const {error, paymentMethod} = await stripe.createPaymentMethod({
-//             type: 'card',
-//             card: cardElement,
-//         });
-//
-//         if (error) {
-//             console.log('[error]', error);
-//         } else {
-//             console.log('[PaymentMethod]', paymentMethod);
-//         }
-//     };
-//
-//     render() {
-//         const {stripe} = this.props;
-//         return (
-//             <form onSubmit={this.handleSubmit}>
-//                 <CardElement/>
-//                 <button type="submit" disabled={!stripe}>
-//                     Pay
-//                 </button>
-//             </form>
-//         );
-//     }
-// }
-
-    // processApplePay = () => {
-    //
-    // };
-    //
-    // render() {
-    //     const { switchScreen } = this.props.state;
-    //     const { user } = this.props.state;
-    //     return(
-    //         <Container className="main" component="main" maxWidth="xs">
-    //             <div className="player">
-    //                 <video autoPlay muted loop className="video">
-    //                     <source src={Fireplace} type="video/mp4"/>
-    //                 </video>
-    //                 <IconButton aria-label="back"
-    //                             style={styles.myBack}
-    //                             onClick={() => switchScreen(this.props, '/delivery')}>
-    //                     <ArrowBack/>
-    //                 </IconButton>
-    //                 <div className="wrap">
-    //                     <title className="firewood" style={styles.myTitle}> Payment</title>
-    //                     <></>
-    //                     <PaymentInputs/>
-    //                     <Button style={styles.myButton} onClick={() => switchScreen(this.props, '/confirmation')}>
-    //                         Proceed to Confirmation
-    //                     </Button>
-    //                     <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle'}}>
-    //                         <hr style={styles.coloredLine} />
-    //                         <body style={styles.myTitle}>
-    //                         OR
-    //                         </body>
-    //                         <hr style={styles.coloredLine} />
-    //                     </div>
-    //                     <IconButton style={styles.appleBtn} onClick={() => this.processApplePay()}>
-    //                         <Apple style={styles.icon}/>
-    //                         Apple Pay
-    //                     </IconButton>
-    //                     <IconButton className="button" style={styles.googleBtn}>
-    //                         <img src={google} style={styles.icon} />
-    //                         <span className="buttonText">Google Pay</span>
-    //                     </IconButton>
-    //                 </div>
-    //             </div>
-    //         </Container>
-    //     );
-    // }
-
-//}
-//
-// export default PaymentPage;
-//
-
-
-
 import React, { Component } from 'react';
 import Container from "@material-ui/core/Container";
-import {loadStripe} from '@stripe/stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import Fireplace from "../assets/videos/Fireplace.mp4";
 import InjectedCheckoutForm from "../components/creditCardForm";
@@ -184,11 +16,12 @@ const ELEMENTS_OPTIONS = {
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
-
+const stripePromise = loadStripe("pk_test_51HsCWHK9gEiACSgM8PDCldng8tYxigvfIDq09d8510aaSzeEm02BsNfLttTLiNEBOiPcwDd3sJLO71RyukxbpADw00diEeksfU",
+    {apiVersion: "2020-08-27"});
 class PaymentPage extends Component {
     constructor(props) {
         super(props);
+        this.user = this.props.state.user
         this.state = {
             render: true
         }
@@ -207,8 +40,16 @@ class PaymentPage extends Component {
                             Payment
                         </title>
                     <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
-                        <InjectedCheckoutForm />
-                        <PaymentRequestButton/>
+                        <InjectedCheckoutForm user={user}/>
+                         <div style={styles.myDiv}>
+                             <hr style={styles.coloredLine} />
+                             <body style={styles.myTitle}>
+                                OR
+                             </body>
+                             <hr style={styles.coloredLine} />
+                         </div>
+                        <body style={styles.myBody}>Use Google or Apple Pay (if available)</body>
+                        <PaymentRequestButton user={user}/>
                     </Elements>
             </Container>
         );
@@ -218,6 +59,12 @@ class PaymentPage extends Component {
 export default PaymentPage;
 
 let styles = {
+    myDiv: {
+        display:'flex',
+        flexDirection: 'row',
+        verticalAlign: 'middle',
+        horizontalAlign: 'center',
+    },
     myVideo: {
         objectFit: 'cover',
         position: 'fixed',
@@ -257,6 +104,18 @@ let styles = {
         flexDirection:'row',
         position: 'relative',
         color: 'white',
+    },
+    myBody: {
+        flexDirection: "row",
+        position: 'relative',
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: 15,
+        marginTop:10,
+        marginBottom:10
     },
     myTitle: {
         flexDirection: "row",
@@ -328,8 +187,6 @@ let styles = {
         width: "40%",
         color: 'white',
         backgroundColor: 'white',
-        marginRight: 10,
-        marginLeft: 10,
         height: 1
     },
     myButton: {
