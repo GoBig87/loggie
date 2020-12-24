@@ -34,9 +34,6 @@ class HomePage extends Component  {
                     <Button style={styles.loginBtn} onClick={() => switchScreen(this.props, '/signin')}>
                         Sign in
                     </Button>
-                    <Button style={styles.loginBtn} onClick={() => switchScreen(this.props, '/signup')}>
-                        Create Account
-                    </Button>
                     <Button color="secondary" style={styles.learnBtn} onClick={() => switchScreen(this.props, '/about')}>
                         Learn More
                     </Button>

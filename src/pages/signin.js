@@ -1,51 +1,80 @@
 import React, { Component, useState } from "react";
 import Fireplace from "../assets/videos/Fireplace.mp4"
 import logo from "../assets/images/logo.png"
-import google from "../assets/images/google.svg"
 import {IconButton, InputBase, TextField, InputAdornment, Button} from '@material-ui/core';
 import Container from '@material-ui/core/Container';
+import {Email, Visibility, ArrowBack, VerifiedUser, VisibilityOff} from '@material-ui/icons';
+import GoogleLoginButton from "../components/googleLoginButton";
+import AppleLoginButton from "../components/appleLoginButton";
+import FacebookLoginButton from "../components/facebookLoginButton";
+import axios from "axios";
+import sjcl from 'sjcl'
 
-import {Facebook, Apple, Email, Visibility, ArrowBack} from '@material-ui/icons';
+const client_side_salt = 'my_client_side_salt_string_to_increase_complexity_this_is_hashed_again_server_side'
 
 
 class SigninPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            icon: 'facebook',
-            settings:  {
-                clientId: 'com.react.apple.login',
-                redirectURI: 'https://redirectUrl.com',
-                scope: '',
-                state: '',
-                responseType: 'code',
-                responseMode: 'query',
-                nonce: '',
-                designProp: {
-                    height: 30,
-                    width: 140,
-                    color: 'black',
-                    border: false,
-                    type: 'sign-in',
-                    border_radius: 25,
-                    scale: 1,
-                    locale: 'en_US',
-                    alignItems:"center",
-                    justifyContent:"center",
-                    position: 'relative'
-                }
-            }
-
-        }
+            amount: '',
+            password: '',
+            weight: '',
+            weightRange: '',
+            showPassword: false,
+        };
+        this.user = this.props.state.user;
     };
-    switchScreen = (params) => {
-        console.log('switching screen')
-        console.log(params)
-        this.props.history.push(params);
+    // Email account creation
+    signIn = (email, password) => {
+        this.user.email = email
+        let myBitArray = sjcl.hash.sha256.hash(password.concat(client_side_salt));
+        let hashedPassword = sjcl.codec.hex.fromBits(myBitArray);
+        console.log('Password');
+        console.log(password);
+        console.log('hashed');
+        console.log(hashedPassword);
+        let data = {
+            'email': email,
+            'username': email,
+            'password': hashedPassword
+        }
+        axios
+            .post("https://loggie.app/api/rest-auth/login", data)
+            .then(res => this.signInRsp(res.data))
+            .catch(err => console.log(err));
+    };
+    // Handles rsp for email account creation
+    signInRsp = (response) => {
+        console.log(response)
+        this.user.token = response.key;
+        this.user.loggedIn = true;
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home')
     };
     render() {
         const { user } = this.props.state;
         const { switchScreen } = this.props.state;
+
+        // Handles Text input UI
+        const handleChange = (prop) => (event) => {
+            this.setState({
+                [prop]: event.target.value,
+            })
+        }
+        // Toggles Password Text input to show/hide pw
+        const handleClickShowPassword = () => {
+            this.setState(
+                {
+                    showPassword: !this.state.showPassword
+                }
+            )
+        };
+
+        const handleMouseDownPassword = (event) => {
+            event.preventDefault();
+        };
+
         return(
             <Container component="main" maxWidth="xs">
                 <div className="App" >
@@ -61,6 +90,8 @@ class SigninPage extends Component{
                     </title>
                     <InputBase
                         style={styles.textField}
+                        value={this.state.email}
+                        onChange={handleChange('email')}
                         InputProps={{ 'aria-label': 'naked' }}
                         endAdornment={
                             <InputAdornment position="end">
@@ -73,19 +104,29 @@ class SigninPage extends Component{
                         }/>
                     <InputBase
                         style={styles.textField}
+                        type={this.state.showPassword ? 'text' : 'password'}
+                        value={this.state.password}
+                        onChange={handleChange('password')}
                         InputProps={{ 'aria-label': 'naked' }}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
                                     aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
                                 >
-                                    <Visibility />
+                                    {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
                                 </IconButton>
                             </InputAdornment>
                         }
                     />
+                    <IconButton style={styles.loginBtn}
+                                onClick={() => this.signIn(this.state.email, this.state.password)}>
+                        <VerifiedUser style={styles.icon}/>
+                        Sign In
+                    </IconButton>
                     <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle'}}>
-                        <Button color="secondary" style={styles.learnBtn}>
+                        <Button color="secondary" style={styles.learnBtn} onClick={() => switchScreen(this.props, '/signup')}>
                             Create Account
                         </Button>
                         <Button color="secondary" style={styles.learnBtn}>
@@ -99,18 +140,11 @@ class SigninPage extends Component{
                         </body>
                         <hr style={styles.coloredLine} />
                     </div>
-                    <IconButton className="button" style={styles.googleBtn}>
-                        <img src={google} style={styles.icon} />
-                        <span className="buttonText">Sign in with Google</span>
-                    </IconButton>
-                    <IconButton style={styles.appleBtn} onClick={() => this.switchScreen('/home')}>
-                        <Apple style={styles.icon}/>
-                        Sign in with Apple
-                    </IconButton>
-                    <IconButton style={styles.facebookBtn} onClick={() => this.switchScreen('/home')}>
-                        <Facebook style={styles.icon}/>
-                        Login with Facebook
-                    </IconButton>
+                    <div style={styles.phoneDiv}>
+                        <GoogleLoginButton state={this.state}/>
+                    </div>
+                    <AppleLoginButton state={this.state}/>
+                    <FacebookLoginButton state={this.state}/>
                 </div>
             </Container>
         );
@@ -120,6 +154,12 @@ class SigninPage extends Component{
 export default SigninPage;
 
 let styles = {
+    phoneDiv: {
+        position: 'relative',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        width: "90%",
+    },
     myVideo: {
         objectFit: 'cover',
         position: 'fixed',
@@ -134,18 +174,18 @@ let styles = {
         left: 0,
         top: 0,
     },
-    myImage:{
+    myImage: {
         position: 'relative',
-        width: "50%",
-        height: "50%",
-        top: 0,
-        marginTop:0,
-        marginBottom:50
+        width: "35%",
+        height: "35%",
+        top: 10,
+        marginTop: 7,
+        marginBottom: 7
     },
     textField: {
-        marginTop:10,
-        marginBottom:10,
-        height: 50,
+        marginTop: 7,
+        marginBottom: 7,
+        height: 30,
         backgroundColor: 'rgba(255,255,255,0.5)',
         borderRadius: 25,
         width: '100%',
@@ -155,11 +195,11 @@ let styles = {
         outline: 'none',
         width: '100%',
         backgroundColor: 'rgba(255,255,255,0.5)',
-        height: 50,
+        height: 30,
         borderRadius: 25,
         position: 'relative',
-        marginTop:10,
-        marginBottom:10,
+        marginTop: 7,
+        marginBottom: 7,
         fontSize: 20
     },
     coloredLine: {
@@ -173,60 +213,52 @@ let styles = {
         height: 1
     },
     loginBtn: {
-        width:"100%",
-        backgroundColor:"#fb5b5a",
-        borderRadius:25,
-        height:50,
-        alignItems:"center",
-        justifyContent:"center",
-        marginTop:10,
-        marginBottom:10
+        width: "100%",
+        backgroundColor: "#FFFFFF",
+        borderRadius: 25,
+        height: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 7,
+        marginBottom: 7
     },
     icon: {
-        fontSize: 40,
-        marginLeft:-50,
-        marginRight:20,
-        height:50,
-        marginTop:-15,
-        marginBottom:-15
+        fontSize: 25,
+        marginLeft: -50,
+        marginRight: 20,
+        height: 25,
+        marginTop: -15,
+        marginBottom: -15
     },
     googleBtn: {
         text: "Login with Facebook",
         color: 'white',
-        backgroundColor:"#4285F4",
-        borderRadius:25,
-        height:50,
-        width:"100%",
-        marginTop:10,
-        marginBottom:10
+        backgroundColor: "#4285F4",
+        borderRadius: 25,
+        height: 40,
+        width: "100%",
+        marginTop: 10,
+        marginBottom: 10
     },
     facebookBtn: {
         text: "Login with Facebook",
         color: 'white',
-        backgroundColor:"#3b5998",
-        borderRadius:25,
-        height:50,
-        width:"100%",
-        marginTop:10,
-        marginBottom:10
+        backgroundColor: "#3b5998",
+        borderRadius: 25,
+        height: 40,
+        width: "100%",
+        marginTop: 10,
+        marginBottom: 10
     },
-    appleBtn:{
+    appleBtn: {
         text: "Login with Facebook",
         color: 'black',
-        backgroundColor:"#FFFFFF",
-        borderRadius:25,
-        height:50,
-        width:"100%",
-        marginTop:10,
-        marginBottom:10
-    },
-    learnBtn:{
-        alignItems:"center",
-        justifyContent:"center",
-        marginLeft:30,
-        marginTop:1,
-        marginBottom:1,
-        textDecorationLine: 'underline'
+        backgroundColor: "#FFFFFF",
+        borderRadius: 25,
+        height: 40,
+        width: "100%",
+        marginTop: 10,
+        marginBottom: 10
     },
     myTitle: {
         flexDirection: "row",
@@ -236,10 +268,10 @@ let styles = {
         alignItems: 'center',
         justifyContent: 'center',
         color: 'white',
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
         textTransform: 'uppercase',
-        marginTop:10,
-        marginBottom:10
+        marginTop: 10,
+        marginBottom: 10
     }
 }

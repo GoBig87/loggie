@@ -9,7 +9,10 @@ class User {
         this.lat = '33.333';
         this.lon = '-117.222';
         this.quantity = 2;
-        this.total = this.quantity*10
+        this.pitNum = null;
+    }
+    total() {
+        return this.quantity*10;
     }
 }
 

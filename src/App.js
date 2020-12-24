@@ -40,8 +40,8 @@ class App extends Component {
                 <Route exact path="/menu" render={(props) => <MenuPage state={this.state} {...props}/> }/>
                 <Route exact path="/signup" render={(props) => <SignupPage state={this.state} {...props}/> }/>
                 <Route exact path="/signin" render={(props) => <SigninPage state={this.state} {...props}/> }/>
-                <Route exact path="/payment" render={(props) => <PaymentPage state={this.state} {...props}/> }/>
                 <Route exact path="/delivery" render={(props) => <DeliveryPage state={this.state} {...props}/> }/>
+                <Route exact path="/payment" render={(props) => <PaymentPage state={this.state} {...props}/> }/>
                 <Route exact path="/confirmation" render={(props) => <ConfirmationPage state={this.state} {...props}/> }/>
                 <Route exact path="/success" render={(props) => <SuccessPage state={this.state} {...props}/> }/>
                 <Route exact path="/failure" render={(props) => <FailurePage state={this.state} {...props}/> }/>
