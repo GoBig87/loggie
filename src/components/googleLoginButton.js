@@ -1,17 +1,7 @@
 import React, { Component } from "react";
-import Fireplace from "../assets/videos/Fireplace.mp4"
-import logo from "../assets/images/logo.png"
-import { IconButton, InputBase, InputAdornment } from '@material-ui/core';
-import Container from '@material-ui/core/Container';
-
-import {Facebook, Apple, Email, Visibility, VerifiedUser, ArrowBack, VisibilityOff} from '@material-ui/icons';
 import { GoogleLogin } from 'react-google-login';
-import FacebookAuth from 'react-facebook-auth';
 import axios from "axios";
-import AppleLogin from 'react-apple-login';
-import passwordHash from 'password-hash';
 let clientID = "613632797540-u18o915kcsju9oj57u7c3m0o6ru0t78q.apps.googleusercontent.com";
-
 
 
 class GoogleLoginButton extends Component{
@@ -32,8 +22,8 @@ class GoogleLoginButton extends Component{
         this.user.email = response.email
         let access_token = response.accessToken
         console.log(access_token)
-        let data = {'client_id': "5EafzuKMzApABl0oxks8Bv3Ap671C1QvyTt2B3Sa",
-            'client_secret': "X5wRsNBUqJfoRvX92m6Y8wupnWQAEljbbrHyIbhi6vp6CivpDBCIIyg6CcVJDmHiiFnPwDvgWwFYzZRRJPw05kSBrBeZoXPfzPg6DA8913whHW0KBtkIyKln1PxaiHlA",
+        let data = {'client_id': "fv4HSO9twEEqu6KA4jGrpeesxqJpUoX1ix4cK3ST",
+            'client_secret': "H1tdyhoe58iISkkMdZrrb15iSkpE19MXxz4uRx9maGrtNpysPu2c7KjAbwUvFgSykw0Q4c0ET5vIau1EmjrDq4tkNmH9GFKBNgG7pfGx1HOBrw9dQKLNtjE1P1OTcNDD",
             'backend': 'google-oauth2',
             'token': access_token,
             'grant_type': 'convert_token',

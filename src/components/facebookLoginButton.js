@@ -30,8 +30,8 @@ class FacebookLoginButton extends Component{
         console.log(response);
         let token = response.accessToken;
         let data = {'grant_type': 'convert_token',
-            'client_id': "9ObRxu2jDt1SvpgCRRTZ6qRaO6rxKw3eY9KrSqYE",
-            'client_secret': "CieG4uE8LPcUTUfNkfKdP7bP6KpNYOi8wUI9Vbdl5c8rGAj1HflZ0Ow9BGLFZDMNcIoZBswEMGAQTgSasxygG2ZKM4wACfVgoiz6R5RAHpDbBXzwlKuL81aUmzoSOdXZ",
+            'client_id': "aDldrHAK5S0frvkGZsuPkjGlLh0nDZ4FnOZ24YMQ",
+            'client_secret': "A2KSC6KdGtpSjECztY3CYTJjKrEyNGqp6ogsHImSXj5DT3EfQ7GPLA0Iu1B1NSbvaLl2bXsBhkBhha66obGRQSS1cF11QFA6EUE3BK72zQIBeF5ESHnV2oSq4VZ8md53",
             'backend': 'facebook',
             'token': token
         }

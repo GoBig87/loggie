@@ -5,7 +5,6 @@ import { IconButton, InputBase, InputAdornment } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import {Email, Visibility, VerifiedUser, ArrowBack, VisibilityOff} from '@material-ui/icons';
 import axios from "axios";
-import { hashString } from 'react-hash-string'
 import sjcl from "sjcl";
 
 const client_side_salt = 'my_client_side_salt_string_to_increase_complexity_this_is_hashed_again_server_side'

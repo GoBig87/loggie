@@ -5,7 +5,7 @@ import Container from "@material-ui/core/Container";
 import ReactMapboxGl, { Layer, Feature, Marker } from 'react-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import firepit from "../assets/images/firepit.svg";
-import pin from "../assets/images/pin.png";
+import pin from "../assets/images/pin.svg";
 import UserLocation from "../assets/images/UserLocation.svg";
 
 
@@ -71,6 +71,8 @@ class DeliveryPage extends Component{
         this.setState({
             userLat: position.coords.latitude,
             userLon: position.coords.longitude,
+            lng: position.coords.longitude,
+            lat: position.coords.latitude
         })
     }
     centerOnLocation = () => {
@@ -104,6 +106,8 @@ class DeliveryPage extends Component{
             pitNum: ' #' + user.pitNum,
             pinLat: user.lat,
             pinLon: user.lon,
+            lng: user.lon,
+            lat: user.lat,
         })
     }
 
@@ -135,7 +139,7 @@ class DeliveryPage extends Component{
                     </ul>
                     <Marker
                         coordinates={[this.state.pinLon, this.state.pinLat]}
-                        anchor="left">
+                        anchor="bottom">
                         <img src={pin} style={{width: '30px', height: '30px'}}/>
                     </Marker>
                     <Marker

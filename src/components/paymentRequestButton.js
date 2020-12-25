@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {PaymentRequestButtonElement, useStripe} from '@stripe/react-stripe-js';
-import {loadStripe} from "@stripe/stripe-js";
+import axios from "axios";
 
 
-const PaymentRequestButton = () => {
+const PaymentRequestButton = (props) => {
     const stripe = useStripe();
-    const [paymentRequest, setPaymentRequest] = useState(null);
+    const [paymentRequest, setPaymentRequest] = useState(null)
+    const { user } = props.state;
+    const { switchScreen } = props.state;
 
     useEffect(() => {
         if (stripe) {
@@ -14,7 +16,7 @@ const PaymentRequestButton = () => {
                 currency: 'usd',
                 total: {
                     label: 'Bundles of Wood',
-                    amount: 1099,
+                    amount: user.total(),
                 },
                 requestPayerName: true,
                 requestPayerEmail: true,
@@ -24,7 +26,27 @@ const PaymentRequestButton = () => {
             // Check the availability of the Payment Request API.
             pr.canMakePayment().then(result => {
                 if (result) {
-                    setPaymentRequest(pr);
+                    console.log('found stripe payment result')
+                    console.log(result)
+                    const data = {
+                        total: user.total,
+                        quantity: user.quantity,
+                        lon: user.lon,
+                        lat: user.lat,
+                        pitNum: user.pitNum,
+                        name: result.name,
+                        phone: result.phone,
+                        email: result.email
+                    }
+                    axios
+                        .post("https://loggie.app/api/order/", data)
+                        .then(res => {
+                                if (res) {
+                                    setPaymentRequest(pr);
+                                    switchScreen(props, '/confirmation')
+                                }
+                            })
+                        .catch(err => console.log(err));
                 }
             });
         }

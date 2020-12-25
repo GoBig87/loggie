@@ -136,16 +136,11 @@ class CheckoutForm extends React.Component {
         if (cardComplete) {
             this.setState({processing: true});
             const data = {
-                total: this.state.user.total,
-                quantity: this.state.user.quantity,
-                lon: this.state.user.lon,
-                lat: this.state.user.lat,
-                name: name,
-                phone: phone,
-                email: email
+                quantity: this.state.user.quantity
             }
+            const config = this.state.authTokenHeader()
             axios
-                .post("https://loggie.app/api/charge/", data)
+                .post("https://loggie.app/api/charge/", data, config)
                 .then(res => this.paymentIntentRsp(res.data))
                 .catch(err => console.log(err));
         }
@@ -173,13 +168,11 @@ class CheckoutForm extends React.Component {
     confirmCardPayment = (result) => {
         if(result.paymentIntent) {
             const data = {
-                payment_intent: result.paymentIntent.id,
-                email: this.state.email,
-                lon: this.state.user.lon,
-                lat: this.state.user.lat,
+                paymentIntent: result.paymentIntent.id,
             }
+            const config = this.state.authTokenHeader()
             axios
-                .put("https://loggie.app/api/charge/", data)
+                .put("https://loggie.app/api/charge/", data, config)
                 .then(res => this.confirmCardPaymentRsp(res.data))
                 .catch(err => console.log(err));
         }
@@ -189,6 +182,27 @@ class CheckoutForm extends React.Component {
     }
     confirmCardPaymentRsp = (response) => {
         console.log(response)
+        // Payment succeeded, now create the order
+        const data = {
+            total: this.state.user.total(),
+            quantity: this.state.user.quantity,
+            lon: this.state.user.lon,
+            lat: this.state.user.lat,
+            pitNum: this.state.user.pitNum,
+            phone: this.state.phone,
+            email: this.state.email,
+            name: this.state.name
+        }
+        const config = this.state.authTokenHeader()
+        axios
+            .post("https://loggie.app/api/order/", data, config)
+            .then(res => this.confirmOrderRsp(res.data))
+            .catch(err => console.log(err));
+    }
+    confirmOrderRsp = (response) => {
+        console.log(response)
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/confirmation')
     }
     reset = () => {
         this.setState(DEFAULT_STATE);

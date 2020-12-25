@@ -18,6 +18,7 @@ const ELEMENTS_OPTIONS = {
 // recreating the `Stripe` object on every render.
 const stripePromise = loadStripe("pk_test_51HsCWHK9gEiACSgM8PDCldng8tYxigvfIDq09d8510aaSzeEm02BsNfLttTLiNEBOiPcwDd3sJLO71RyukxbpADw00diEeksfU",
     {apiVersion: "2020-08-27"});
+
 class PaymentPage extends Component {
     constructor(props) {
         super(props);
@@ -73,24 +74,11 @@ let styles = {
         top: 0,
         left: 0
     },
-    myCart: {
-        position: 'fixed',
-        color: 'white',
-        right: 0,
-        top: 0,
-    },
     myBack: {
         position: 'fixed',
         color: 'white',
         left: 0,
         top: 0,
-    },
-    myRow: {
-        flexDirection:'row',
-        display: 'flex',
-        margin: 'auto',
-        alignItems: 'center',
-        justifyContent: 'center'
     },
     icon: {
         fontSize: 40,
@@ -131,56 +119,6 @@ let styles = {
         marginTop:10,
         marginBottom:10
     },
-    appleBtn:{
-        color: 'black',
-        backgroundColor:"#FFFFFF",
-        borderRadius:25,
-        height:50,
-        width:"80%",
-        marginTop:10,
-        marginBottom: 10,
-        marginRight: 30,
-        marginLeft: 30,
-    },
-    googleBtn: {
-        position: 'relative',
-        textAlign: 'center',
-        display: 'flex',
-        color: 'white',
-        backgroundColor:"#4285F4",
-        borderRadius:25,
-        height:50,
-        width:"80%",
-        marginTop:10,
-        marginBottom:10,
-        marginRight: 30,
-        marginLeft: 30,
-    },
-    myItem: {
-        flexDirection: "row",
-        textAlign: 'center',
-        display: 'flex',
-        color: 'white',
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginRight:15,
-        marginTop:5,
-        marginBottom:5
-    },
-    frostedBox: {
-        display: 'inline-block',
-        position: 'relative',
-        marginTop: 50,
-        marginBottom: 50,
-        width: "100%",
-        height: "100%",
-        alignItemstems: 'center',
-        justifyContent: 'center',
-        opacity: 0.66,
-        backgroundColor: '#708090',
-        filter: 'blur(6px)',
-        overflow: 'hidden',
-    },
     coloredLine: {
         position: 'relative',
         marginTop: 25,
@@ -198,8 +136,5 @@ let styles = {
         justifyContent:"center",
         marginTop:50,
         marginBottom:50
-    },
-    pos: {
-        marginBottom: 12,
     },
 }

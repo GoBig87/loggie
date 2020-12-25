@@ -9,6 +9,7 @@ import AppleLoginButton from "../components/appleLoginButton";
 import FacebookLoginButton from "../components/facebookLoginButton";
 import axios from "axios";
 import sjcl from 'sjcl'
+import SignupPage from "./signup";
 
 const client_side_salt = 'my_client_side_salt_string_to_increase_complexity_this_is_hashed_again_server_side'
 
@@ -141,10 +142,10 @@ class SigninPage extends Component{
                         <hr style={styles.coloredLine} />
                     </div>
                     <div style={styles.phoneDiv}>
-                        <GoogleLoginButton state={this.state}/>
+                        <GoogleLoginButton state={this.state} {...this.props}/>
                     </div>
-                    <AppleLoginButton state={this.state}/>
-                    <FacebookLoginButton state={this.state}/>
+                    <AppleLoginButton state={this.state} {...this.props}/>
+                    <FacebookLoginButton state={this.state} {...this.props}/>
                 </div>
             </Container>
         );

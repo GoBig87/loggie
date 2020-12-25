@@ -33,8 +33,8 @@ class AppleLoginButton extends Component{
             let token = response.authorization.id_token;
             let data = {
                 'grant_type': 'convert_token',
-                'client_id': "2brEF0rnw4o4WoVdbSrh48IFuTkEhgglxv2ebenP",
-                'client_secret': "k0ycjsicoEtOCI5CUQpD9jT2M1JVwZxoya2gFW4y5djZYLeGPHNMbw6JaijPLFRDK1Rv6d1zYWyWlVUXGQrRbNylcRZT8vhjkgGKRR7zlCBfTW7eZXenzKI77j4Wxkzg",
+                'client_id': "GBxE6NdJyebmZ3zrqBoRKctW5wo3peJkOXBstbNf",
+                'client_secret': "1yDYJyflFXrwqzTqjrllrVDs6mhPosewsDJj9m5a82KDqbKxF0DCj7rqwgOFT2fL8Pf52YZFgqwK9PHaVgjMJJlBYUnyCotQ02TEUM7AJz8ZBSMYRInnPRNq2v5p5c8Y",
                 'backend': 'apple-id',
                 'token': token
             }

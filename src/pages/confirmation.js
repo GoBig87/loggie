@@ -11,13 +11,20 @@ class ConfirmationPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            render: true
+            quantity: 0,
+            total: 0,
         }
+    }
+    resetUser = (props, user, switchScreen) => {
+        user.resetCart()
+        switchScreen(props, '/home')
     }
 
     render() {
         const { switchScreen } = this.props.state;
         const { user } = this.props.state;
+        this.state.quantity = user.quantity;
+        this.state.total = user.total();
         return(
             <Container className="main" component="main" maxWidth="xs">
                 <div className="player">
@@ -37,19 +44,19 @@ class ConfirmationPage extends Component{
                         <div style={styles.myRow}>
                             <title style={styles.myItemLeft}>Qty: </title>
                             <hr style={styles.coloredLine} />
-                            <title style={styles.myItemRight}>x1</title>
+                            <title style={styles.myItemRight}>x{this.state.quantity}</title>
                         </div>
                         <div style={styles.myRow}>
                             <title style={styles.myItemLeft}>Total: </title>
                             <hr style={styles.coloredLine} />
-                            <title style={styles.myItemRight}>$10</title>
+                            <title style={styles.myItemRight}>${this.state.total}</title>
                         </div>
                         <div style={styles.myRow}>
-                            <Button style={styles.myButton} onClick={() => switchScreen(this.props, '/home')}>
+                            <Button style={styles.myButton}
+                                    onClick={() => this.resetUser(this.props, user, switchScreen)}>
                                 Return Home
                             </Button>
                         </div>
-
                     </div>
                 </div>
             </Container>
@@ -61,9 +68,6 @@ class ConfirmationPage extends Component{
 export default ConfirmationPage;
 
 let styles = {
-    myPhone: {
-      width: "80%"
-    },
     myVideo: {
         objectFit: 'cover',
         position: 'fixed',
@@ -71,12 +75,6 @@ let styles = {
         height: "100%",
         top: 0,
         left: 0
-    },
-    myCart: {
-        position: 'fixed',
-        color: 'white',
-        right: 0,
-        top: 0,
     },
     myBack: {
         position: 'fixed',
@@ -89,7 +87,9 @@ let styles = {
         display: 'flex',
         margin: 'auto',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginLeft: 20,
+        marginRight: 20
     },
     icon: {
         fontSize: 40,
@@ -98,11 +98,6 @@ let styles = {
         height:50,
         marginTop:-15,
         marginBottom:-15
-    },
-    myIcon: {
-        flexDirection:'row',
-        position: 'relative',
-        color: 'white',
     },
     myTitle: {
         flexDirection: "row",
@@ -161,8 +156,5 @@ let styles = {
         justifyContent:"center",
         marginTop:50,
         marginBottom:50
-    },
-    pos: {
-        marginBottom: 12,
     },
 }

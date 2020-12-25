@@ -20,7 +20,7 @@ class HomePage extends Component  {
             return(
                 <Container component="main" maxWidth="xs">
                 <div className="App" >
-                    <video autoPlay muted loop muted style={styles.myVideo}>
+                    <video autoPlay muted loop style={styles.myVideo}>
                         <source src={Fireplace} type="video/mp4"/>
                     </video>
                     <img src={logo} style={styles.myImage} />
