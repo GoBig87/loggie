@@ -31,6 +31,7 @@ class AppleLoginButton extends Component{
             return null
         } else {
             let token = response.authorization.id_token;
+            this.user.email = response.user.email;
             let data = {
                 'grant_type': 'convert_token',
                 'client_id': "GBxE6NdJyebmZ3zrqBoRKctW5wo3peJkOXBstbNf",
@@ -51,23 +52,38 @@ class AppleLoginButton extends Component{
         console.log(response)
         this.user.token = response.access_token;
         this.user.loggedIn = true;
-        const { switchScreen } = this.props.state;
-        switchScreen(this.props, '/home')
+        this.createCustomer();
     };
+    createCustomer = () => {
+        const data = {'foo':'bar'};
+        const config = this.user.config();
+        axios
+            .post("https://loggie.app/api/customer/", data, config)
+            .then(res => this.createCustomerRsp(res.data))
+            .catch(err => console.log(err));
+    };
+    createCustomerRsp = (response) => {
+        console.log(response);
+        this.user.updateOrders(response);
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home');
+    };
+
     // Start Webpage layout
     render() {
         const { user } = this.props.state;
         const { switchScreen } = this.props.state;
 
         return(
-                <AppleLogin clientId="com.loggie.loggie.app"
-                            redirectURI="https://loggie.app"
-                            responseMode= {"form_post"}
-                            responseType= {"id_token"}
-                            usePopup={true}
-                            callback={this.appleAuthentication}
-                            render={this.appleButton}
-                />
+            <AppleLogin clientId={"com.loggie.loggie.app"}
+                        redirectURI={"https://loggie.app"}
+                        scope={"scope=email"}
+                        responseMode= {"form_post"}
+                        responseType= {"id_token"}
+                        usePopup={true}
+                        callback={this.appleAuthentication}
+                        render={this.appleButton}
+            />
 
         );
     }

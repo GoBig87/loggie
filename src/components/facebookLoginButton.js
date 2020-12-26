@@ -28,6 +28,7 @@ class FacebookLoginButton extends Component{
 
     facebookAuthenticate = (response) => {
         console.log(response);
+        this.user.email = response.email;
         let token = response.accessToken;
         let data = {'grant_type': 'convert_token',
             'client_id': "aDldrHAK5S0frvkGZsuPkjGlLh0nDZ4FnOZ24YMQ",
@@ -47,9 +48,21 @@ class FacebookLoginButton extends Component{
     authRsp = (response) => {
         console.log(response)
         this.user.token = response.access_token;
-        this.user.loggedIn = true;
+        this.createCustomer();
+    };
+    createCustomer = () => {
+        const data = {'foo':'bar'};
+        const config = this.user.config();
+        axios
+            .post("https://loggie.app/api/customer/", data, config)
+            .then(res => this.createCustomerRsp(res.data))
+            .catch(err => console.log(err));
+    };
+    createCustomerRsp = (response) => {
+        console.log(response);
+        this.user.updateOrders(response);
         const { switchScreen } = this.props.state;
-        switchScreen(this.props, '/home')
+        switchScreen(this.props, '/home');
     };
     // Start Webpage layout
     render() {

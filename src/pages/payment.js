@@ -47,10 +47,10 @@ class PaymentPage extends Component {
                              <body style={styles.myTitle}>
                                 OR
                              </body>
-                             <hr style={styles.coloredLine} />
+                             <hr style={styles.coloredLine}confirmCardPayment />
                          </div>
                         <body style={styles.myBody}>Use Google or Apple Pay (if available)</body>
-                        <PaymentRequestButton user={user}/>
+                        <PaymentRequestButton {...this.props}/>
                     </Elements>
             </Container>
         );

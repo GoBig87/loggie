@@ -19,8 +19,8 @@ class GoogleLoginButton extends Component{
 
     // Google sign in
     googleSuccess = (response) => {
-        this.user.email = response.email
-        let access_token = response.accessToken
+        this.user.email = response.profileObj.email;
+        let access_token = response.accessToken;
         console.log(access_token)
         let data = {'client_id': "fv4HSO9twEEqu6KA4jGrpeesxqJpUoX1ix4cK3ST",
             'client_secret': "H1tdyhoe58iISkkMdZrrb15iSkpE19MXxz4uRx9maGrtNpysPu2c7KjAbwUvFgSykw0Q4c0ET5vIau1EmjrDq4tkNmH9GFKBNgG7pfGx1HOBrw9dQKLNtjE1P1OTcNDD",
@@ -52,13 +52,13 @@ class GoogleLoginButton extends Component{
             .post("https://loggie.app/api/customer/", data, config)
             .then(res => this.createCustomerRsp(res.data))
             .catch(err => console.log(err));
-    }
+    };
     createCustomerRsp = (response) => {
         console.log(response);
         this.user.updateOrders(response);
         const { switchScreen } = this.props.state;
         switchScreen(this.props, '/home');
-    }
+    };
     // Start Webpage layout
     render() {
         const { user } = this.props.state;
