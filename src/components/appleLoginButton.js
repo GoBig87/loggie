@@ -77,7 +77,7 @@ class AppleLoginButton extends Component{
         return(
             <AppleLogin clientId={"com.loggie.loggie.app"}
                         redirectURI={"https://loggie.app"}
-                        scope={"scope=email"}
+                        scope={"email"}
                         responseMode= {"form_post"}
                         responseType= {"id_token"}
                         usePopup={true}
