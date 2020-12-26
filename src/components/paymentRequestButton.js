@@ -15,7 +15,7 @@ const PaymentRequestButton = (props) => {
                 currency: 'usd',
                 total: {
                     label: 'Loggie Firewood',
-                    amount: user.total() * 100,
+                    amount: user.total(),
                 },
                 requestPayerName: true,
                 requestPayerEmail: true,
@@ -28,7 +28,6 @@ const PaymentRequestButton = (props) => {
 
                 }
             });
-
             pr.on('paymentmethod', async (ev) => {
                 // Confirm the PaymentIntent without handling potential next actions (yet).
                 let { user } =  props.state;
@@ -73,15 +72,15 @@ const PaymentRequestButton = (props) => {
                                 lon: user.lon,
                                 lat: user.lat,
                                 pitNum: user.pitNum,
-                                phone: ev.payerPhone,
-                                email: user.email,
-                                name: ev.payerName
+                                phone: paymentIntent.shipping.phone,
+                                email: paymentIntent.receipt_email,
+                                name: paymentIntent.shipping.name
                             };
                             axios.post("https://loggie.app/api/order/", data, config)
-                                 .then((result) => {
+                                .then((result) => {
                                     switchScreen(props, '/confirmation');
-                                 })
-                                 .catch(err => console.log(err));
+                                })
+                                .catch(err => console.log(err));
                         }
                     } else {
                         // The payment has succeeded.
@@ -94,9 +93,9 @@ const PaymentRequestButton = (props) => {
                             lon: user.lon,
                             lat: user.lat,
                             pitNum: user.pitNum,
-                            phone: paymentIntent.shipping.phone,
-                            email: paymentIntent.receipt_email,
-                            name: paymentIntent.shipping.name
+                            phone: ev.payerPhone,
+                            email: user.email,
+                            name: ev.payerName
                         };
                         axios.post("https://loggie.app/api/order/", data, config)
                             .then((result) => {
@@ -119,26 +118,3 @@ const PaymentRequestButton = (props) => {
 }
 
 export default PaymentRequestButton;
-
-// style:{paymentRequestButton: {theme:'light'}}}
-// console.log('found stripe payment result')
-// console.log(result)
-// const data = {
-//     total: user.total,
-//     quantity: user.quantity,
-//     lon: user.lon,
-//     lat: user.lat,
-//     pitNum: user.pitNum,
-//     name: result.name,
-//     phone: result.phone,
-//     email: result.email
-// }
-// axios
-//     .post("https://loggie.app/api/order/", data)
-//     .then(res => {
-//         if (res) {
-//             setPaymentRequest(pr);
-//             props.state.switchScreen(props, '/confirmation')
-//         }
-//     })
-//     .catch(err => console.log(err));
