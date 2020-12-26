@@ -41,7 +41,7 @@ class PaymentPage extends Component {
                             Payment
                         </title>
                     <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
-                        <InjectedCheckoutForm user={user}/>
+                        <InjectedCheckoutForm {...this.props}/>
                          <div style={styles.myDiv}>
                              <hr style={styles.coloredLine} />
                              <body style={styles.myTitle}>

@@ -38,15 +38,27 @@ class GoogleLoginButton extends Component{
         console.log('Failure')
         console.log(response)
     }
-
     // Handles rsp for all return tokens
     authRsp = (response) => {
-        console.log(response)
+        console.log(response);
         this.user.token = response.access_token;
         this.user.loggedIn = true;
-        const { switchScreen } = this.props.state;
-        switchScreen(this.props, '/home')
+        this.createCustomer();
     };
+    createCustomer = () => {
+        const data = {'foo':'bar'};
+        const config = this.user.config();
+        axios
+            .post("https://loggie.app/api/customer/", data, config)
+            .then(res => this.createCustomerRsp(res.data))
+            .catch(err => console.log(err));
+    }
+    createCustomerRsp = (response) => {
+        console.log(response);
+        this.user.updateOrders(response);
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home');
+    }
     // Start Webpage layout
     render() {
         const { user } = this.props.state;

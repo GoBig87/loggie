@@ -113,7 +113,6 @@ class CheckoutForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = DEFAULT_STATE;
-        this.state.user = this.props.user.user
     }
 
     handleSubmit = async (event) => {
@@ -135,10 +134,11 @@ class CheckoutForm extends React.Component {
 
         if (cardComplete) {
             this.setState({processing: true});
+            let { user } =  this.props.state;
             const data = {
-                quantity: this.state.user.quantity
+                quantity: user.quantity
             }
-            const config = this.state.authTokenHeader()
+            const config = user.config();
             axios
                 .post("https://loggie.app/api/charge/", data, config)
                 .then(res => this.paymentIntentRsp(res.data))
@@ -166,11 +166,12 @@ class CheckoutForm extends React.Component {
             .catch(err => console.log(err));
     }
     confirmCardPayment = (result) => {
+        let { user } =  this.props.state;
         if(result.paymentIntent) {
             const data = {
                 paymentIntent: result.paymentIntent.id,
             }
-            const config = this.state.authTokenHeader()
+            let config = user.config();
             axios
                 .put("https://loggie.app/api/charge/", data, config)
                 .then(res => this.confirmCardPaymentRsp(res.data))
@@ -183,17 +184,18 @@ class CheckoutForm extends React.Component {
     confirmCardPaymentRsp = (response) => {
         console.log(response)
         // Payment succeeded, now create the order
+        let { user } =  this.props.state;
         const data = {
-            total: this.state.user.total(),
-            quantity: this.state.user.quantity,
-            lon: this.state.user.lon,
-            lat: this.state.user.lat,
-            pitNum: this.state.user.pitNum,
+            total: user.total(),
+            quantity: user.quantity,
+            lon: user.lon,
+            lat: user.lat,
+            pitNum: user.pitNum,
             phone: this.state.phone,
             email: this.state.email,
             name: this.state.name
         }
-        const config = this.state.authTokenHeader()
+        let config = user.config();
         axios
             .post("https://loggie.app/api/order/", data, config)
             .then(res => this.confirmOrderRsp(res.data))
@@ -201,7 +203,7 @@ class CheckoutForm extends React.Component {
     }
     confirmOrderRsp = (response) => {
         console.log(response)
-        const { switchScreen } = this.props.state;
+        let { switchScreen } = this.props.state;
         switchScreen(this.props, '/confirmation')
     }
     reset = () => {
@@ -281,10 +283,10 @@ class CheckoutForm extends React.Component {
     }
 }
 
-const InjectedCheckoutForm = (user => (
+const InjectedCheckoutForm = (props => (
     <ElementsConsumer>
         {({stripe, elements}) => (
-            <CheckoutForm user={user} stripe={stripe} elements={elements} />
+            <CheckoutForm stripe={stripe} elements={elements} {...props} />
         )}
     </ElementsConsumer>
 ));

@@ -6,8 +6,8 @@ import axios from "axios";
 const PaymentRequestButton = (props) => {
     const stripe = useStripe();
     const [paymentRequest, setPaymentRequest] = useState(null)
-    const { user } = props.state;
-    const { switchScreen } = props.state;
+    const { user } = props;
+    const { switchScreen } = props;
 
     useEffect(() => {
         if (stripe) {
