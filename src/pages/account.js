@@ -20,16 +20,13 @@ class AccountPage extends Component {
         const { switchScreen } = this.props.state;
         const { user } = this.props.state;
 
-
         let orders = user.orders.map((item,index)=>{
             return  <li>
-                <OrderCard lat={item['lat']}
-                           lon={item['lon']}
-                           pitNum={item['pitNum']}
-                           status={item['status']}
-                           orderPlaced={item['orderPlaced']}
-                           total={item['total']}
-                           onClick={() => switchScreen(this.props, '/payment')}
+                <OrderCard order={item}
+                           user={user}
+                           switchScreen={switchScreen}
+                           {...this.props}
+
                 />
             </li>
         })

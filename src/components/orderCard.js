@@ -17,34 +17,33 @@ class OrderCard extends Component {
         super(props);
     };
 
+    switchToOrderScreen = (switchScreen, order) => {
+        const { user } = this.props.state;
+        user.order = order;
+        switchScreen(this.props, '/order')
+    };
     render() {
-        const { lat, lon, pitNum, status, orderPlaced, total } = this.props;
-        var date = new Date(orderPlaced * 1000);
-        var month = date.getMonth();
-        var day = date.getDay();
-        var year = date.getFullYear();
-        var hours = date.getHours();
-        var minutes = "0" + date.getMinutes();
-        var formattedTime = month + '/' + day + '/' + year + ' ' +hours + ':' + minutes.substr(-2)
-
+        const { order, user } = this.props;
+        const { switchScreen } = this.props;
+        const formattedTime = user.getDate(order['orderPlaced'])
         return(
-            <div style={styles.myDiv}>
+            <div style={styles.myDiv} onClick={() => this.switchToOrderScreen(switchScreen, order)}>
                 <div style={styles.myRow}>
                     <Map
                         style="mapbox://styles/mapbox/dark-v10"
                         containerStyle={styles.mapDiv}
-                        center={[lon, lat]}
+                        center={[order['lon'], order['lat']]}
                         zoom={[12]}
                         >
                     <Marker
-                        coordinates={[lon, lat]}
+                        coordinates={[order['lon'], order['lat']]}
                         anchor="center">
                         <img src={firepit} style={{width: '30px', height: '30px'}}/>
                     </Marker>
                     </Map>
                     <div style={styles.myCol}>
-                        <text style={styles.infoText}>Order Status: {status}</text>
-                        <text style={styles.infoText}>Order Total: ${total}.00</text>
+                        <text style={styles.infoText}>Order Status: {order['status']}</text>
+                        <text style={styles.infoText}>Order Total: ${order['total']}.00</text>
                         <text style={styles.infoText}>Order Date: {formattedTime}</text>
                     </div>
                 </div>

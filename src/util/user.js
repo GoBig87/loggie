@@ -1,30 +1,3 @@
-const active_order = {
-    email: 'inbody.5@gmail.com',
-    status: 'Processing',
-    total: '10',
-    items: {foo: 'bar'},
-    phone: '419-957-5390',
-    name: 'Jason Inbody',
-    pitNum: 1,
-    lon: -117.231963,
-    lat: 32.787912,
-    orderPlaced: 1609134501,
-    orderDelivered: null,
-}
-
-const completed_order = {
-    email: 'inbody.5@gmail.com',
-    status: 'Delivered',
-    total: '10',
-    items: {foo: 'bar'},
-    phone: '419-957-5390',
-    name: 'Jason Inbody',
-    pitNum: 1,
-    lon: -117.231963,
-    lat: 32.787912,
-    orderPlaced: 1609134501,
-    orderDelivered: 1609134701,
-}
 
 class User {
     constructor() {
@@ -35,7 +8,8 @@ class User {
         this.lon = '-117.222';
         this.quantity = 0;
         this.pitNum = null;
-        this.orders = [];//[active_order, completed_order, completed_order, completed_order, completed_order, completed_order, completed_order, completed_order];
+        this.orders = null
+        this.order = null;
     }
     total = () => {
         return this.quantity*10;
@@ -54,6 +28,16 @@ class User {
         // this method creates the head config for https requests
         const header = {headers: {Authorization: 'Bearer ' + this.token}};
         return header;
+    }
+    getDate= (timeStamp) => {
+        var date = new Date(timeStamp * 1000);
+        var month = date.getMonth();
+        var day = date.getDate();
+        var year = date.getFullYear();
+        var hours = date.getHours();
+        var minutes = "0" + date.getMinutes();
+        var formattedTime = month + '/' + day + '/' + year + ' ' +hours + ':' + minutes.substr(-2)
+        return formattedTime
     }
 }
 
