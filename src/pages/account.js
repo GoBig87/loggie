@@ -3,6 +3,7 @@ import Fireplace from "../assets/videos/Fireplace.mp4"
 import logo from "../assets/images/logo.png"
 import { Button } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
+import BackGroundVideo from '../components/backGroundVideo'
 
 
 class AccountPage extends Component {
@@ -17,9 +18,7 @@ class AccountPage extends Component {
 
         <Container component="main" maxWidth="xs">
             <div className="App" >
-                <video autoPlay muted loop muted style={styles.myVideo}>
-                    <source src={Fireplace} type="video/mp4"/>
-                </video>
+                <BackGroundVideo/>
                 <img src={logo} style={styles.myImage} />
                 <title style={styles.myTitle}>
                     Account Information

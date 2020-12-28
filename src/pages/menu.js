@@ -3,7 +3,7 @@ import firewood from "../assets/images/firewood.png"
 import { IconButton, Button, Card } from "@material-ui/core";
 import {Remove, Add, ShoppingCart, ArrowBack} from "@material-ui/icons";
 import Container from "@material-ui/core/Container";
-import Fireplace from "../assets/videos/Fireplace.mp4";
+import BackGroundVideo from '../components/backGroundVideo'
 import './menu.css'
 
 class MenuPage extends Component{
@@ -41,9 +41,7 @@ class MenuPage extends Component{
         return(
         <Container className="main" component="main">
             <div className="player">
-                <video autoPlay muted loop className="video">
-                    <source src={Fireplace} type="video/mp4"/>
-                </video>
+                <BackGroundVideo/>
                 <IconButton aria-label="back"
                             style={styles.myBack}
                             onClick={() => switchScreen(this.props, '/home')}>

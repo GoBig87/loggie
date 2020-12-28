@@ -7,6 +7,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import firepit from "../assets/images/firepit.svg";
 import pin from "../assets/images/pin.svg";
 import UserLocation from "../assets/images/UserLocation.svg";
+import BackGroundVideo from '../components/backGroundVideo'
 
 
 const Map = ReactMapboxGl({

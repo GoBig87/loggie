@@ -31,7 +31,6 @@ class AppleLoginButton extends Component{
             return null
         } else {
             let token = response.authorization.id_token;
-            this.user.email = response.user.email;
             let data = {
                 'grant_type': 'convert_token',
                 'client_id': "GBxE6NdJyebmZ3zrqBoRKctW5wo3peJkOXBstbNf",
@@ -65,6 +64,7 @@ class AppleLoginButton extends Component{
     createCustomerRsp = (response) => {
         console.log(response);
         this.user.updateOrders(response);
+        this.user.email = response.email;
         const { switchScreen } = this.props.state;
         switchScreen(this.props, '/home');
     };

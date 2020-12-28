@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import Fireplace from "../assets/videos/Fireplace.mp4"
+import BackGroundVideo from '../components/backGroundVideo'
 import logo from "../assets/images/logo.png"
 import {IconButton, InputBase, TextField, InputAdornment, Button} from '@material-ui/core';
 import Container from '@material-ui/core/Container';
@@ -79,9 +79,7 @@ class SigninPage extends Component{
         return(
             <Container component="main" maxWidth="xs">
                 <div className="App" >
-                    <video autoPlay muted loop muted style={styles.myVideo}>
-                        <source src={Fireplace} type="video/mp4"/>
-                    </video>
+                    <BackGroundVideo/>
                     <IconButton aria-label="back" style={styles.myBack} onClick={() => switchScreen(this.props, '/home')}>
                         <ArrowBack/>
                     </IconButton>

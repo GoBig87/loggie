@@ -2,7 +2,7 @@ import React, { Component, useState } from "react";
 import { IconButton, Button } from "@material-ui/core";
 import { ArrowBack } from "@material-ui/icons";
 import Container from "@material-ui/core/Container";
-import Fireplace from "../assets/videos/Fireplace.mp4";
+import BackGroundVideo from '../components/backGroundVideo'
 import 'react-phone-input-2/lib/style.css'
 import './menu.css'
 
@@ -21,9 +21,7 @@ class FailurePage extends Component{
         return(
             <Container className="main" component="main" maxWidth="xs">
                 <div className="player">
-                    <video autoPlay muted loop className="video">
-                        <source src={Fireplace} type="video/mp4"/>
-                    </video>
+                    <BackGroundVideo/>
                     <IconButton aria-label="back" style={styles.myBack} onClick={() => switchScreen(this.props, '/menu')}>
                         <ArrowBack/>
                     </IconButton>

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import Fireplace from "../assets/videos/Fireplace.mp4"
 import logo from "../assets/images/logo.png"
+import accountAlert  from "../assets/images/accountAlert.svg"
+import account  from "../assets/images/account.svg"
 import {Button, IconButton} from '@material-ui/core';
 import Container from '@material-ui/core/Container';
-import { Person } from "@material-ui/icons";
-
+import BackGroundVideo from '../components/backGroundVideo'
 
 
 class HomePage extends Component  {
@@ -20,9 +20,7 @@ class HomePage extends Component  {
             return(
                 <Container component="main" maxWidth="xs">
                 <div className="App" >
-                    <video autoPlay muted loop style={styles.myVideo}>
-                        <source src={Fireplace} type="video/mp4"/>
-                    </video>
+                    <BackGroundVideo/>
                     <img src={logo} style={styles.myImage} />
                     <title style={styles.myTitle}>
                         On-demand fire wood delivery
@@ -44,11 +42,9 @@ class HomePage extends Component  {
             return(
                 <Container component="main" maxWidth="xs">
                     <div className="App" >
-                        <video autoPlay muted loop muted style={styles.myVideo}>
-                            <source src={Fireplace} type="video/mp4"/>
-                        </video>
+                        <BackGroundVideo/>
                         <IconButton aria-label="back" style={styles.myAccount} onClick={() => switchScreen(this.props, '/account')}>
-                            <Person/>
+                            <img src={account} height={30} width={30}/>
                         </IconButton>
                         <img src={logo} style={styles.myImage} />
                         <title style={styles.myTitle}>
@@ -74,14 +70,6 @@ class HomePage extends Component  {
 export default HomePage;
 
 let styles = {
-    myVideo: {
-        objectFit: 'cover',
-        position: 'fixed',
-        width: "100%",
-        height: "100%",
-        top: 0,
-        left: 0
-    },
     myAccount: {
         position: 'fixed',
         color: 'white',

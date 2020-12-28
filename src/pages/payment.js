@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Container from "@material-ui/core/Container";
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import Fireplace from "../assets/videos/Fireplace.mp4";
+import BackGroundVideo from '../components/backGroundVideo'
 import InjectedCheckoutForm from "../components/creditCardForm";
 import PaymentRequestButton from "../components/paymentRequestButton"
 
@@ -33,25 +33,23 @@ class PaymentPage extends Component {
         const {user} = this.props.state;
         return (
             <Container  maxWidth="s">
-                    <video autoPlay muted loop className="video">
-                        <source src={Fireplace} type="video/mp4"/>
-                    </video>
-                        <title className="firewood"
-                               style={styles.myTitle}>
-                            Payment
-                        </title>
-                    <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
-                        <InjectedCheckoutForm {...this.props}/>
-                         <div style={styles.myDiv}>
-                             <hr style={styles.coloredLine} />
-                             <body style={styles.myTitle}>
-                                OR
-                             </body>
-                             <hr style={styles.coloredLine}confirmCardPayment />
-                         </div>
-                        <body style={styles.myBody}>Use Google or Apple Pay (if available)</body>
-                        <PaymentRequestButton {...this.props}/>
-                    </Elements>
+                <BackGroundVideo/>
+                <title className="firewood"
+                       style={styles.myTitle}>
+                    Payment
+                </title>
+                <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+                    <InjectedCheckoutForm {...this.props}/>
+                     <div style={styles.myDiv}>
+                         <hr style={styles.coloredLine} />
+                         <body style={styles.myTitle}>
+                            OR
+                         </body>
+                         <hr style={styles.coloredLine}confirmCardPayment />
+                     </div>
+                    <body style={styles.myBody}>Use Google or Apple Pay (if available)</body>
+                    <PaymentRequestButton {...this.props}/>
+                </Elements>
             </Container>
         );
     }
