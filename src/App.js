@@ -9,11 +9,10 @@ import MenuPage from "./pages/menu";
 import PaymentPage from "./pages/payment";
 import ConfirmationPage from "./pages/confirmation";
 import DeliveryPage from "./pages/delivery"
-import SuccessPage from "./pages/success"
-import FailurePage from "./pages/failure";
 import AboutPage from "./pages/about";
 import AccountPage from "./pages/account";
 import User from "./util/user";
+import OrderPage from "./pages/order";
 
 
 class App extends Component {
@@ -43,10 +42,9 @@ class App extends Component {
                 <Route exact path="/delivery" render={(props) => <DeliveryPage state={this.state} {...props}/> }/>
                 <Route exact path="/payment" render={(props) => <PaymentPage state={this.state} {...props}/> }/>
                 <Route exact path="/confirmation" render={(props) => <ConfirmationPage state={this.state} {...props}/> }/>
-                <Route exact path="/success" render={(props) => <SuccessPage state={this.state} {...props}/> }/>
-                <Route exact path="/failure" render={(props) => <FailurePage state={this.state} {...props}/> }/>
                 <Route exact path="/about" render={(props) => <AboutPage state={this.state} {...props}/> }/>
                 <Route exact path="/account" render={(props) => <AccountPage state={this.state} {...props}/> }/>
+                <Route exact path="/order" render={(props) => <OrderPage state={this.state} {...props}/> }/>
             </div>
         </Router>
         );

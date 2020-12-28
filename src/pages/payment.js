@@ -5,6 +5,8 @@ import { Elements } from '@stripe/react-stripe-js';
 import BackGroundVideo from '../components/backGroundVideo'
 import InjectedCheckoutForm from "../components/creditCardForm";
 import PaymentRequestButton from "../components/paymentRequestButton"
+import {IconButton} from "@material-ui/core";
+import {ArrowBack} from "@material-ui/icons";
 
 const ELEMENTS_OPTIONS = {
     fonts: [
@@ -38,6 +40,11 @@ class PaymentPage extends Component {
                        style={styles.myTitle}>
                     Payment
                 </title>
+                <IconButton aria-label="back"
+                            style={styles.myBack}
+                            onClick={() => switchScreen(this.props, '/delivery')}>
+                    <ArrowBack/>
+                </IconButton>
                 <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
                     <InjectedCheckoutForm {...this.props}/>
                      <div style={styles.myDiv}>

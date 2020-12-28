@@ -1,4 +1,30 @@
+const active_order = {
+    email: 'inbody.5@gmail.com',
+    status: 'Processing',
+    total: '10',
+    items: {foo: 'bar'},
+    phone: '419-957-5390',
+    name: 'Jason Inbody',
+    pitNum: 1,
+    lon: -117.231963,
+    lat: 32.787912,
+    orderPlaced: 1609134501,
+    orderDelivered: null,
+}
 
+const completed_order = {
+    email: 'inbody.5@gmail.com',
+    status: 'Delivered',
+    total: '10',
+    items: {foo: 'bar'},
+    phone: '419-957-5390',
+    name: 'Jason Inbody',
+    pitNum: 1,
+    lon: -117.231963,
+    lat: 32.787912,
+    orderPlaced: 1609134501,
+    orderDelivered: 1609134701,
+}
 
 class User {
     constructor() {
@@ -9,8 +35,7 @@ class User {
         this.lon = '-117.222';
         this.quantity = 0;
         this.pitNum = null;
-        this.activeOrders = [];
-        this.completedOrders = [];
+        this.orders = [];//[active_order, completed_order, completed_order, completed_order, completed_order, completed_order, completed_order, completed_order];
     }
     total = () => {
         return this.quantity*10;
@@ -23,24 +48,7 @@ class User {
     }
     updateOrders = (orders) => {
         // This method updates the active orders and completed orders
-        const arrayLength = orders.length;
-        const activeArray = [''];
-        const completedArray = [''];
-        this.activeOrders = []
-        this.completedOrders = [];
-        for (let i = 0; i < arrayLength; i++) {
-            console.log(orders[i]);
-            if(orders[i].hasOwnProperty('status')){
-                if(orders[i]['status'].includes(activeArray)){
-                    this.activeOrders.push(orders[i])
-                }else if(orders[i]['status'].includes(completedArray)){
-                    this.completedOrders.push(orders[i])
-                }else{
-                    console.log('Invalid status for order');
-                    console.log(orders[i]);
-                }
-            }
-        }
+        this.orders = orders;
     }
     config = () => {
         // this method creates the head config for https requests

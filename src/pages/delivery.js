@@ -1,18 +1,16 @@
 import React, { Component } from "react";
 import { IconButton, Button } from "@material-ui/core";
-import {GpsFixed, Add, Apple, ShoppingCart, ArrowBack} from "@material-ui/icons";
+import {GpsFixed, ArrowBack} from "@material-ui/icons";
 import Container from "@material-ui/core/Container";
-import ReactMapboxGl, { Layer, Feature, Marker } from 'react-mapbox-gl';
+import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import firepit from "../assets/images/firepit.svg";
 import pin from "../assets/images/pin.svg";
 import UserLocation from "../assets/images/UserLocation.svg";
-import BackGroundVideo from '../components/backGroundVideo'
-
 
 const Map = ReactMapboxGl({
     accessToken:
-        'pk.eyJ1IjoiaW5ib2R5NSIsImEiOiJja2hzM2x2aGgwcGxoMndtYzJjanpzcWdpIn0.ZtYmfrqQ6MksSghUfvCq9Q'
+        'pk.eyJ1IjoiaW5ib2R5NSIsImEiOiJja2hzM2x2aGgwcGxoMndtYzJjanpzcWdpIn0.ZtYmfrqQ6MksSghUfvCq9Q',
 });
 
 class DeliveryPage extends Component{

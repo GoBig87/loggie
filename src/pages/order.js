@@ -6,7 +6,7 @@ import {IconButton} from "@material-ui/core";
 import {ArrowBack} from "@material-ui/icons";
 
 
-class AccountPage extends Component {
+class OrderPage extends Component {
     constructor(props) {
         super(props);
         this.user = this.props.state.user
@@ -20,47 +20,28 @@ class AccountPage extends Component {
         const { switchScreen } = this.props.state;
         const { user } = this.props.state;
 
-
-        let orders = user.orders.map((item,index)=>{
-            return  <li>
-                <OrderCard lat={item['lat']}
-                           lon={item['lon']}
-                           pitNum={item['pitNum']}
-                           status={item['status']}
-                           orderPlaced={item['orderPlaced']}
-                           total={item['total']}
-                           onClick={() => switchScreen(this.props, '/payment')}
-                />
-            </li>
-        })
         return(
-
-        <Container component="main" maxWidth="lg">
-            <BackGroundVideo/>
-            <title style={styles.myTitle}>
-                Order History
-            </title>
-            <div style={styles.myDiv}>
-                <ul>
-                    {orders}
-                </ul>
-            </div>
-            <IconButton aria-label="back"
-                        style={styles.myBack}
-                        onClick={() => switchScreen(this.props, '/home')}>
-                <ArrowBack/>
-            </IconButton>
-        </Container>
-    );
+            <Container component="main" maxWidth="lg">
+                <BackGroundVideo/>
+                <title style={styles.myTitle}>
+                    Order Information
+                </title>
+                <IconButton aria-label="back"
+                            style={styles.myBack}
+                            onClick={() => switchScreen(this.props, '/home')}>
+                    <ArrowBack/>
+                </IconButton>
+            </Container>
+        );
     }
 }
-export default AccountPage;
+export default OrderPage;
 
 // styles section
 let styles = {
     myDiv: {
-      marginTop: 5,
-      marginBottom: 5,
+        marginTop: 5,
+        marginBottom: 5,
     },
     myVideo: {
         objectFit: 'cover',
