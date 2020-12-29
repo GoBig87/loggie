@@ -25,7 +25,7 @@ class OrderCard extends Component {
     render() {
         const { order, user } = this.props;
         const { switchScreen } = this.props;
-        const formattedTime = user.getDate(order['orderPlaced'])
+        const formattedTime = user.getDate(order['order_placed'])
         return(
             <div style={styles.myDiv} onClick={() => this.switchToOrderScreen(switchScreen, order)}>
                 <div style={styles.myRow}>
@@ -43,7 +43,7 @@ class OrderCard extends Component {
                     </Map>
                     <div style={styles.myCol}>
                         <text style={styles.infoText}>Order Status: {order['status']}</text>
-                        <text style={styles.infoText}>Order Total: ${order['total']}.00</text>
+                        <text style={styles.infoText}>Order Total: ${order['total']}</text>
                         <text style={styles.infoText}>Order Date: {formattedTime}</text>
                     </div>
                 </div>

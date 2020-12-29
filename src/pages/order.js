@@ -25,11 +25,10 @@ class OrderPage extends Component {
         }
     }
 
-
     render() {
         const { switchScreen } = this.props.state;
         const { user } = this.props.state;
-        const formattedTime = user.getDate(user.order['orderPlaced'])
+        const formattedTime = user.getDate(user.order['order_placed'])
         return(
             <Container component="main" maxWidth="lg">
                 <BackGroundVideo/>

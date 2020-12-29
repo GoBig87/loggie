@@ -76,11 +76,18 @@ const PaymentRequestButton = (props) => {
                                 email: paymentIntent.receipt_email,
                                 name: paymentIntent.shipping.name
                             };
-                            axios.post("https://loggie.app/api/order/", data, config)
-                                .then((result) => {
+                            const resp1 = await axios.post("https://loggie.app/api/order/", data, config);
+                            if(resp1.data) {
+                                const resp2 = await axios.get("https://loggie.app/api/order/");
+                                if(resp2.data) {
+                                    user.orders = resp2.data;
                                     switchScreen(props, '/confirmation');
-                                })
-                                .catch(err => console.log(err));
+                                }else{
+                                    console.log('handle error case');
+                                }
+                            }else{
+                                console.log('handle error case');
+                            }
                         }
                     } else {
                         // The payment has succeeded.
@@ -97,11 +104,18 @@ const PaymentRequestButton = (props) => {
                             email: user.email,
                             name: ev.payerName
                         };
-                        axios.post("https://loggie.app/api/order/", data, config)
-                            .then((result) => {
+                        const resp1 = await axios.post("https://loggie.app/api/order/", data, config);
+                        if(resp1.data) {
+                            const resp2 = await axios.get("https://loggie.app/api/order/");
+                            if(resp2.data) {
+                                user.orders = resp2.data;
                                 switchScreen(props, '/confirmation');
-                            })
-                            .catch(err => console.log(err));
+                            }else{
+                                console.log('handle error case')
+                            }
+                        }else{
+                            console.log('handle error case')
+                        }
                     }
                 }
             });

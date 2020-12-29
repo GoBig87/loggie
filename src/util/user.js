@@ -8,7 +8,7 @@ class User {
         this.lon = '-117.222';
         this.quantity = 0;
         this.pitNum = null;
-        this.orders = null
+        this.orders = [];
         this.order = null;
     }
     total = () => {

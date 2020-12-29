@@ -202,9 +202,22 @@ class CheckoutForm extends React.Component {
             .catch(err => console.log(err));
     }
     confirmOrderRsp = (response) => {
-        console.log(response)
+        console.log(response);
+        this.updateOrders();
+    }
+    updateOrders = () => {
+        let { user } =  this.props.state;
+        let config = user.config();
+        axios
+            .get("https://loggie.app/api/order/", config)
+            .then(res => this.updateOrdersRsp(res.data))
+            .catch(err => console.log(err));
+    }
+    updateOrdersRsp = (response) => {
         let { switchScreen } = this.props.state;
-        switchScreen(this.props, '/confirmation')
+        let { user } =  this.props.state;
+        user.orders = response;
+        switchScreen(this.props, '/confirmation');
     }
     reset = () => {
         this.setState(DEFAULT_STATE);

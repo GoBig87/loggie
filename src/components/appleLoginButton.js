@@ -63,12 +63,21 @@ class AppleLoginButton extends Component{
     };
     createCustomerRsp = (response) => {
         console.log(response);
-        this.user.updateOrders(response);
         this.user.email = response.email;
+        this.getOrders();
+    };
+    getOrders = () => {
+        const config = this.user.config();
+        axios
+            .get("https://loggie.app/api/order/", config)
+            .then(res => this.getOrdersRsp(res.data))
+            .catch(err => console.log(err));
+    };
+    getOrdersRsp = (response) => {
+        this.user.orders = response;
         const { switchScreen } = this.props.state;
         switchScreen(this.props, '/home');
     };
-
     // Start Webpage layout
     render() {
         const { user } = this.props.state;
