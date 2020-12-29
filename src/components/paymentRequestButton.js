@@ -15,7 +15,7 @@ const PaymentRequestButton = (props) => {
                 currency: 'usd',
                 total: {
                     label: 'Loggie Firewood',
-                    amount: user.total(),
+                    amount: user.total()*100,
                 },
                 requestPayerName: true,
                 requestPayerEmail: true,
