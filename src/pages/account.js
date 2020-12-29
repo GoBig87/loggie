@@ -20,7 +20,7 @@ class AccountPage extends Component {
         const { switchScreen } = this.props.state;
         const { user } = this.props.state;
 
-        let orders = user.orders.map((item,index)=>{
+        let orders = user.orders.reverse().map((item,index)=>{
             return  <li>
                 <OrderCard order={item}
                            user={user}
