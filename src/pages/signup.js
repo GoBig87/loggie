@@ -23,7 +23,7 @@ class SignupPage extends Component{
             showPassword: false,
             open: false,
             allowClose: false,
-            dialogMessage: 'Logging In...'
+            dialogMessage: 'Creating Account In...'
         };
         this.user = this.props.state.user;
     };
