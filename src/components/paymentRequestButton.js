@@ -88,7 +88,7 @@ const PaymentRequestButton = (props) => {
                             };
                             const resp1 = await axios.post("https://loggie.app/api/order/", data, config);
                             if(resp1.data) {
-                                const resp2 = await axios.get("https://loggie.app/api/order/");
+                                const resp2 = await axios.get("https://loggie.app/api/order/", config);
                                 if(resp2.data) {
                                     user.orders = resp2.data;
                                     setParentState({
@@ -130,7 +130,7 @@ const PaymentRequestButton = (props) => {
                         };
                         const resp1 = await axios.post("https://loggie.app/api/order/", data, config);
                         if(resp1.data) {
-                            const resp2 = await axios.get("https://loggie.app/api/order/");
+                            const resp2 = await axios.get("https://loggie.app/api/order/", config);
                             if(resp2.data) {
                                 user.orders = resp2.data;
                                 setParentState({
