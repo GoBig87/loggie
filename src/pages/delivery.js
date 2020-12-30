@@ -7,11 +7,18 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import firepit from "../assets/images/firepit.svg";
 import pin from "../assets/images/pin.svg";
 import UserLocation from "../assets/images/UserLocation.svg";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const Map = ReactMapboxGl({
     accessToken:
         'pk.eyJ1IjoiaW5ib2R5NSIsImEiOiJja2hzM2x2aGgwcGxoMndtYzJjanpzcWdpIn0.ZtYmfrqQ6MksSghUfvCq9Q',
 });
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 
 class DeliveryPage extends Component{
     constructor(props) {
@@ -25,8 +32,9 @@ class DeliveryPage extends Component{
             pitNum: 'No pit selected',
             userLat: 0,
             userLon: 0,
-            pinLat: 0,
-            pinLon: 0
+            pinLat: null,
+            pinLon: null,
+            open: false,
         };
         this.user = this.props.state.user;
         this.firePit1 = {pitNum: 1, loc: [-117.231963, 32.787912]};
@@ -65,7 +73,7 @@ class DeliveryPage extends Component{
             this.firePit21, this.firePit22, this.firePit23, this.firePit24,
             this.firePit25, this.firePit26, this.firePit27
         ];
-    }
+    };
     setUserLocation = (position) => {
         this.setState({
             userLat: position.coords.latitude,
@@ -73,14 +81,14 @@ class DeliveryPage extends Component{
             lng: position.coords.longitude,
             lat: position.coords.latitude
         })
-    }
+    };
     centerOnLocation = () => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(this.setUserLocation)
         } else {
             console.log("Not Available");
         }
-    }
+    };
     setUserDelivery = (user) => {
         console.log('user location selected')
         user.lon = this.state.userLon;
@@ -92,7 +100,7 @@ class DeliveryPage extends Component{
             pinLat: user.lat,
             pinLon: user.lon,
         })
-    }
+    };
     setFirePit = (user, firePit) => {
         console.log('fire pit selected')
         console.log(firePit)
@@ -108,8 +116,17 @@ class DeliveryPage extends Component{
             lng: user.lon,
             lat: user.lat,
         })
+    };
+    switchScreenCheck = () => {
+        const pinLon = this.state.pinLon;
+        const pinLat = this.state.pinLat;
+        if([pinLat, pinLat].includes(null)){
+            this.setState({open: true});
+        }else{
+            const { switchScreen } = this.props.state;
+            switchScreen(this.props, '/payment');
+        }
     }
-
     render() {
         const { switchScreen } = this.props.state;
         const { user } = this.props.state;
@@ -124,7 +141,13 @@ class DeliveryPage extends Component{
                             <img src={firepit} style={{width: '30px', height: '30px'}}/>
                         </Marker>
                     </li>
+
         })
+
+        const handleClose = () => {
+            this.setState({open: false});
+        };
+
         return(
             <Container className="main" component="main" maxWidth="xs">
                 <Map
@@ -163,10 +186,15 @@ class DeliveryPage extends Component{
                     <text style={styles.myItemLeft}>Latitude: {this.state.pitLat}</text>
                     <text style={styles.myItemLeft}>Longitude: {this.state.pitLon}</text>
                 <div style={styles.myRow}>
-                    <Button id={'paymentButton'} style={styles.myButton} onClick={() => switchScreen(this.props, '/payment')}>
+                    <Button id={'paymentButton'} style={styles.myButton} onClick={() => this.switchScreenCheck()}>
                         Proceed to Payment
                     </Button>
                 </div>
+                <Snackbar open={this.state.open} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="error">
+                        Drop a Pin on a fire pit or Current Location
+                    </Alert>
+                </Snackbar>
             </Container>
         );
     }
@@ -216,7 +244,7 @@ let styles = {
     },
     myButton: {
         position: 'absolute',
-        bottom: 50,
+        bottom: 75,
         width:"80%",
         backgroundColor:"#FFFFFF",
         borderRadius:25,
