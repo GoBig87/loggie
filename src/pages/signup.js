@@ -6,6 +6,9 @@ import Container from '@material-ui/core/Container';
 import {Email, Visibility, VerifiedUser, ArrowBack, VisibilityOff} from '@material-ui/icons';
 import axios from "axios";
 import sjcl from "sjcl";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const client_side_salt = 'my_client_side_salt_string_to_increase_complexity_this_is_hashed_again_server_side'
 
@@ -18,12 +21,16 @@ class SignupPage extends Component{
             weight: '',
             weightRange: '',
             showPassword: false,
+            open: false,
+            allowClose: false,
+            dialogMessage: 'Logging In...'
         };
         this.user = this.props.state.user;
     };
 
     // Email account creation
     createAccount = (email, password) => {
+        this.setState({open: true})
         this.user.email = email;
         let myBitArray = sjcl.hash.sha256.hash(password.concat(client_side_salt));
         let hashedPassword = sjcl.codec.hex.fromBits(myBitArray);
@@ -40,17 +47,30 @@ class SignupPage extends Component{
         axios
             .post("https://loggie.app/api/rest-auth/registration/", data)
             .then(res => this.accountRsp(res.data))
-            .catch(err => console.log(err));
+            .catch(err => this.accountErr(err));
     };
     // Handles rsp for email account creation
     accountRsp = (response) => {
         console.log(response)
+        this.setState({
+                dialogMessage: 'Successfully Signed in',
+                allowClose: true,
+                open: false,
+            }
+        )
         this.user.token = response.key;
         this.user.loggedIn = true;
         const { switchScreen } = this.props.state;
         switchScreen(this.props, '/home')
     };
-
+    accountErr = (err) => {
+        console.log(err)
+        this.setState({
+                dialogMessage: 'Failed to Create Account',
+                allowClose: true
+            }
+        )
+    }
     // Start Webpage layout
     render() {
         const { user } = this.props.state;
@@ -73,6 +93,12 @@ class SignupPage extends Component{
 
         const handleMouseDownPassword = (event) => {
             event.preventDefault();
+        };
+
+        const handleClose = () => {
+            if(this.state.allowClose){
+                this.setState({open: false})
+            }
         };
 
         return(
@@ -123,6 +149,12 @@ class SignupPage extends Component{
                         <VerifiedUser style={styles.icon}/>
                         Create Account
                     </IconButton>
+                    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>
+                        <DialogTitle>{this.state.dialogMessage}</DialogTitle>
+                        <div style={{position: 'relative', margin: 'auto', marginBottom: 10}}>
+                            <CircularProgress />
+                        </div>
+                    </Dialog>
                 </div>
             </Container>
         );
