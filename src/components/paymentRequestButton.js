@@ -10,8 +10,7 @@ const PaymentRequestButton = (props) => {
     useEffect(() => {
         if (stripe) {
             let { user } = props.state;
-            const { setParentState } = props;
-            setParentState({ open: true});
+
             const pr = stripe.paymentRequest({
                 country: 'US',
                 currency: 'usd',
@@ -31,6 +30,8 @@ const PaymentRequestButton = (props) => {
             });
             pr.on('paymentmethod', async (ev) => {
                 // Confirm the PaymentIntent without handling potential next actions (yet).
+                const { setParentState } = props;
+                setParentState({ open: true});
                 let { user } =  props.state;
                 const data = {
                     quantity: user.quantity
