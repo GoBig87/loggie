@@ -8,13 +8,6 @@ import AppleLogin from 'react-apple-login';
 class AppleLoginButton extends Component{
     constructor(props) {
         super(props);
-        this.state = {
-            amount: '',
-            password: '',
-            weight: '',
-            weightRange: '',
-            showPassword: false,
-        };
         this.user = this.props.state.user;
     };
 
@@ -27,8 +20,10 @@ class AppleLoginButton extends Component{
     );
     appleAuthentication = (response) => {
         console.log(response);
+        const { setParentState } = this.props
+        setParentState({ open: true})
         if (response.hasOwnProperty('error')){
-            return null
+            this.authErr(response)
         } else {
             let token = response.authorization.id_token;
             let data = {
@@ -43,7 +38,7 @@ class AppleLoginButton extends Component{
             axios
                 .post("https://loggie.app/api/auth/convert-token/", data)
                 .then(res => this.authRsp(res.data))
-                .catch(err => console.log(err));
+                .catch(err => this.authErr(err));
         }
     };
     // Handles rsp for all return tokens
@@ -53,13 +48,21 @@ class AppleLoginButton extends Component{
         this.user.loggedIn = true;
         this.createCustomer();
     };
+    authErr = (err) => {
+        console.log(err)
+        const { setParentState } = this.props
+        setParentState({
+            dialogMessage: 'Failed to sign in',
+            allowClose: true
+        })
+    };
     createCustomer = () => {
         const data = {'foo':'bar'};
         const config = this.user.config();
         axios
             .post("https://loggie.app/api/customer/", data, config)
             .then(res => this.createCustomerRsp(res.data))
-            .catch(err => console.log(err));
+            .catch(err => this.authErr(err));
     };
     createCustomerRsp = (response) => {
         console.log(response);
@@ -71,11 +74,18 @@ class AppleLoginButton extends Component{
         axios
             .get("https://loggie.app/api/order/", config)
             .then(res => this.getOrdersRsp(res.data))
-            .catch(err => console.log(err));
+            .catch(err => this.authErr(err));
     };
     getOrdersRsp = (response) => {
         this.user.orders = response;
         const { switchScreen } = this.props.state;
+        const { setParentState } = this.props
+        setParentState({
+                dialogMessage: 'Successfully Signed in',
+                allowClose: true,
+                open: false,
+            }
+        )
         switchScreen(this.props, '/home');
     };
     // Start Webpage layout

@@ -19,9 +19,8 @@ class AboutPage extends Component {
             <Container component="main" maxWidth="xs">
             <div className="App" >
             <BackGroundVideo/>
-            <img src={logo} style={styles.myImage} />
             <title style={styles.myTitle}>
-                About Loggies
+                About Loggie
             </title>
             <p style={styles.myParagraph}>
                 Conact Information

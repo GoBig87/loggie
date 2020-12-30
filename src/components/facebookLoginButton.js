@@ -28,6 +28,8 @@ class FacebookLoginButton extends Component{
 
     facebookAuthenticate = (response) => {
         console.log(response);
+        console.log(this.user.orders)
+        const { setParentState } = this.props
         this.user.email = response.email;
         let token = response.accessToken;
         let data = {'grant_type': 'convert_token',
@@ -40,10 +42,17 @@ class FacebookLoginButton extends Component{
         axios
             .post("https://loggie.app/api/auth/convert-token/", data)
             .then(res => this.authRsp(res.data))
-            .catch(err => console.log(err));
+            .catch(err => this.authErr(err));
         // Api call to server so we can validate the token
     };
-
+    authErr = (err) => {
+        console.log(err)
+        const { setParentState } = this.props
+        setParentState({
+            dialogMessage: 'Failed to sign in',
+            allowClose: true
+        })
+    };
     // Handles rsp for all return tokens
     authRsp = (response) => {
         console.log(response)
@@ -56,7 +65,7 @@ class FacebookLoginButton extends Component{
         axios
             .post("https://loggie.app/api/customer/", data, config)
             .then(res => this.createCustomerRsp(res.data))
-            .catch(err => console.log(err));
+            .catch(err => this.authErr(err));
     };
     createCustomerRsp = (response) => {
         console.log(response);
@@ -67,10 +76,17 @@ class FacebookLoginButton extends Component{
         axios
             .get("https://loggie.app/api/order/", config)
             .then(res => this.getOrdersRsp(res.data))
-            .catch(err => console.log(err));
+            .catch(err => this.authErr(err));
     };
     getOrdersRsp = (response) => {
         this.user.orders = response;
+        const { setParentState } = this.props
+        setParentState({
+                dialogMessage: 'Successfully Signed in',
+                allowClose: true,
+                open: false,
+            }
+        )
         const { switchScreen } = this.props.state;
         switchScreen(this.props, '/home');
     };

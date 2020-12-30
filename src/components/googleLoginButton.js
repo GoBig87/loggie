@@ -19,6 +19,8 @@ class GoogleLoginButton extends Component{
 
     // Google sign in
     googleSuccess = (response) => {
+        const { setParentState } = this.props
+        setParentState({ open: true})
         this.user.email = response.profileObj.email;
         let access_token = response.accessToken;
         console.log(access_token)
@@ -32,11 +34,15 @@ class GoogleLoginButton extends Component{
         axios
             .post("https://loggie.app/api/auth/convert-token/", data)
             .then(res => this.authRsp(res.data))
-            .catch(err => console.log(err));
+            .catch(err => this.googleFailure(err));
     }
     googleFailure = (response) => {
-        console.log('Failure')
         console.log(response)
+        const { setParentState } = this.props
+        setParentState({
+            dialogMessage: 'Failed to sign in',
+            allowClose: true
+        })
     }
     // Handles rsp for all return tokens
     authRsp = (response) => {
@@ -51,7 +57,7 @@ class GoogleLoginButton extends Component{
         axios
             .post("https://loggie.app/api/customer/", data, config)
             .then(res => this.createCustomerRsp(res.data))
-            .catch(err => console.log(err));
+            .catch(err => this.googleFailure(err));
     };
     createCustomerRsp = (response) => {
         console.log(response);
@@ -62,11 +68,18 @@ class GoogleLoginButton extends Component{
         axios
             .get("https://loggie.app/api/order/", config)
             .then(res => this.getOrdersRsp(res.data))
-            .catch(err => console.log(err));
+            .catch(err => this.googleFailure(err));
     };
     getOrdersRsp = (response) => {
         this.user.orders = response;
         console.log(this.user.orders)
+        const { setParentState } = this.props
+        setParentState({
+                dialogMessage: 'Successfully Signed in',
+                allowClose: true,
+                open: false,
+            }
+        )
         const { switchScreen } = this.props.state;
         switchScreen(this.props, '/home');
     };

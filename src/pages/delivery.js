@@ -230,7 +230,7 @@ let styles = {
         color: 'white',
         fontSize: 14,
         fontWeight: 'bold',
-        marginLeft:-40,
+        marginLeft:0,
         marginTop: 10,
     },
 }

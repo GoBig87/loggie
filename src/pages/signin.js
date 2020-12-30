@@ -8,8 +8,13 @@ import GoogleLoginButton from "../components/googleLoginButton";
 import AppleLoginButton from "../components/appleLoginButton";
 import FacebookLoginButton from "../components/facebookLoginButton";
 import axios from "axios";
-import sjcl from 'sjcl'
-import SignupPage from "./signup";
+import sjcl from 'sjcl';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import List from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/ListItemText';
+import Dialog from '@material-ui/core/Dialog';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 const client_side_salt = 'my_client_side_salt_string_to_increase_complexity_this_is_hashed_again_server_side'
 
@@ -23,11 +28,18 @@ class SigninPage extends Component{
             weight: '',
             weightRange: '',
             showPassword: false,
+            open: false,
+            allowClose: false,
+            dialogMessage: 'Logging In...'
         };
         this.user = this.props.state.user;
     };
+    setParentState = (key) => {
+        this.setState(key)
+    }
     // Email account creation
     signIn = (email, password) => {
+        this.setState({open: true})
         this.user.email = email
         let myBitArray = sjcl.hash.sha256.hash(password.concat(client_side_salt));
         let hashedPassword = sjcl.codec.hex.fromBits(myBitArray);
@@ -43,18 +55,50 @@ class SigninPage extends Component{
         axios
             .post("https://loggie.app/api/rest-auth/login", data)
             .then(res => this.signInRsp(res.data))
-            .catch(err => console.log(err));
+            .catch(err => this.signinRspErr(err));
     };
+    signinRspErr = (err) => {
+        console.log(err)
+        this.setState({
+            dialogMessage: 'Failed to Log in',
+            allowClose: true
+            }
+        )
+    }
     // Handles rsp for email account creation
     signInRsp = (response) => {
         console.log(response)
         this.user.token = response.key;
         this.user.loggedIn = true;
-        const { switchScreen } = this.props.state;
-        switchScreen(this.props, '/home')
+        this.getOrders();
     };
+    getOrders = () => {
+        const config = this.user.config();
+        axios
+            .get("https://loggie.app/api/order/", config)
+            .then(res => this.getOrdersRsp(res.data))
+            .catch(err => this.getOrdersRspErr(err));
+    };
+    getOrdersRsp = (response) => {
+        this.setState({
+                dialogMessage: 'Successfully Signed in',
+                allowClose: true,
+                open: false,
+            }
+        )
+        this.user.orders = response;
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home');
+    };
+    getOrdersRspErr = (err) => {
+        console.log(err)
+        this.setState({
+                dialogMessage: 'Failed to get Order History',
+                allowClose: true
+            }
+        )
+    }
     render() {
-        const { user } = this.props.state;
         const { switchScreen } = this.props.state;
 
         // Handles Text input UI
@@ -74,6 +118,12 @@ class SigninPage extends Component{
 
         const handleMouseDownPassword = (event) => {
             event.preventDefault();
+        };
+
+        const handleClose = () => {
+            if(this.state.allowClose){
+                this.setState({open: false})
+            }
         };
 
         return(
@@ -140,10 +190,16 @@ class SigninPage extends Component{
                         <hr style={styles.coloredLine} />
                     </div>
                     <div style={styles.phoneDiv}>
-                        <GoogleLoginButton state={this.state} {...this.props}/>
+                        <GoogleLoginButton setParentState={this.setParentState} state={this.state} {...this.props}/>
                     </div>
-                    <AppleLoginButton state={this.state} {...this.props}/>
-                    <FacebookLoginButton state={this.state} {...this.props}/>
+                    <AppleLoginButton setParentState={this.setParentState} state={this.state} {...this.props}/>
+                    <FacebookLoginButton setParentState={this.setParentState} state={this.state} {...this.props}/>
+                    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>
+                        <DialogTitle>{this.state.dialogMessage}</DialogTitle>
+                        <div style={{position: 'relative', margin: 'auto', marginBottom: 10}}>
+                            <CircularProgress />
+                        </div>
+                    </Dialog>
                 </div>
             </Container>
         );
