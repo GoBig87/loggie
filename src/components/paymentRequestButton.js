@@ -10,6 +10,8 @@ const PaymentRequestButton = (props) => {
     useEffect(() => {
         if (stripe) {
             let { user } = props.state;
+            const { setParentState } = props;
+            setParentState({ open: true});
             const pr = stripe.paymentRequest({
                 country: 'US',
                 currency: 'usd',
@@ -25,7 +27,6 @@ const PaymentRequestButton = (props) => {
             pr.canMakePayment().then(result => {
                 if (result) {
                     setPaymentRequest(pr);
-
                 }
             });
             pr.on('paymentmethod', async (ev) => {
@@ -48,6 +49,10 @@ const PaymentRequestButton = (props) => {
                     // re-show the payment interface, or show an error message and close
                     // the payment interface.
                     ev.complete('fail');
+                    setParentState({
+                        dialogMessage: 'Failed to Process Payment',
+                        allowClose: true
+                    });
                 } else {
                     // Report to the browser that the confirmation was successful, prompting
                     // it to close the browser payment method collection interface.
@@ -61,6 +66,10 @@ const PaymentRequestButton = (props) => {
                         if (error) {
                             // The payment failed -- ask your customer for a new payment method.
                             console.log('Pay Now Payment Failed');
+                            setParentState({
+                                dialogMessage: 'Failed to Process Payment',
+                                allowClose: true
+                            });
                         } else {
                             // The payment has succeeded.
                             let { user } =  props.state;
@@ -81,12 +90,26 @@ const PaymentRequestButton = (props) => {
                                 const resp2 = await axios.get("https://loggie.app/api/order/");
                                 if(resp2.data) {
                                     user.orders = resp2.data;
+                                    setParentState({
+                                            dialogMessage: 'Payment Succeeded',
+                                            allowClose: true,
+                                            open: false,
+                                        }
+                                    );
                                     switchScreen(props, '/confirmation');
                                 }else{
-                                    console.log('handle error case');
+                                    console.log(resp2)
+                                    setParentState({
+                                        dialogMessage: 'Failed to Process Payment',
+                                        allowClose: true
+                                    });
                                 }
                             }else{
-                                console.log('handle error case');
+                                console.log(resp1)
+                                setParentState({
+                                    dialogMessage: 'Failed to Process Payment',
+                                    allowClose: true
+                                });
                             }
                         }
                     } else {
@@ -109,12 +132,26 @@ const PaymentRequestButton = (props) => {
                             const resp2 = await axios.get("https://loggie.app/api/order/");
                             if(resp2.data) {
                                 user.orders = resp2.data;
+                                setParentState({
+                                        dialogMessage: 'Payment Succeeded',
+                                        allowClose: true,
+                                        open: false,
+                                    }
+                                );
                                 switchScreen(props, '/confirmation');
                             }else{
-                                console.log('handle error case')
+                                console.log(resp2)
+                                setParentState({
+                                    dialogMessage: 'Failed to Process Payment',
+                                    allowClose: true
+                                });
                             }
                         }else{
-                            console.log('handle error case')
+                            console.log(resp1)
+                            setParentState({
+                                dialogMessage: 'Failed to Process Payment',
+                                allowClose: true
+                            });
                         }
                     }
                 }

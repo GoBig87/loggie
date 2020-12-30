@@ -7,6 +7,9 @@ import InjectedCheckoutForm from "../components/creditCardForm";
 import PaymentRequestButton from "../components/paymentRequestButton"
 import {IconButton} from "@material-ui/core";
 import {ArrowBack} from "@material-ui/icons";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const ELEMENTS_OPTIONS = {
     fonts: [
@@ -26,13 +29,26 @@ class PaymentPage extends Component {
         super(props);
         this.user = this.props.state.user
         this.state = {
-            render: true
+            render: true,
+            open: false,
+            allowClose: false,
+            dialogMessage: 'Processing Payment...'
         }
     };
 
+    setParentState = (key) => {
+        this.setState(key)
+    }
+
     render() {
         const {switchScreen} = this.props.state;
-        const {user} = this.props.state;
+
+        const handleClose = () => {
+            if(this.state.allowClose){
+                this.setState({open: false})
+            }
+        };
+
         return (
             <Container  maxWidth="s">
                 <BackGroundVideo/>
@@ -46,7 +62,7 @@ class PaymentPage extends Component {
                     <ArrowBack/>
                 </IconButton>
                 <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
-                    <InjectedCheckoutForm {...this.props}/>
+                    <InjectedCheckoutForm setParentState={this.setParentState} {...this.props}/>
                      <div style={styles.myDiv}>
                          <hr style={styles.coloredLine} />
                          <body style={styles.myTitle}>
@@ -55,8 +71,14 @@ class PaymentPage extends Component {
                          <hr style={styles.coloredLine}confirmCardPayment />
                      </div>
                     <body style={styles.myBody}>Use Google or Apple Pay (if available)</body>
-                    <PaymentRequestButton {...this.props}/>
+                    <PaymentRequestButton setParentState={this.setParentState} {...this.props}/>
                 </Elements>
+                <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>
+                    <DialogTitle>{this.state.dialogMessage}</DialogTitle>
+                    <div style={{position: 'relative', margin: 'auto', marginBottom: 10}}>
+                        <CircularProgress />
+                    </div>
+                </Dialog>
             </Container>
         );
     }

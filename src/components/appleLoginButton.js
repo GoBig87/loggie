@@ -20,10 +20,10 @@ class AppleLoginButton extends Component{
     );
     appleAuthentication = (response) => {
         console.log(response);
-        const { setParentState } = this.props
-        setParentState({ open: true})
+        const { setParentState } = this.props;
+        setParentState({ open: true});
         if (response.hasOwnProperty('error')){
-            this.authErr(response)
+            this.authErr(response);
         } else {
             let token = response.authorization.id_token;
             let data = {
@@ -32,9 +32,9 @@ class AppleLoginButton extends Component{
                 'client_secret': "1yDYJyflFXrwqzTqjrllrVDs6mhPosewsDJj9m5a82KDqbKxF0DCj7rqwgOFT2fL8Pf52YZFgqwK9PHaVgjMJJlBYUnyCotQ02TEUM7AJz8ZBSMYRInnPRNq2v5p5c8Y",
                 'backend': 'apple-id',
                 'token': token
-            }
-            console.log('Loggie server rsp')
-            console.log(data)
+            };
+            console.log('Loggie server rsp');
+            console.log(data);
             axios
                 .post("https://loggie.app/api/auth/convert-token/", data)
                 .then(res => this.authRsp(res.data))
@@ -49,12 +49,12 @@ class AppleLoginButton extends Component{
         this.createCustomer();
     };
     authErr = (err) => {
-        console.log(err)
-        const { setParentState } = this.props
+        console.log(err);
+        const { setParentState } = this.props;
         setParentState({
             dialogMessage: 'Failed to sign in',
             allowClose: true
-        })
+        });
     };
     createCustomer = () => {
         const data = {'foo':'bar'};
@@ -79,13 +79,13 @@ class AppleLoginButton extends Component{
     getOrdersRsp = (response) => {
         this.user.orders = response;
         const { switchScreen } = this.props.state;
-        const { setParentState } = this.props
+        const { setParentState } = this.props;
         setParentState({
                 dialogMessage: 'Successfully Signed in',
                 allowClose: true,
                 open: false,
             }
-        )
+        );
         switchScreen(this.props, '/home');
     };
     // Start Webpage layout

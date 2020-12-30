@@ -117,7 +117,8 @@ class CheckoutForm extends React.Component {
 
     handleSubmit = async (event) => {
         event.preventDefault();
-
+        const { setParentState } = this.props;
+        setParentState({ open: true});
         const {stripe, elements} = this.props;
         const {email, phone, name, error, cardComplete} = this.state;
 
@@ -129,6 +130,7 @@ class CheckoutForm extends React.Component {
 
         if (error) {
             elements.getElement('card').focus();
+            this.paymentErr(error)
             return;
         }
 
@@ -142,7 +144,7 @@ class CheckoutForm extends React.Component {
             axios
                 .post("https://loggie.app/api/charge/", data, config)
                 .then(res => this.paymentIntentRsp(res.data))
-                .catch(err => console.log(err));
+                .catch(err => this.paymentErr(err));
         }
 
         this.setState({processing: false});
@@ -163,7 +165,7 @@ class CheckoutForm extends React.Component {
                 },
             })
             .then(result => this.confirmCardPayment(result))
-            .catch(err => console.log(err));
+            .catch(err => this.paymentErr(err));
     }
     confirmCardPayment = (result) => {
         let { user } =  this.props.state;
@@ -175,10 +177,10 @@ class CheckoutForm extends React.Component {
             axios
                 .put("https://loggie.app/api/charge/", data, config)
                 .then(res => this.confirmCardPaymentRsp(res.data))
-                .catch(err => console.log(err));
+                .catch(err => this.paymentErr(err));
         }
         if(result.error){
-            console.log(result.error)
+            this.paymentErr(result.error)
         }
     }
     confirmCardPaymentRsp = (response) => {
@@ -199,26 +201,41 @@ class CheckoutForm extends React.Component {
         axios
             .post("https://loggie.app/api/order/", data, config)
             .then(res => this.confirmOrderRsp(res.data))
-            .catch(err => console.log(err));
+            .catch(err => this.paymentErr(err));
     }
     confirmOrderRsp = (response) => {
         console.log(response);
         this.updateOrders();
     }
     updateOrders = () => {
-        let { user } =  this.props.state;
+        let {user} = this.props.state;
         let config = user.config();
         axios
             .get("https://loggie.app/api/order/", config)
             .then(res => this.updateOrdersRsp(res.data))
-            .catch(err => console.log(err));
-    }
+            .catch(err => this.paymentErr(err));
+    };
     updateOrdersRsp = (response) => {
+        const { setParentState } = this.props;
         let { switchScreen } = this.props.state;
         let { user } =  this.props.state;
+        setParentState({
+                dialogMessage: 'Payment Succeeded',
+                allowClose: true,
+                open: false,
+            }
+        );
         user.orders = response;
         switchScreen(this.props, '/confirmation');
-    }
+    };
+    paymentErr = (err) => {
+        console.log(err);
+        const { setParentState } = this.props;
+        setParentState({
+            dialogMessage: 'Failed to Process Payment',
+            allowClose: true
+        });
+    };
     reset = () => {
         this.setState(DEFAULT_STATE);
     };
@@ -299,7 +316,7 @@ class CheckoutForm extends React.Component {
 const InjectedCheckoutForm = (props => (
     <ElementsConsumer>
         {({stripe, elements}) => (
-            <CheckoutForm stripe={stripe} elements={elements} {...props} />
+            <CheckoutForm setParentState={props.setParentState} stripe={stripe} elements={elements} {...props} />
         )}
     </ElementsConsumer>
 ));
