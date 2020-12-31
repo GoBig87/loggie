@@ -47,6 +47,11 @@ class HomePage extends Component  {
         }
         return(
             <Container component="main" maxWidth="xs">
+                <input
+                    type="text"
+                    value={this.state.loggedIn}
+                    onChange={this.handleChange}
+                />
                 <div className="App" >
                     <BackGroundVideo/>
                     {accountIcon()}
@@ -63,11 +68,6 @@ class HomePage extends Component  {
                     </Button>
                     {updateButton()}
                 </div>
-                <input
-                    type="text"
-                    value={this.state.loggedIn}
-                    onChange={this.handleChange}
-                />
             </Container>
         );
     }
