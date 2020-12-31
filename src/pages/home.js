@@ -5,25 +5,36 @@ import account  from "../assets/images/account.svg"
 import {Button, IconButton} from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import BackGroundVideo from '../components/backGroundVideo'
+import axios from "axios";
 
 
 class HomePage extends Component  {
     constructor(props) {
         super(props);
-        const { user } = this.props.state;
-        this.state = {
-            loggedIn: user.loggedIn,
-        }
     }
-    handleChange = (e) => {
-        this.setState({ loggedIn: e.target.value });
-    };
+
+    handleRsp = (response) => {
+        const { user } = this.props.state;
+        user.loggedIn = true;
+        this.setState({loggedIn: true})
+        this.orders = response;
+    }
+    handleErr = (err) => {
+        console.log(err)
+    }
     render() {
         const { user } = this.props.state;
         const { switchScreen } = this.props.state;
 
+        if(!(user.loggedIn) && user.token) {
+            const config = user.config();
+            axios.get("https://loggie.app/api/order/", config)
+                .then(res => this.handleRsp(res.data))
+                .catch(err => this.handleErr(err))
+        }
+
         const accountIcon = () => {
-            if(this.state.loggedIn) {
+            if(user.loggedIn) {
                 return (
                     <IconButton aria-label="back" style={styles.myAccount} onClick={() => switchScreen(this.props, '/account')}>
                         <img src={account} height={30} width={30}/>
@@ -31,7 +42,7 @@ class HomePage extends Component  {
             }
         }
         const updateButton = () => {
-            if(this.state.loggedIn) {
+            if(user.loggedIn) {
                 return(
                     <Button style={styles.loginBtn} onClick={() => switchScreen(this.props, '/menu')}>
                         Purchase Wood
@@ -47,11 +58,6 @@ class HomePage extends Component  {
         }
         return(
             <Container component="main" maxWidth="xs">
-                <input
-                    type="text"
-                    value={this.state.loggedIn}
-                    onChange={this.handleChange}
-                />
                 <div className="App" >
                     <BackGroundVideo/>
                     {accountIcon()}
