@@ -67,6 +67,8 @@ class AppleLoginButton extends Component{
     createCustomerRsp = (response) => {
         console.log(response);
         this.user.email = response.email;
+        localStorage.setItem('token', this.user.token);
+        localStorage.setItem('email', this.user.email);
         this.getOrders();
     };
     getOrders = () => {

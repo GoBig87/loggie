@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import Container from '@material-ui/core/Container';
 import BackGroundVideo from '../components/backGroundVideo'
 import OrderCard from "../components/orderCard";
-import {IconButton} from "@material-ui/core";
-import {ArrowBack} from "@material-ui/icons";
+import {Button, IconButton} from "@material-ui/core";
+import {ArrowBack, ExitToApp} from "@material-ui/icons";
 
 
 class AccountPage extends Component {
@@ -14,7 +14,14 @@ class AccountPage extends Component {
             activeOrder: this.activeOrders,
             completedOrders: this.completedOrders,
         }
-    }
+    };
+
+    logout = () => {
+        const { switchScreen } = this.props.state;
+        const { user } = this.props.state;
+        this.user.logout();
+        switchScreen(this.props, '/home');
+    };
 
     render() {
         const { switchScreen } = this.props.state;
@@ -26,7 +33,6 @@ class AccountPage extends Component {
                            user={user}
                            switchScreen={switchScreen}
                            {...this.props}
-
                 />
             </li>
         })
@@ -47,6 +53,16 @@ class AccountPage extends Component {
                         onClick={() => switchScreen(this.props, '/home')}>
                 <ArrowBack/>
             </IconButton>
+            <div style={styles.myDivRow}>
+                <Button color="secondary" style={styles.myLogoutButton} onClick={() => this.logout()}>
+                    Sign out, {user.email}
+                </Button>
+                <IconButton aria-label="back"
+                            style={styles.myLogoutIcon}
+                            onClick={() => this.logout()}>
+                    <ExitToApp/>
+                </IconButton>
+            </div>
         </Container>
     );
     }
@@ -55,9 +71,24 @@ export default AccountPage;
 
 // styles section
 let styles = {
+    myDivRow: {
+        position: 'fixed',
+        flexDirection: 'row',
+        right: 10,
+        top: 10,
+    },
     myDiv: {
       marginTop: 5,
       marginBottom: 5,
+    },
+    myLogoutIcon: {
+        position: 'relative',
+        color: 'white',
+    },
+    myLogoutButton:{
+        alignItems:"center",
+        justifyContent:"center",
+        color: "#FFFFFF",
     },
     myVideo: {
         objectFit: 'cover',
@@ -70,8 +101,8 @@ let styles = {
     myCart: {
         position: 'fixed',
         color: 'white',
-        right: 0,
-        top: 0,
+        right: 10,
+        top: 10,
     },
     myImage:{
         position: 'relative',

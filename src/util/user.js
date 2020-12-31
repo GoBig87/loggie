@@ -1,8 +1,9 @@
+import axios from "axios";
 
 class User {
     constructor() {
-        this.email = '';
-        this.token = '';
+        this.email = localStorage.getItem('email');
+        this.token = localStorage.getItem('token');
         this.loggedIn = false;
         this.lat = '33.333';
         this.lon = '-117.222';
@@ -10,6 +11,9 @@ class User {
         this.pitNum = null;
         this.orders = [];
         this.order = null;
+        if(this.token){
+            this.getOrders();
+        };
     }
     total = () => {
         return this.quantity*10;
@@ -39,6 +43,28 @@ class User {
         var formattedTime = month + '/' + day + '/' + year + ' ' +hours + ':' + minutes.substr(-2)
         return formattedTime
     }
+    getOrders = () => {
+        const config = this.config();
+        axios
+            .get("https://loggie.app/api/order/", config)
+            .then(res => this.getOrdersRsp(res.data))
+            .catch(err => console.log(err));
+    };
+    getOrdersRsp = (response) => {
+        this.loggedIn = true;
+        this.orders = response;
+    };
+    logout = () => {
+        localStorage.removeItem('email');
+        localStorage.removeItem('token');
+        this.loggedIn = false;
+        this.lat = '33.333';
+        this.lon = '-117.222';
+        this.quantity = 0;
+        this.pitNum = null;
+        this.orders = [];
+        this.order = null;
+    };
 }
 
 export default User

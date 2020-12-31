@@ -43,10 +43,6 @@ class SigninPage extends Component{
         this.user.email = email
         let myBitArray = sjcl.hash.sha256.hash(password.concat(client_side_salt));
         let hashedPassword = sjcl.codec.hex.fromBits(myBitArray);
-        console.log('Password');
-        console.log(password);
-        console.log('hashed');
-        console.log(hashedPassword);
         let data = {
             'email': email,
             'username': email,
@@ -67,8 +63,9 @@ class SigninPage extends Component{
     }
     // Handles rsp for email account creation
     signInRsp = (response) => {
-        console.log(response)
         this.user.token = response.key;
+        localStorage.setItem('token', this.user.token);
+        localStorage.setItem('email', this.user.email);
         this.user.loggedIn = true;
         this.getOrders();
     };

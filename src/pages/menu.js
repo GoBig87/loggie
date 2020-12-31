@@ -36,8 +36,8 @@ class MenuPage extends Component{
     render() {
         const { switchScreen } = this.props.state;
         const { user } = this.props.state;
-        this.state.lon = user.quantity;
-        this.state.lat = user.quantity*10;
+        this.state.quantity = user.quantity;
+        this.state.total = user.quantity*10;
         return(
         <Container className="main" component="main">
             <div className="player">

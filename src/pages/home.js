@@ -10,60 +10,66 @@ import BackGroundVideo from '../components/backGroundVideo'
 class HomePage extends Component  {
     constructor(props) {
         super(props);
+        const { user } = this.props.state;
         this.state = {
+            loggedIn: user.loggedIn,
         }
     }
+    handleChange = (e) => {
+        this.setState({ loggedIn: e.target.value });
+    };
     render() {
         const { user } = this.props.state;
         const { switchScreen } = this.props.state;
-        if (user.loggedIn === false){
-            return(
-                <Container component="main" maxWidth="xs">
+
+        const accountIcon = () => {
+            if(this.state.loggedIn) {
+                return (
+                    <IconButton aria-label="back" style={styles.myAccount} onClick={() => switchScreen(this.props, '/account')}>
+                        <img src={account} height={30} width={30}/>
+                    </IconButton>)
+            }
+        }
+        const updateButton = () => {
+            if(this.state.loggedIn) {
+                return(
+                    <Button style={styles.loginBtn} onClick={() => switchScreen(this.props, '/menu')}>
+                        Purchase Wood
+                    </Button>
+                )
+            }else {
+                return(
+                    <Button style={styles.loginBtn} onClick={() => switchScreen(this.props, '/signin')}>
+                        Sign in
+                    </Button>
+                )
+            }
+        }
+        return(
+            <Container component="main" maxWidth="xs">
                 <div className="App" >
                     <BackGroundVideo/>
+                    {accountIcon()}
                     <img src={logo} style={styles.myImage} />
                     <title style={styles.myTitle}>
                         On-demand fire wood delivery
                     </title>
                     <body style={styles.myBody}>
-                        Purchase firewood online and submit your location
-                        to have firewood delivered right to your fire pit!
+                    Purchase firewood online and submit your location
+                    to have firewood delivered right to your fire pit!
                     </body>
-                    <Button style={styles.loginBtn} onClick={() => switchScreen(this.props, '/signin')}>
-                        Sign in
-                    </Button>
                     <Button color="secondary" style={styles.learnBtn} onClick={() => switchScreen(this.props, '/about')}>
                         Learn More
                     </Button>
+                    {updateButton()}
                 </div>
-                </Container>
-                );
-        }else{
-            return(
-                <Container component="main" maxWidth="xs">
-                    <div className="App" >
-                        <BackGroundVideo/>
-                        <IconButton aria-label="back" style={styles.myAccount} onClick={() => switchScreen(this.props, '/account')}>
-                            <img src={account} height={30} width={30}/>
-                        </IconButton>
-                        <img src={logo} style={styles.myImage} />
-                        <title style={styles.myTitle}>
-                            On-demand fire wood delivery
-                        </title>
-                        <body style={styles.myBody}>
-                        Purchase firewood online and submit your location
-                        to have firewood delivered right to your fire pit!
-                        </body>
-                        <Button color="secondary" style={styles.learnBtn} onClick={() => switchScreen(this.props, '/about')}>
-                            Learn More
-                        </Button>
-                        <Button style={styles.loginBtn} onClick={() => switchScreen(this.props, '/menu')}>
-                            Purchase Wood
-                        </Button>
-                    </div>
-                </Container>
-            );
-        }
+                <input
+                    type="text"
+                    value={this.state.loggedIn}
+                    onChange={this.handleChange}
+                />
+            </Container>
+        );
     }
 }
 
@@ -134,3 +140,4 @@ let styles = {
         color:"white"
     }
 }
+

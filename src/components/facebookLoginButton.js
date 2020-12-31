@@ -57,6 +57,8 @@ class FacebookLoginButton extends Component{
     authRsp = (response) => {
         console.log(response)
         this.user.token = response.access_token;
+        localStorage.setItem('token', this.user.token);
+        localStorage.setItem('email', this.user.email);
         this.createCustomer();
     };
     createCustomer = () => {

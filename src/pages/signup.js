@@ -59,6 +59,8 @@ class SignupPage extends Component{
             }
         )
         this.user.token = response.key;
+        localStorage.setItem('token', this.user.token);
+        localStorage.setItem('email', this.user.email);
         this.user.loggedIn = true;
         const { switchScreen } = this.props.state;
         switchScreen(this.props, '/home')
