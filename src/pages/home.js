@@ -27,6 +27,7 @@ class HomePage extends Component  {
         const { switchScreen } = this.props.state;
 
         if(!(user.loggedIn) && user.token) {
+            console.log('hello1')
             const config = user.config();
             axios.get("https://loggie.app/api/order/", config)
                 .then(res => this.handleRsp(res.data))

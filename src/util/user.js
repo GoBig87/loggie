@@ -43,6 +43,8 @@ class User {
     logout = () => {
         localStorage.removeItem('email');
         localStorage.removeItem('token');
+        this.email = null;
+        this.token = null;
         this.loggedIn = false;
         this.lat = '33.333';
         this.lon = '-117.222';
