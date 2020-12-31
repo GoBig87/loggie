@@ -118,6 +118,7 @@ let styles = {
         justifyContent:"center",
         marginTop:0,
         marginBottom:50,
+        color: "#FFFFFF",
         textDecorationLine: 'underline'
     },
     loginBtn: {
