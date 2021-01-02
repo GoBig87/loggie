@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { GoogleLogin } from 'react-google-login';
+import google from "../assets/images/google.svg";
+import { IconButton } from '@material-ui/core';
 import axios from "axios";
 let clientID = "613632797540-u18o915kcsju9oj57u7c3m0o6ru0t78q.apps.googleusercontent.com";
 
@@ -99,9 +101,40 @@ class GoogleLoginButton extends Component{
                     onSuccess={this.googleSuccess}
                     onFailure={this.googleFailure}
                     cookiePolicy={'single_host_origin'}
+                    render={renderProps => (
+                        <IconButton className="button"
+                                    style={styles.googleBtn}
+                                    onClick={renderProps.onClick}
+                                    disabled={renderProps.disabled}>
+                            <img src={google} style={styles.icon} />
+                            <span className="buttonText">Sign in with Google</span>
+                        </IconButton>                    )}
                 />
         );
     }
 }
 
 export default GoogleLoginButton;
+
+
+let styles = {
+    googleBtn: {
+        text: "Login with Facebook",
+        color: 'white',
+        backgroundColor:"#4285F4",
+        borderRadius:25,
+        height:40,
+        width:"100%",
+        marginTop:7,
+        marginBottom:7
+    },
+    icon: {
+        fontSize: 35,
+        height:35,
+        margin: 'auto',
+        marginLeft:-50,
+        marginRight:20,
+        marginTop:-15,
+        marginBottom:-15
+    },
+}

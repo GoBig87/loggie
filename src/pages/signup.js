@@ -3,51 +3,63 @@ import BackGroundVideo from '../components/backGroundVideo'
 import logo from "../assets/images/logo.png"
 import { IconButton, InputBase, InputAdornment } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
-import {Email, Visibility, VerifiedUser, ArrowBack, VisibilityOff} from '@material-ui/icons';
+import {Email, Visibility, PersonAdd, ArrowBack, VisibilityOff} from '@material-ui/icons';
 import axios from "axios";
 import sjcl from "sjcl";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from '@material-ui/lab/Alert';
 
-const client_side_salt = 'my_client_side_salt_string_to_increase_complexity_this_is_hashed_again_server_side'
+const client_side_salt = 'my_client_side_salt_string_to_increase_complexity_this_is_hashed_again_server_side';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
+
 
 class SignupPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
             amount: '',
-            password: '',
+            password1: '',
+            password2: '',
             weight: '',
             weightRange: '',
-            showPassword: false,
+            showPassword1: false,
+            showPassword2: false,
             open: false,
+            alertOpen: false,
             allowClose: false,
-            dialogMessage: 'Creating Account In...'
+            dialogMessage: 'Creating Account...'
         };
         this.user = this.props.state.user;
     };
 
     // Email account creation
-    createAccount = (email, password) => {
-        this.setState({open: true})
-        this.user.email = email;
-        let myBitArray = sjcl.hash.sha256.hash(password.concat(client_side_salt));
-        let hashedPassword = sjcl.codec.hex.fromBits(myBitArray);
-        console.log('Password');
-        console.log(password);
-        console.log('hashed');
-        console.log(hashedPassword);
-        let data = {
-                      'email': email,
-                      'username': email,
-                      'password1': hashedPassword,
-                      'password2': hashedPassword
-                      }
-        axios
-            .post("https://loggie.app/api/rest-auth/registration/", data)
-            .then(res => this.accountRsp(res.data))
-            .catch(err => this.accountErr(err));
+    createAccount = (email, password1, password2) => {
+        if(password1 != password2){
+            this.setState({alertOpen: true});
+        }else {
+            this.setState({open: true})
+            this.user.email = email;
+            let myBitArray1 = sjcl.hash.sha256.hash(password1.concat(client_side_salt));
+            let hashedPassword1 = sjcl.codec.hex.fromBits(myBitArray1);
+            let myBitArray2 = sjcl.hash.sha256.hash(password2.concat(client_side_salt));
+            let hashedPassword2 = sjcl.codec.hex.fromBits(myBitArray2);
+            let data = {
+                'email': email,
+                'username': email,
+                'password1': hashedPassword1,
+                'password2': hashedPassword2
+            }
+            axios
+                .post("https://loggie.app/api/rest-auth/registration/", data)
+                .then(res => this.accountRsp(res.data))
+                .catch(err => this.accountErr(err));
+        }
     };
     // Handles rsp for email account creation
     accountRsp = (response) => {
@@ -85,10 +97,18 @@ class SignupPage extends Component{
             })
         }
         // Toggles Password Text input to show/hide pw
-        const handleClickShowPassword = () => {
+        const handleClickShowPassword1 = () => {
             this.setState(
                 {
-                    showPassword: !this.state.showPassword
+                    showPassword1: !this.state.showPassword1
+                }
+            )
+        };
+        // Toggles Password Text input to show/hide pw
+        const handleClickShowPassword2 = () => {
+            this.setState(
+                {
+                    showPassword2: !this.state.showPassword2
                 }
             )
         };
@@ -103,6 +123,14 @@ class SignupPage extends Component{
             }
         };
 
+        const handleAlertClose = () => {
+            this.setState({
+                alertOpen: false,
+                password1: '',
+                password2: '',
+            });
+        };
+
         return(
             <Container component="main" maxWidth="xs">
                 <div className="App" >
@@ -110,7 +138,6 @@ class SignupPage extends Component{
                     <IconButton aria-label="back" style={styles.myBack} onClick={() => switchScreen(this.props, '/signin')}>
                         <ArrowBack/>
                     </IconButton>
-                    <img src={logo} style={styles.myImage} />
                     <title style={styles.myTitle}>
                         Create Account
                     </title>
@@ -130,25 +157,43 @@ class SignupPage extends Component{
                         }/>
                     <InputBase
                         style={styles.textField}
-                        type={this.state.showPassword ? 'text' : 'password'}
-                        value={this.state.password}
-                        onChange={handleChange('password')}
+                        type={this.state.showPassword1 ? 'text' : 'password'}
+                        value={this.state.password1}
+                        onChange={handleChange('password1')}
                         InputProps={{ 'aria-label': 'naked' }}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
                                     aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
+                                    onClick={handleClickShowPassword1}
                                     onMouseDown={handleMouseDownPassword}
                                 >
-                                    {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                                    {this.state.showPassword1 ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    />
+                    <InputBase
+                        style={styles.textField}
+                        type={this.state.showPassword2 ? 'text' : 'password'}
+                        value={this.state.password2}
+                        onChange={handleChange('password2')}
+                        InputProps={{ 'aria-label': 'naked' }}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword2}
+                                    onMouseDown={handleMouseDownPassword}
+                                >
+                                    {this.state.showPassword2 ? <Visibility /> : <VisibilityOff />}
                                 </IconButton>
                             </InputAdornment>
                         }
                     />
                     <IconButton style={styles.loginBtn}
-                                onClick={() => this.createAccount(this.state.email, this.state.password)}>
-                        <VerifiedUser style={styles.icon}/>
+                                onClick={() => this.createAccount(this.state.email, this.state.password1, this.state.password2)}>
+                        <PersonAdd style={styles.icon}/>
                         Create Account
                     </IconButton>
                     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>
@@ -157,6 +202,11 @@ class SignupPage extends Component{
                             <CircularProgress />
                         </div>
                     </Dialog>
+                    <Snackbar open={this.state.alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
+                        <Alert onClose={handleClose} severity="error">
+                            Passwords do not match!
+                        </Alert>
+                    </Snackbar>
                 </div>
             </Container>
         );
@@ -235,10 +285,10 @@ let styles = {
         marginBottom:10
     },
     icon: {
-        fontSize: 40,
+        fontSize: 30,
         marginLeft:-50,
         marginRight:20,
-        height:40,
+        height:30,
         marginTop:-15,
         marginBottom:-15
     },
@@ -254,7 +304,7 @@ let styles = {
         fontSize: 30,
         fontWeight: 'bold',
         textTransform: 'uppercase',
-        marginTop:10,
-        marginBottom:10
+        marginTop:20,
+        marginBottom:60
     }
 }

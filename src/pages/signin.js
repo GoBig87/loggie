@@ -3,15 +3,13 @@ import BackGroundVideo from '../components/backGroundVideo'
 import logo from "../assets/images/logo.png"
 import {IconButton, InputBase, TextField, InputAdornment, Button} from '@material-ui/core';
 import Container from '@material-ui/core/Container';
-import {Email, Visibility, ArrowBack, VerifiedUser, VisibilityOff} from '@material-ui/icons';
+import {Email, Visibility, ArrowBack, Person, VisibilityOff} from '@material-ui/icons';
 import GoogleLoginButton from "../components/googleLoginButton";
 import AppleLoginButton from "../components/appleLoginButton";
 import FacebookLoginButton from "../components/facebookLoginButton";
 import axios from "axios";
 import sjcl from 'sjcl';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import List from '@material-ui/core/List';
-import ListItemText from '@material-ui/core/ListItemText';
 import Dialog from '@material-ui/core/Dialog';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -130,7 +128,6 @@ class SigninPage extends Component{
                     <IconButton aria-label="back" style={styles.myBack} onClick={() => switchScreen(this.props, '/home')}>
                         <ArrowBack/>
                     </IconButton>
-                    <img src={logo} style={styles.myImage} />
                     <title style={styles.myTitle}>
                         Sign in
                     </title>
@@ -168,8 +165,8 @@ class SigninPage extends Component{
                     />
                     <IconButton style={styles.loginBtn}
                                 onClick={() => this.signIn(this.state.email, this.state.password)}>
-                        <VerifiedUser style={styles.icon}/>
-                        Sign In
+                        <Person style={styles.icon}/>
+                        Sign In With Email
                     </IconButton>
                     <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle'}}>
                         <Button color="secondary" style={styles.learnBtn} onClick={() => switchScreen(this.props, '/signup')}>
@@ -186,9 +183,7 @@ class SigninPage extends Component{
                         </body>
                         <hr style={styles.coloredLine} />
                     </div>
-                    <div style={styles.phoneDiv}>
-                        <GoogleLoginButton setParentState={this.setParentState} state={this.state} {...this.props}/>
-                    </div>
+                    <GoogleLoginButton setParentState={this.setParentState} state={this.state} {...this.props}/>
                     <AppleLoginButton setParentState={this.setParentState} state={this.state} {...this.props}/>
                     <FacebookLoginButton setParentState={this.setParentState} state={this.state} {...this.props}/>
                     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>
@@ -237,7 +232,7 @@ let styles = {
     textField: {
         marginTop: 7,
         marginBottom: 7,
-        height: 30,
+        height: 40,
         backgroundColor: 'rgba(255,255,255,0.5)',
         borderRadius: 25,
         width: '100%',
@@ -254,6 +249,14 @@ let styles = {
         marginBottom: 7,
         fontSize: 20
     },
+    learnBtn:{
+        alignItems:"center",
+        justifyContent:"center",
+        marginTop:0,
+        marginBottom:50,
+        color: "#FFFFFF",
+        textDecorationLine: 'underline'
+    },
     coloredLine: {
         position: 'relative',
         marginTop: 25,
@@ -268,19 +271,19 @@ let styles = {
         width: "100%",
         backgroundColor: "#FFFFFF",
         borderRadius: 25,
-        height: 30,
+        height: 40,
         alignItems: "center",
         justifyContent: "center",
         marginTop: 7,
         marginBottom: 7
     },
     icon: {
-        fontSize: 25,
-        marginLeft: -50,
-        marginRight: 20,
-        height: 25,
-        marginTop: -15,
-        marginBottom: -15
+        fontSize: 30,
+        marginLeft:-50,
+        marginRight:20,
+        height:30,
+        marginTop:-15,
+        marginBottom:-15
     },
     googleBtn: {
         text: "Login with Facebook",
@@ -323,7 +326,7 @@ let styles = {
         fontSize: 25,
         fontWeight: 'bold',
         textTransform: 'uppercase',
-        marginTop: 10,
+        marginTop: 20,
         marginBottom: 10
     }
 }
