@@ -16,6 +16,20 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 const client_side_salt = 'my_client_side_salt_string_to_increase_complexity_this_is_hashed_again_server_side'
 
+const mdStyles = theme => ({
+    textField: {
+        width: '90%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        paddingBottom: 0,
+        marginTop: 0,
+        fontWeight: 500
+    },
+    input: {
+        color: 'white'
+    }
+});
+
 
 class SigninPage extends Component{
     constructor(props) {
@@ -135,7 +149,11 @@ class SigninPage extends Component{
                         style={styles.textField}
                         value={this.state.email}
                         onChange={handleChange('email')}
-                        InputProps={{ 'aria-label': 'naked' }}
+                        inputProps={{
+                            style: { textAlign: 'left', padding: 20 },
+                        }}
+                        InputProps={{ 'aria-label': 'Email Address' }}
+                        placeholder="Email Address"
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
@@ -150,7 +168,11 @@ class SigninPage extends Component{
                         type={this.state.showPassword ? 'text' : 'password'}
                         value={this.state.password}
                         onChange={handleChange('password')}
-                        InputProps={{ 'aria-label': 'naked' }}
+                        inputProps={{
+                            style: { textAlign: 'left', padding: 20 },
+                        }}
+                        InputProps={{ 'aria-label': 'Password'}}
+                        placeholder="Password"
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton

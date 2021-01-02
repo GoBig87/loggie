@@ -145,7 +145,11 @@ class SignupPage extends Component{
                         style={styles.textField}
                         value={this.state.email}
                         onChange={handleChange('email')}
-                        InputProps={{ 'aria-label': 'naked' }}
+                        InputProps={{ 'aria-label': 'Email Address' }}
+                        placeholder="Email Address"
+                        inputProps={{
+                            style: { textAlign: 'left', padding: 20 },
+                        }}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
@@ -160,7 +164,11 @@ class SignupPage extends Component{
                         type={this.state.showPassword1 ? 'text' : 'password'}
                         value={this.state.password1}
                         onChange={handleChange('password1')}
-                        InputProps={{ 'aria-label': 'naked' }}
+                        InputProps={{ 'aria-label': 'Password' }}
+                        placeholder="Password"
+                        inputProps={{
+                            style: { textAlign: 'left', padding: 20 },
+                        }}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
@@ -178,7 +186,11 @@ class SignupPage extends Component{
                         type={this.state.showPassword2 ? 'text' : 'password'}
                         value={this.state.password2}
                         onChange={handleChange('password2')}
-                        InputProps={{ 'aria-label': 'naked' }}
+                        InputProps={{ 'aria-label': 'Confirm Password' }}
+                        placeholder="Confirm Password"
+                        inputProps={{
+                            style: { textAlign: 'left', padding: 20 },
+                        }}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
