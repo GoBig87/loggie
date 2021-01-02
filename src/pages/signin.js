@@ -190,7 +190,7 @@ class SigninPage extends Component{
                         <Person style={styles.icon}/>
                         Sign In With Email
                     </IconButton>
-                    <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle'}}>
+                    <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle', marginBottom: 10}}>
                         <Button color="secondary" style={styles.learnBtn} onClick={() => switchScreen(this.props, '/signup')}>
                             Create Account
                         </Button>
@@ -200,7 +200,7 @@ class SigninPage extends Component{
                     </div>
                     <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle'}}>
                         <hr style={styles.coloredLine} />
-                        <body style={styles.myTitle}>
+                        <body style={styles.myOrTitle}>
                         OR
                         </body>
                         <hr style={styles.coloredLine} />
@@ -275,18 +275,18 @@ let styles = {
         alignItems:"center",
         justifyContent:"center",
         marginTop:0,
-        marginBottom:50,
+        marginBottom:20,
         color: "#FFFFFF",
         textDecorationLine: 'underline'
     },
     coloredLine: {
         position: 'relative',
-        marginTop: 25,
         width: "40%",
         color: 'white',
         backgroundColor: 'white',
         marginRight: 10,
         marginLeft: 10,
+        marginBottom: 20,
         height: 1
     },
     loginBtn: {
@@ -348,7 +348,21 @@ let styles = {
         fontSize: 25,
         fontWeight: 'bold',
         textTransform: 'uppercase',
-        marginTop: 20,
-        marginBottom: 10
+        marginTop: 40,
+        marginBottom: 40
+    },
+    myOrTitle: {
+        flexDirection: "row",
+        position: 'relative',
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: 25,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        marginTop: -5,
+        marginBottom: 20
     }
 }
