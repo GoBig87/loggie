@@ -71,12 +71,6 @@ let styles = {
         top: 0,
         left: 0
     },
-    myBack: {
-        position: 'fixed',
-        color: 'white',
-        left: 0,
-        top: 0,
-    },
     myRow: {
         flexDirection:'row',
         display: 'flex',

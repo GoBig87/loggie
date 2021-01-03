@@ -56,11 +56,13 @@ export default OrderCard;
 
 let styles = {
     myDiv: {
-        marginTop: 10,
-        marginBottom: 10,
-        marginLeft:-20,
+        marginTop: 20,
+        marginLeft: -20,
+        marginRight: 20,
+        paddingTop: 8,
+        paddingBottom: 8,
         position: 'relative',
-        height: '115px',
+        height: '15vh',
         width: '100%',
         borderRadius: '10px',
         background: '#77889980',
@@ -68,12 +70,12 @@ let styles = {
     },
     mapDiv: {
         position: 'relative',
-        height: '15vh',
-        width: '30vw',
+        height: '13vh',
+        width: '35%',
         margin: 'auto',
+        borderRadius: '10px',
     },
     myRow: {
-        padding: 10,
         margin: 'auto',
         flexDirection:'row',
         display: 'flex',

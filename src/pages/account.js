@@ -4,6 +4,7 @@ import BackGroundVideo from '../components/backGroundVideo'
 import OrderCard from "../components/orderCard";
 import {Button, IconButton} from "@material-ui/core";
 import {ArrowBack, ExitToApp} from "@material-ui/icons";
+import axios from "axios";
 
 
 class AccountPage extends Component {
@@ -11,8 +12,9 @@ class AccountPage extends Component {
         super(props);
         this.user = this.props.state.user
         this.state = {
-            activeOrder: this.activeOrders,
-            completedOrders: this.completedOrders,
+            checkedOrders: false,
+            orders: this.user.orders,
+            orderCards: [],
         }
     };
 
@@ -23,39 +25,48 @@ class AccountPage extends Component {
         switchScreen(this.props, '/home');
     };
 
-    render() {
+    getOrdersRsp = (rsp) => {
         const { switchScreen } = this.props.state;
         const { user } = this.props.state;
-
-        let orders = user.orders.reverse().map((item,index)=>{
-            return  <li>
+        let orderCards = rsp.reverse().map((item, index) => {
+            return <li>
                 <OrderCard order={item}
                            user={user}
                            switchScreen={switchScreen}
                            {...this.props}
                 />
             </li>
-        })
+
+        });
+        this.setState({orderCards: orderCards, orders: rsp, checkedOrders: true});
+    };
+
+    render() {
+        const { switchScreen } = this.props.state;
+        const { user } = this.props.state;
+
+        if(!(this.state.checkedOrders)) {
+            const config = this.user.config();
+            axios
+                .get("https://loggie.app/api/order/", config)
+                .then(res => this.getOrdersRsp(res.data))
+                .catch(err => console.log(err));
+        }
         return(
 
-        <Container component="main" maxWidth="lg">
+        <Container component="main" maxWidth="sm">
             <BackGroundVideo/>
             <title style={styles.myTitle}>
-                Order History
+                Order History {"\n"} {user.email}
             </title>
             <div style={styles.myDiv}>
                 <ul>
-                    {orders}
+                    {this.state.orderCards}
                 </ul>
             </div>
-            <IconButton aria-label="back"
-                        style={styles.myBack}
-                        onClick={() => switchScreen(this.props, '/home')}>
-                <ArrowBack/>
-            </IconButton>
             <div style={styles.myDivRow}>
                 <Button color="secondary" style={styles.myLogoutButton} onClick={() => this.logout()}>
-                    Sign out, {user.email}
+                    Sign out
                 </Button>
                 <IconButton aria-label="back"
                             style={styles.myLogoutIcon}
@@ -78,8 +89,10 @@ let styles = {
         top: 10,
     },
     myDiv: {
-      marginTop: 5,
-      marginBottom: 5,
+        margin: 'auto',
+        position: 'relative',
+        height: '100vh',
+        width: '100%',
     },
     myLogoutIcon: {
         position: 'relative',
@@ -98,19 +111,6 @@ let styles = {
         top: 0,
         left: 0
     },
-    myCart: {
-        position: 'fixed',
-        color: 'white',
-        right: 10,
-        top: 10,
-    },
-    myImage:{
-        position: 'relative',
-        width: "50%",
-        height: "50%",
-        marginTop:75,
-        marginBottom:50
-    },
     myTitle: {
         position: 'relative',
         textAlign: 'center',
@@ -118,40 +118,10 @@ let styles = {
         alignItemstems: 'center',
         justifyContent: 'center',
         color: 'white',
-        fontSize: 30,
+        fontSize: 24,
         fontWeight: 'bold',
         textTransform: 'uppercase',
-        marginTop:10,
+        marginTop:50,
         marginBottom:10
-    },
-    myBody: {
-        position: 'relative',
-        textAlign: 'center',
-        display: 'flex',
-        alignItemstems: 'center',
-        justifyContent: 'center',
-        color: 'white',
-        fontSize: 16,
-        marginTop:10,
-        marginBottom:0
-    },
-    myParagraph: {
-        position: 'relative',
-        textAlign: 'center',
-        display: 'flex',
-        alignItemstems: 'center',
-        justifyContent: 'center',
-        color: 'white',
-        fontSize: 30,
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        marginTop:10,
-        marginBottom:10
-    },
-    myBack: {
-        position: 'fixed',
-        color: 'white',
-        left: 0,
-        top: 5,
     },
 }

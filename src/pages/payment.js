@@ -56,11 +56,6 @@ class PaymentPage extends Component {
                        style={styles.myTitle}>
                     Payment
                 </title>
-                <IconButton aria-label="back"
-                            style={styles.myBack}
-                            onClick={() => switchScreen(this.props, '/delivery')}>
-                    <ArrowBack/>
-                </IconButton>
                 <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
                     <InjectedCheckoutForm setParentState={this.setParentState} {...this.props}/>
                      <div style={styles.myDiv}>
@@ -100,12 +95,6 @@ let styles = {
         height: "100%",
         top: 0,
         left: 0
-    },
-    myBack: {
-        position: 'fixed',
-        color: 'white',
-        left: 0,
-        top: 0,
     },
     icon: {
         fontSize: 40,

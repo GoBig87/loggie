@@ -30,13 +30,8 @@ class OrderPage extends Component {
         const { user } = this.props.state;
         const formattedTime = user.getDate(user.order['order_placed'])
         return(
-            <Container component="main" maxWidth="lg">
+            <Container component="main" maxWidth="sm">
                 <BackGroundVideo/>
-                <IconButton aria-label="back"
-                            style={styles.myBack}
-                            onClick={() => switchScreen(this.props, '/account')}>
-                    <ArrowBack/>
-                </IconButton>
                 <div style={styles.myDiv}>
                     <title style={styles.myTitle}>
                         Order Information
@@ -45,7 +40,7 @@ class OrderPage extends Component {
                         style="mapbox://styles/mapbox/dark-v10"
                         containerStyle={styles.mapDiv}
                         center={[user.order['lon'], user.order['lat']]}
-                        zoom={[12]}
+                        zoom={[12.75]}
                     >
                         <Marker
                             coordinates={[user.order['lon'], user.order['lat']]}
@@ -91,6 +86,8 @@ let styles = {
         position: 'relative',
         marginTop: 50,
         marginLeft: 25,
+        paddingTop: 20,
+        paddingBottom: 20,
         top: 'center',
         left: 'center',
         height: '90%',
@@ -105,8 +102,8 @@ let styles = {
         margin: 'auto',
         alignItems: 'center',
         justifyContent: 'center',
-        marginLeft: 20,
-        marginRight: 20
+        marginLeft: 25,
+        marginRight: 25
     },
     myItemLeft: {
         flexDirection: "row",
@@ -139,11 +136,11 @@ let styles = {
     },
     mapDiv: {
         padding: 10,
-        marginLeft: 25,
+        margin: 'auto',
         position: 'relative',
-        alignItemstems: 'center',
+        alignItems: 'center',
         justifyContent: 'center',
-        height: '35vh',
+        height: '30vh',
         width: '90%'
     },
     myTitle: {
@@ -156,7 +153,6 @@ let styles = {
         fontSize: 30,
         fontWeight: 'bold',
         textTransform: 'uppercase',
-        marginTop:10,
         marginBottom:10
     },
     myBody: {
@@ -169,11 +165,5 @@ let styles = {
         fontSize: 16,
         marginTop:10,
         marginBottom:0
-    },
-    myBack: {
-        position: 'fixed',
-        color: 'white',
-        left: 0,
-        top: 5,
     },
 }

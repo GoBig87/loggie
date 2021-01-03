@@ -139,9 +139,6 @@ class SigninPage extends Component{
             <Container component="main" maxWidth="xs">
                 <div className="App" >
                     <BackGroundVideo/>
-                    <IconButton aria-label="back" style={styles.myBack} onClick={() => switchScreen(this.props, '/home')}>
-                        <ArrowBack/>
-                    </IconButton>
                     <title style={styles.myTitle}>
                         Sign in
                     </title>
@@ -236,12 +233,6 @@ let styles = {
         height: "100%",
         top: 0,
         left: 0
-    },
-    myBack: {
-        position: 'fixed',
-        color: 'white',
-        left: 0,
-        top: 0,
     },
     myImage: {
         position: 'relative',

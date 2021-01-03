@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { IconButton, Button } from "@material-ui/core";
-import {GpsFixed, ArrowBack} from "@material-ui/icons";
+import { GpsFixed } from "@material-ui/icons";
 import Container from "@material-ui/core/Container";
 import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -24,7 +24,7 @@ class DeliveryPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            lng: -117.2353,
+            lng: -117.2363,
             lat: 32.7764,
             zoom: 11,
             pitLon: '',
@@ -128,7 +128,6 @@ class DeliveryPage extends Component{
         }
     }
     render() {
-        const { switchScreen } = this.props.state;
         const { user } = this.props.state;
 
         let markerList = this.firePitArray.map((item,index)=>{
@@ -149,7 +148,7 @@ class DeliveryPage extends Component{
         };
 
         return(
-            <Container className="main" component="main" maxWidth="xs">
+            <Container component="main" maxWidth="xs">
                 <Map
                     style="mapbox://styles/mapbox/dark-v10"
                     containerStyle={styles.mapDiv}
@@ -171,25 +170,22 @@ class DeliveryPage extends Component{
                         <img src={UserLocation} style={{width: '30px', height: '30px'}}/>
                     </Marker>
                 </Map>
-                <IconButton aria-label="back"
-                            style={styles.myBack}
-                            onClick={() => switchScreen(this.props, '/menu')}>
-                    <ArrowBack/>
-                </IconButton>
-                <IconButton aria-label="center"
-                            style={styles.myCenter}
-                            onClick={() => this.centerOnLocation()}>
-                    <GpsFixed/>
-                </IconButton>
-                    <text style={styles.infoText}>Select Fire Pit for Delivery</text>
+                <div style={styles.myDiv}>
+                    <text style={styles.infoText}>Select Fire Pit</text>
                     <text style={styles.myItemLeft}>Fire Pit: {this.state.pitNum}</text>
                     <text style={styles.myItemLeft}>Latitude: {this.state.pitLat}</text>
                     <text style={styles.myItemLeft}>Longitude: {this.state.pitLon}</text>
+                </div>
                 <div style={styles.myRow}>
                     <Button id={'paymentButton'} style={styles.myButton} onClick={() => this.switchScreenCheck()}>
                         Proceed to Payment
                     </Button>
                 </div>
+                <IconButton aria-label="center"
+                            style={styles.myCenter}
+                            onClick={() => this.centerOnLocation()}>
+                    <GpsFixed/>
+                </IconButton>
                 <Snackbar open={this.state.open} autoHideDuration={6000} onClose={handleClose}>
                     <Alert onClose={handleClose} severity="error">
                         Drop a Pin on a fire pit or Current Location
@@ -215,14 +211,8 @@ let styles = {
     myCenter: {
         position: 'fixed',
         color: 'white',
-        right: 0,
-        top: 0,
-    },
-    myBack: {
-        position: 'fixed',
-        color: 'white',
-        left: 0,
-        top: 0,
+        right: 15,
+        top: 15,
     },
     myRow: {
         flexDirection:'row',
@@ -231,9 +221,8 @@ let styles = {
         justifyContent: 'center',
     },
     infoText: {
-        marginTop: 20,
-        paddingBottom: 20,
         flexDirection: "row",
+        marginBottom: 20,
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
@@ -244,7 +233,7 @@ let styles = {
     },
     myButton: {
         position: 'absolute',
-        bottom: 75,
+        bottom: 25,
         width:"80%",
         backgroundColor:"#FFFFFF",
         borderRadius:25,
@@ -260,5 +249,13 @@ let styles = {
         fontWeight: 'bold',
         marginLeft:0,
         marginTop: 10,
+    },
+    myDiv: {
+        marginTop: 25,
+        marginBottom: 10,
+        marginLeft:0,
+        position: 'relative',
+        height: '100%',
+        width: '100%',
     },
 }
