@@ -43,6 +43,7 @@ class User {
     logout = () => {
         localStorage.removeItem('email');
         localStorage.removeItem('token');
+        localStorage.removeItem('order_id');
         this.email = null;
         this.token = null;
         this.loggedIn = false;

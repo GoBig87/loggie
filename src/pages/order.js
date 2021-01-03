@@ -5,6 +5,7 @@ import {IconButton} from "@material-ui/core";
 import {ArrowBack} from "@material-ui/icons";
 import ReactMapboxGl, {Marker} from "react-mapbox-gl";
 import firepit from "../assets/images/firepit.svg";
+import axios from "axios";
 
 
 const Map = ReactMapboxGl({
@@ -20,15 +21,45 @@ class OrderPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            lon: '',
-            lat: '',
+            order: {
+                lon: '',
+                lat: '',
+                quantity: '',
+                total: '',
+                status: '',
+            },
+            formattedTime: '',
+            orderSet: false,
         }
     }
 
-    render() {
-        const { switchScreen } = this.props.state;
+    getOrdersRsp = (order_list) => {
         const { user } = this.props.state;
-        const formattedTime = user.getDate(user.order['order_placed'])
+        user.orders = order_list;
+        const order_id = localStorage.getItem('order_id');
+        let tempOrder = {};
+        for (let i = 0; i < order_list.length; i++){
+            if(order_list[i]['id'] == order_id){
+                user.order = order_list[i]
+                const formattedTime = user.getDate(user.order['order_placed'])
+                this.setState({order: user.order, orderSet: true, formattedTime: formattedTime})
+            }
+        }
+    }
+    render() {
+        const { user } = this.props.state;
+        if(!(this.state.orderSet)) {
+            if (user.order == null) {
+                const config = user.config();
+                axios
+                    .get("https://loggie.app/api/order/", config)
+                    .then(res => this.getOrdersRsp(res.data))
+                    .catch(err => console.log(err));
+            } else {
+                const formattedTime = user.getDate(user.order['order_placed'])
+                this.setState({order: user.order, orderSet: true, formattedTime: formattedTime});
+            }
+        }
         return(
             <Container component="main" maxWidth="sm">
                 <BackGroundVideo/>
@@ -39,11 +70,11 @@ class OrderPage extends Component {
                     <Map
                         style="mapbox://styles/mapbox/dark-v10"
                         containerStyle={styles.mapDiv}
-                        center={[user.order['lon'], user.order['lat']]}
+                        center={[this.state.order['lon'], this.state.order['lat']]}
                         zoom={[12.75]}
                     >
                         <Marker
-                            coordinates={[user.order['lon'], user.order['lat']]}
+                            coordinates={[this.state.order['lon'], this.state.order['lat']]}
                             anchor="center">
                             <img src={firepit} style={{width: '30px', height: '30px'}}/>
                         </Marker>
@@ -56,22 +87,22 @@ class OrderPage extends Component {
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Qty: </title>
                         <hr style={styles.coloredLine} />
-                        <title style={styles.myItemRight}>x{user.order['quantity']}</title>
+                        <title style={styles.myItemRight}>x{this.state.order['quantity']}</title>
                     </div>
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Total: </title>
                         <hr style={styles.coloredLine} />
-                        <title style={styles.myItemRight}>${user.order['total']}</title>
+                        <title style={styles.myItemRight}>${this.state.order['total']}</title>
                     </div>
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Order Placed: </title>
                         <hr style={styles.coloredLine} />
-                        <title style={styles.myItemRight}>{formattedTime}</title>
+                        <title style={styles.myItemRight}>{this.state.formattedTime}</title>
                     </div>
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Order Status: </title>
                         <hr style={styles.coloredLine} />
-                        <title style={styles.myItemRight}>{user.order['status']}</title>
+                        <title style={styles.myItemRight}>{this.state.order['status']}</title>
                     </div>
                 </div>
             </Container>

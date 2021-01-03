@@ -19,6 +19,7 @@ class OrderCard extends Component {
 
     switchToOrderScreen = (switchScreen, order) => {
         const { user } = this.props.state;
+        localStorage.setItem('order_id', order['id']);
         user.order = order;
         switchScreen(this.props, '/order')
     };
