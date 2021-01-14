@@ -242,6 +242,7 @@ class CheckoutForm extends React.Component {
 
     render() {
         const {error, processing, paymentMethod, name, email, phone } = this.state;
+        let { user } =  this.props.state;
         const {stripe} = this.props;
         return paymentMethod ? (
             <div className="Result">
@@ -306,7 +307,7 @@ class CheckoutForm extends React.Component {
                 </fieldset>
                 {error && <ErrorMessage>{error.message}</ErrorMessage>}
                 <SubmitButton processing={processing} error={error} disabled={!stripe}>
-                    Pay $25
+                    Pay ${user.total()}
                 </SubmitButton>
             </form>
         );

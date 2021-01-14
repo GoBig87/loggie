@@ -1,4 +1,4 @@
-import axios from "axios";
+
 
 class User {
     constructor() {
@@ -13,7 +13,7 @@ class User {
         this.order = null;
     }
     total = () => {
-        return this.quantity*10;
+        return parseInt(this.quantity)*20;
     }
     resetCart = () => {
         this.lat = '33.333';

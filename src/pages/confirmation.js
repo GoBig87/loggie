@@ -32,9 +32,9 @@ class ConfirmationPage extends Component{
                     <div className="wrap">
                         <title className="firewood" style={styles.myTitle}> Thank You!</title>
                         <div style={styles.myRow}>
-                            <title style={styles.myItemLeft}>Bundles: </title>
+                            <title style={styles.myItemLeft}>Cost per Trailer: </title>
                             <hr style={styles.coloredLine} />
-                            <title style={styles.myItemRight}>$10 </title>
+                            <title style={styles.myItemRight}>$20 </title>
                         </div>
                         <div style={styles.myRow}>
                             <title style={styles.myItemLeft}>Qty: </title>
@@ -46,12 +46,10 @@ class ConfirmationPage extends Component{
                             <hr style={styles.coloredLine} />
                             <title style={styles.myItemRight}>${this.state.total}</title>
                         </div>
-                        <div style={styles.myRow}>
-                            <Button style={styles.myButton}
-                                    onClick={() => this.resetUser(this.props, user, switchScreen)}>
-                                Return Home
-                            </Button>
-                        </div>
+                        <Button style={styles.myButton}
+                                onClick={() => this.resetUser(this.props, user, switchScreen)}>
+                            Return Home
+                        </Button>
                     </div>
                 </div>
             </Container>
@@ -135,15 +133,15 @@ let styles = {
         height: 1
     },
     myButton: {
-        position: 'fixed',
-        bottom: 0,
-        width:"80%",
-        backgroundColor:"#FFFFFF",
+        position: 'absolute',
+        bottom: 25,
+        width: "80%",
+        backgroundColor:"#fff59d",
         borderRadius:25,
         height:50,
-        alignItems:"center",
-        justifyContent:"center",
-        marginTop:50,
-        marginBottom:50
+        left: 0,
+        right: 0,
+        marginRight: 'auto',
+        marginLeft: 'auto',
     },
 }

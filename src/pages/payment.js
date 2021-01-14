@@ -41,12 +41,16 @@ class PaymentPage extends Component {
     }
 
     render() {
-        const {switchScreen} = this.props.state;
+        const {switchScreen, user} = this.props.state;
 
         const handleClose = () => {
             if(this.state.allowClose){
                 this.setState({open: false})
             }
+        };
+
+        if(user.quantity == 0){
+          switchScreen(this.props, '/menu')
         };
 
         return (

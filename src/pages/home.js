@@ -125,12 +125,12 @@ let styles = {
         justifyContent:"center",
         marginTop:0,
         marginBottom:50,
-        color: "#FFFFFF",
+        color: "#fff59d",
         textDecorationLine: 'underline'
     },
     loginBtn: {
         width:"80%",
-        backgroundColor:"#FFFFFF",
+        backgroundColor:"#fff59d",
         borderRadius:25,
         height:50,
         alignItems:"center",

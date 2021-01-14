@@ -68,6 +68,7 @@ let styles = {
         borderRadius: '10px',
         background: '#77889980',
         backdropFilter: 'blur(15px)',
+        webkitBackdropFilter: 'blur(15px)',
     },
     mapDiv: {
         position: 'relative',

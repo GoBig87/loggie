@@ -54,7 +54,7 @@ class MenuPage extends Component{
 
         const { user } = this.props.state;
         this.state.quantity = user.quantity;
-        this.state.total = user.quantity*10;
+        this.state.total = user.quantity*20;
 
         const handleClose = () => {
             this.setState({open: false});
@@ -68,12 +68,12 @@ class MenuPage extends Component{
                     <title style={styles.firewoodTitle}>Purchase Firewood</title>
                     <img style={styles.myImage} src={firewood}/>
                     <div style={styles.myRow}>
-                        <title style={styles.myItemLeft}>Cost Per Bundle: </title>
+                        <title style={styles.myItemLeft}>Cost Per Trailer  (2 cu ft): </title>
                         <hr style={styles.coloredLine} />
-                        <title style={styles.myItemRight}>$10 </title>
+                        <title style={styles.myItemRight}>$20 </title>
                     </div>
                     <div style={styles.myRow}>
-                        <title style={styles.myItemLeft}>Bundles: </title>
+                        <title style={styles.myItemLeft}>Trailers: </title>
                         <hr style={styles.coloredLine} />
                         <title style={styles.myItemRight}>x {this.state.quantity} </title>
                     </div>
@@ -96,12 +96,10 @@ class MenuPage extends Component{
                             <Remove fontSize="large" />
                         </IconButton>
                     </div>
-                    <div style={styles.myRow}>
                     <Button style={styles.myButton}
                             onClick={() => this.proceedToDelivery()}>
                         Proceed to Delivery Info
                     </Button>
-                    </div>
                     <Snackbar open={this.state.open} autoHideDuration={6000} onClose={handleClose}>
                         <Alert onClose={handleClose} severity="error">
                             Quantity must be greater than 0
@@ -203,8 +201,11 @@ let styles = {
     },
     myDiv: {
         marginTop: 40,
-        marginBottom: 10,
-        marginLeft:-20,
+        marginBottom: 20,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        left: 0,
+        right: 0,
         padding: 20,
         position: 'relative',
         height: '90vh',
@@ -212,6 +213,7 @@ let styles = {
         borderRadius: '10px',
         background: '#77889980',
         backdropFilter: 'blur(15px)',
+        webkitBackdropFilter: 'blur(15px)',
     },
     frostedBox: {
         display: 'inline-block',
@@ -238,16 +240,14 @@ let styles = {
         height: 1
     },
     myButton: {
-        position: 'fixed',
-        bottom: 0,
+        position: 'relative',
         width:"80%",
-        backgroundColor:"#FFFFFF",
+        backgroundColor:"#fff59d",
         borderRadius:25,
         height:50,
         alignItems:"center",
         justifyContent:"center",
-        marginTop:50,
-        marginBottom:50
+        margin: 'auto',
     },
     pos: {
         marginBottom: 12,

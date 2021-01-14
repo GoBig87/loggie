@@ -128,7 +128,11 @@ class DeliveryPage extends Component{
         }
     }
     render() {
-        const { user } = this.props.state;
+        const { switchScreen, user } = this.props.state;
+
+        if(user.quantity == 0){
+            switchScreen(this.props, '/menu')
+        };
 
         let markerList = this.firePitArray.map((item,index)=>{
             return  <li>
@@ -148,7 +152,7 @@ class DeliveryPage extends Component{
         };
 
         return(
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="sm">
                 <Map
                     style="mapbox://styles/mapbox/dark-v10"
                     containerStyle={styles.mapDiv}
@@ -176,11 +180,9 @@ class DeliveryPage extends Component{
                     <text style={styles.myItemLeft}>Latitude: {this.state.pitLat}</text>
                     <text style={styles.myItemLeft}>Longitude: {this.state.pitLon}</text>
                 </div>
-                <div style={styles.myRow}>
                     <Button id={'paymentButton'} style={styles.myButton} onClick={() => this.switchScreenCheck()}>
                         Proceed to Payment
                     </Button>
-                </div>
                 <IconButton aria-label="center"
                             style={styles.myCenter}
                             onClick={() => this.centerOnLocation()}>
@@ -215,8 +217,8 @@ let styles = {
         top: 15,
     },
     myRow: {
-        flexDirection:'row',
-        display: 'flex',
+        position: 'absolute',
+        bottom: 25,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -232,12 +234,16 @@ let styles = {
         fontWeight: 'bold',
     },
     myButton: {
-        position: 'absolute',
+        position: 'fixed',
         bottom: 25,
-        width:"80%",
-        backgroundColor:"#FFFFFF",
+        width: "80%",
+        backgroundColor:"#fff59d",
         borderRadius:25,
         height:50,
+        left: 0,
+        right: 0,
+        marginRight: 'auto',
+        marginLeft: 'auto',
     },
     myItemLeft: {
         position: 'relative',

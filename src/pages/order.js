@@ -82,7 +82,7 @@ class OrderPage extends Component {
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Bundles: </title>
                         <hr style={styles.coloredLine} />
-                        <title style={styles.myItemRight}>$10 </title>
+                        <title style={styles.myItemRight}>$20 </title>
                     </div>
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Qty: </title>
@@ -126,6 +126,7 @@ let styles = {
         borderRadius: '10px',
         background: '#77889980',
         backdropFilter: 'blur(15px)',
+        webkitBackdropFilter: 'blur(15px)',
     },
     myRow: {
         flexDirection:'row',
