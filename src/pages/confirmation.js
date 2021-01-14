@@ -109,7 +109,8 @@ let styles = {
         fontWeight: 'bold',
         marginLeft:10,
         marginTop:5,
-        marginBottom:5
+        marginBottom:5,
+        whiteSpace: 'nowrap',
     },
     myItemRight: {
         flexDirection: "row",
@@ -120,7 +121,8 @@ let styles = {
         fontWeight: 'bold',
         marginRight:10,
         marginTop:5,
-        marginBottom:5
+        marginBottom:5,
+        whiteSpace: 'nowrap',
     },
     coloredLine: {
         position: 'relative',
