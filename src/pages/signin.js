@@ -193,7 +193,7 @@ class SigninPage extends Component{
                         </Button>
                         <Button color="secondary"
                                 style={styles.learnBtn}
-                                onClick={switchScreen(this.props, '/reset')}>
+                                onClick={() => switchScreen(this.props, '/reset')}>
                             Forgot Password
                         </Button>
                     </div>
