@@ -31,6 +31,7 @@ class ConfirmationPage extends Component{
                     <BackGroundVideo/>
                     <div className="wrap">
                         <title className="firewood" style={styles.myTitle}> Thank You!</title>
+                        <text style={styles.myText}>Check your spam folder for confirmation email</text>
                         <div style={styles.myRow}>
                             <title style={styles.myItemLeft}>Cost per Trailer: </title>
                             <hr style={styles.coloredLine} />
@@ -99,6 +100,16 @@ let styles = {
         textTransform: 'uppercase',
         marginTop:30,
         marginBottom:10
+    },
+    myText: {
+        flexDirection: "row",
+        position: 'relative',
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: 12,
     },
     myItemLeft: {
         flexDirection: "row",
