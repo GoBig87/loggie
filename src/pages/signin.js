@@ -282,7 +282,7 @@ let styles = {
     },
     loginBtn: {
         width: "100%",
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "#fff59d",
         borderRadius: 25,
         height: 40,
         alignItems: "center",
