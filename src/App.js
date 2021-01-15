@@ -13,6 +13,8 @@ import AboutPage from "./pages/about";
 import AccountPage from "./pages/account";
 import User from "./util/user";
 import OrderPage from "./pages/order";
+import ResetPage from "./pages/reset";
+import ContactPage from "./pages/contact";
 
 
 class App extends Component {
@@ -36,8 +38,10 @@ class App extends Component {
             renders the first one that matches the current URL. */}
                 <Route exact path="/" render={(props) => <HomePage state={this.state} {...props}/> }/>
                 <Route exact path="/home" render={(props) => <HomePage state={this.state} {...props}/> }/>
+                <Route exact path="/contact" render={(props) => <ContactPage state={this.state} {...props}/> }/>
                 <Route exact path="/menu" render={(props) => <MenuPage state={this.state} {...props}/> }/>
                 <Route exact path="/signup" render={(props) => <SignupPage state={this.state} {...props}/> }/>
+                <Route exact path="/reset" render={(props) => <ResetPage state={this.state} {...props}/> }/>
                 <Route exact path="/signin" render={(props) => <SigninPage state={this.state} {...props}/> }/>
                 <Route exact path="/delivery" render={(props) => <DeliveryPage state={this.state} {...props}/> }/>
                 <Route exact path="/payment" render={(props) => <PaymentPage state={this.state} {...props}/> }/>

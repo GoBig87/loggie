@@ -191,7 +191,9 @@ class SigninPage extends Component{
                         <Button color="secondary" style={styles.learnBtn} onClick={() => switchScreen(this.props, '/signup')}>
                             Create Account
                         </Button>
-                        <Button color="secondary" style={styles.learnBtn}>
+                        <Button color="secondary"
+                                style={styles.learnBtn}
+                                onClick={switchScreen(this.props, '/reset')}>
                             Forgot Password
                         </Button>
                     </div>

@@ -3,6 +3,7 @@ import logo from "../assets/images/logo.png"
 import accountAlert  from "../assets/images/accountAlert.svg"
 import account  from "../assets/images/account.svg"
 import {Button, IconButton} from '@material-ui/core';
+import { ContactPhone } from "@material-ui/icons";
 import Container from '@material-ui/core/Container';
 import BackGroundVideo from '../components/backGroundVideo'
 import axios from "axios";
@@ -74,6 +75,9 @@ class HomePage extends Component  {
                         Learn More
                     </Button>
                     {updateButton()}
+                    <IconButton aria-label="back" style={styles.myContact} onClick={() => switchScreen(this.props, '/contact')}>
+                        <ContactPhone/>
+                    </IconButton>)
                 </div>
             </Container>
         );
@@ -86,8 +90,14 @@ let styles = {
     myAccount: {
         position: 'fixed',
         color: 'white',
-        right: 0,
-        top: 0,
+        right: 10,
+        top: 10,
+    },
+    myContact: {
+        position: 'fixed',
+        color: 'white',
+        left: 10,
+        top: 10,
     },
     myImage:{
         position: 'relative',
@@ -119,6 +129,19 @@ let styles = {
         fontSize: 16,
         marginTop:10,
         marginBottom:0
+    },
+    contactUs: {
+        position: 'fixed',
+        bottom: 25,
+        fontWeight: 'bold',
+        alignItems:"center",
+        justifyContent:"center",
+        color: "#000000",
+        textDecorationLine: 'underline',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        left: 0,
+        right: 0,
     },
     learnBtn:{
         alignItems:"center",
