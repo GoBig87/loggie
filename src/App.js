@@ -16,6 +16,7 @@ import OrderPage from "./pages/order";
 import ResetPage from "./pages/reset";
 import ContactPage from "./pages/contact";
 import StatusPage from "./pages/status";
+import PasswordResetPage from "./pages/password-reset";
 
 
 class App extends Component {
@@ -51,6 +52,7 @@ class App extends Component {
                 <Route exact path="/order" render={(props) => <OrderPage state={this.state} {...props}/> }/>
                 <Route exact path="/reset" render={(props) => <ResetPage state={this.state} {...props}/> }/>
                 <Route exact path="/status/:id/:status" render={(props) => <StatusPage state={this.state} {...props}/> }/>
+                <Route exact path="/password-reset/:uid/:token" render={(props) => <PasswordResetPage state={this.state} {...props}/> }/>
             </div>
         </Router>
         );
