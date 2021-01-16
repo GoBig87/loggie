@@ -204,6 +204,7 @@ export default DeliveryPage;
 let styles = {
     mapDiv: {
         position: 'fixed',
+        backgroundColor: 'black',
         top: 0,
         left: 0,
         objectFit: 'cover',
