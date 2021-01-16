@@ -3,7 +3,7 @@ import BackGroundVideo from '../components/backGroundVideo'
 import logo from "../assets/images/logo.png"
 import { IconButton, InputBase, InputAdornment } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
-import {Email, Visibility, PersonAdd, ArrowBack, VisibilityOff} from '@material-ui/icons';
+import {Email, Cached} from '@material-ui/icons';
 import axios from "axios";
 import sjcl from "sjcl";
 import Dialog from "@material-ui/core/Dialog";
@@ -26,12 +26,27 @@ class ResetPage extends Component{
             weightRange: '',
             open: false,
             alertOpen: false,
-            allowClose: false,
-            dialogMessage: 'Not Implemented.  Email admin@loggie.app for help'
+            allowClose: true,
+            dialogMessage: 'Sending Password Reset Email.\n Please Check your email.'
         };
         this.user = this.props.state.user;
     };
 
+    resetPassword = (email) => {
+        let data = {
+            'email': email,
+        }
+        axios
+            .post("https://loggie.app/api/rest-auth/password/reset/", data)
+            .then(res => this.resetPasswordRsp(res.data))
+            .catch(err => this.resetPasswordErr(err));
+    };
+    resetPasswordRsp = (rsp) => {
+        this.setState({open: true});
+    };
+    resetPasswordErr = () => {
+        this.setState({alertOpen: true});
+    };
     // Start Webpage layout
     render() {
 
@@ -48,6 +63,8 @@ class ResetPage extends Component{
             if(this.state.allowClose){
                 this.setState({open: false})
             }
+            const { switchScreen } = this.props.state;
+            switchScreen(this.props, '/home')
         };
 
         const handleAlertClose = () => {
@@ -83,8 +100,8 @@ class ResetPage extends Component{
                         }/>
 
                     <IconButton style={styles.loginBtn}
-                                onClick={() => openDialog()}>
-                        <PersonAdd style={styles.icon}/>
+                                onClick={() => this.resetPassword(this.state.email)}>
+                        <Cached style={styles.icon}/>
                         Reset Password
                     </IconButton>
                     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>
@@ -95,7 +112,7 @@ class ResetPage extends Component{
                     </Dialog>
                     <Snackbar open={this.state.alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
                         <Alert onClose={handleClose} severity="error">
-                            Not Implemented.  Email admin@loggie.app for help
+                            Error Reseting Email
                         </Alert>
                     </Snackbar>
                 </div>
