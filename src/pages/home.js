@@ -65,7 +65,7 @@ class HomePage extends Component  {
                     {accountIcon()}
                     <img src={logo} style={styles.myImage} />
                     <title style={styles.myTitle}>
-                        On-demand fire wood delivery
+                        Firewood Delivery OnDemand
                     </title>
                     <body style={styles.myBody}>
                     Purchase firewood online and submit your location
