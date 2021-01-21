@@ -64,6 +64,33 @@ class DeliveryPage extends Component{
         this.firePit25 = {pitNum: 25, loc: [-117.236331, 32.777793]};
         this.firePit26 = {pitNum: 26, loc: [-117.237041, 32.777457]};
         this.firePit27 = {pitNum: 27, loc: [-117.237041, 32.777457]};
+        this.firePit28 = {pitNum: 28, loc: [-117.235322, 32.771573]};
+        this.firePit29 = {pitNum: 29, loc: [-117.235509, 32.771549]};
+        this.firePit30 = {pitNum: 30, loc: [-117.236058, 32.771828]};
+        this.firePit31 = {pitNum: 31, loc: [-117.236572, 32.772270]};
+        this.firePit32 = {pitNum: 32, loc: [-117.237479, 32.772096]};
+        this.firePit33 = {pitNum: 33, loc: [-117.237896, 32.771351]};
+        this.firePit34 = {pitNum: 34, loc: [-117.238889, 32.771030]};
+        this.firePit35 = {pitNum: 35, loc: [-117.239231, 32.771109]};
+        this.firePit36 = {pitNum: 36, loc: [-117.239987, 32.771591]};
+        this.firePit37 = {pitNum: 37, loc: [-117.240151, 32.771925]};
+        this.firePit38 = {pitNum: 38, loc: [-117.239987, 32.771591]};
+        this.firePit39 = {pitNum: 39, loc: [-117.240140, 32.772243]};
+        this.firePit40 = {pitNum: 40, loc: [-117.241993, 32.775068]};
+        this.firePit41 = {pitNum: 41, loc: [-117.242244, 32.775661]};
+        this.firePit42 = {pitNum: 42, loc: [-117.242250, 32.775942]};
+        this.firePit43 = {pitNum: 43, loc: [-117.242237, 32.776290]};
+        this.firePit44 = {pitNum: 44, loc: [-117.242069, 32.776554]};
+        this.firePit45 = {pitNum: 45, loc: [-117.240805, 32.777300]};
+        this.firePit46 = {pitNum: 46, loc: [-117.240110, 32.777388]};
+        this.firePit47 = {pitNum: 47, loc: [-117.239637, 32.777391]};
+        this.firePit48 = {pitNum: 48, loc: [-117.238830, 32.776886]};
+        this.firePit49 = {pitNum: 49, loc: [-117.238805, 32.776596]};
+        this.firePit50 = {pitNum: 50, loc: [-117.238680, 32.776232]};
+        this.firePit51 = {pitNum: 51, loc: [-117.238195, 32.775899]};
+        this.firePit52 = {pitNum: 52, loc: [-117.237941, 32.775851]};
+        this.firePit53 = {pitNum: 53, loc: [-117.237616, 32.775925]};
+        this.firePit54 = {pitNum: 54, loc: [-117.237324, 32.776038]};
         this.firePitArray = [
             this.firePit1, this.firePit2, this.firePit3, this.firePit4,
             this.firePit5, this.firePit6, this.firePit7, this.firePit8,
@@ -71,7 +98,14 @@ class DeliveryPage extends Component{
             this.firePit13, this.firePit14, this.firePit15, this.firePit16,
             this.firePit17, this.firePit18, this.firePit19, this.firePit20,
             this.firePit21, this.firePit22, this.firePit23, this.firePit24,
-            this.firePit25, this.firePit26, this.firePit27
+            this.firePit25, this.firePit26, this.firePit27, this.firePit28,
+            this.firePit29, this.firePit30, this.firePit31, this.firePit32,
+            this.firePit33, this.firePit34, this.firePit35, this.firePit36,
+            this.firePit37, this.firePit38, this.firePit39, this.firePit40,
+            this.firePit41, this.firePit42, this.firePit43, this.firePit44,
+            this.firePit45, this.firePit46, this.firePit47, this.firePit48,
+            this.firePit49, this.firePit50, this.firePit51, this.firePit52,
+            this.firePit53, this.firePit54,
         ];
     };
     setUserLocation = (position) => {
