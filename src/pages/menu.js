@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import firewood from "../assets/images/firewood.png"
+import trailer from "../assets/images/trailer.png"
 import { IconButton, Button, Card } from "@material-ui/core";
 import {Remove, Add, ShoppingCart, ArrowBack} from "@material-ui/icons";
 import Container from "@material-ui/core/Container";
@@ -66,7 +66,7 @@ class MenuPage extends Component{
                 <BackGroundVideo/>
                 <div style={styles.myDiv}>
                     <title style={styles.firewoodTitle}>Purchase Firewood</title>
-                    <img style={styles.myImage} src={firewood}/>
+                    <img style={styles.myImage} src={trailer}/>
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Cost Per Trailer  (2 cu ft): </title>
                         <hr style={styles.coloredLine} />
@@ -152,7 +152,7 @@ let styles = {
         display: 'block',
         padding: '2em',
         height: '25vh',
-        borderRadius: '50%',
+        borderRadius: '20%',
         margin: 'auto',
     },
     myVideo: {
