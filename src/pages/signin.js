@@ -81,6 +81,18 @@ class SigninPage extends Component{
         localStorage.setItem('tokenType', "Token");
         localStorage.setItem('email', this.user.email);
         this.user.loggedIn = true;
+        this.createCustomer();
+    };
+    createCustomer = () => {
+        const data = {'foo':'bar'};
+        const config = this.user.config();
+        axios
+            .post("https://loggie.app/api/customer/", data, config)
+            .then(res => this.createCustomerRsp(res.data))
+            .catch(err => this.authErr(err));
+    };
+    createCustomerRsp = (response) => {
+        console.log(response);
         this.getOrders();
     };
     getOrders = () => {
