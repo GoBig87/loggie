@@ -50,6 +50,8 @@ class GoogleLoginButton extends Component{
     authRsp = (response) => {
         console.log(response);
         this.user.token = response.access_token;
+        this.user.tokenType = "Bearer"
+        localStorage.setItem('tokenType', "Bearer");
         localStorage.setItem('token', this.user.token);
         localStorage.setItem('email', this.user.email);
         this.user.loggedIn = true;

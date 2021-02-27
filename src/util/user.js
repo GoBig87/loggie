@@ -4,6 +4,7 @@ class User {
     constructor() {
         this.email = localStorage.getItem('email');
         this.token = localStorage.getItem('token');
+        this.tokenType = localStorage.getItem('tokenType');
         this.loggedIn = false;
         this.lat = '33.333';
         this.lon = '-117.222';
@@ -27,7 +28,7 @@ class User {
     }
     config = () => {
         // this method creates the head config for https requests
-        const header = {headers: {Authorization: 'Bearer ' + this.token}};
+        const header = {headers: {Authorization: this.tokenType + " " + this.token}};
         return header;
     }
     getDate= (timeStamp) => {
@@ -43,9 +44,11 @@ class User {
     logout = () => {
         localStorage.removeItem('email');
         localStorage.removeItem('token');
+        localStorage.removeItem('tokenType');
         localStorage.removeItem('order_id');
         this.email = null;
         this.token = null;
+        this.tokenType = null;
         this.loggedIn = false;
         this.lat = '33.333';
         this.lon = '-117.222';

@@ -45,6 +45,8 @@ class AppleLoginButton extends Component{
     authRsp = (response) => {
         console.log(response)
         this.user.token = response.access_token;
+        this.user.tokenType = "Bearer"
+        localStorage.setItem('tokenType', "Bearer");
         this.user.loggedIn = true;
         this.createCustomer();
     };

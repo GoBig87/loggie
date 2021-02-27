@@ -61,7 +61,7 @@ class SigninPage extends Component{
             'password': hashedPassword
         }
         axios
-            .post("https://loggie.app/api/rest-auth/login", data)
+            .post("https://loggie.app/api/rest-auth/login/", data)
             .then(res => this.signInRsp(res.data))
             .catch(err => this.signinRspErr(err));
     };
@@ -76,7 +76,9 @@ class SigninPage extends Component{
     // Handles rsp for email account creation
     signInRsp = (response) => {
         this.user.token = response.key;
+        this.user.tokenType = "Token"
         localStorage.setItem('token', this.user.token);
+        localStorage.setItem('tokenType', "Token");
         localStorage.setItem('email', this.user.email);
         this.user.loggedIn = true;
         this.getOrders();
@@ -101,11 +103,9 @@ class SigninPage extends Component{
     };
     getOrdersRspErr = (err) => {
         console.log(err)
-        this.setState({
-                dialogMessage: 'Failed to get Order History',
-                allowClose: true
-            }
-        )
+        this.user.orders = [];
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home');
     }
     render() {
         const { switchScreen } = this.props.state;
