@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import logo from "../assets/images/logo.png"
+import logo from "../assets/images/loggie_vacation.png"
 import accountAlert  from "../assets/images/accountAlert.svg"
 import account  from "../assets/images/account.svg"
 import {Button, IconButton} from '@material-ui/core';
@@ -68,8 +68,9 @@ class HomePage extends Component  {
                         Firewood Delivery OnDemand
                     </title>
                     <body style={styles.myBody}>
-                    Purchase firewood online and submit your location
-                    to have firewood delivered right to your fire pit!
+                    Hola! Loggie is on vacation in Mexico for the month of March
+                    and will be unable to provide and firewood deliveries.  Loggie
+                    will be back in April.  Adios mi amigos!
                     </body>
                     <Button color="secondary" style={styles.learnBtn} onClick={() => switchScreen(this.props, '/about')}>
                         Learn More

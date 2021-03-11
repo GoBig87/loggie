@@ -46,7 +46,7 @@ class MenuPage extends Component{
             this.setState({open:true})
         }else{
             const { switchScreen } = this.props.state;
-            switchScreen(this.props, '/delivery')
+            switchScreen(this.props, '/home')
         }
     };
 
