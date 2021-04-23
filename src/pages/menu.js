@@ -72,7 +72,7 @@ class MenuPage extends Component{
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Cost Per Trailer  (2 cu ft): </title>
                         <hr style={styles.coloredLine} />
-                        <title style={styles.myItemRight}>${this.} </title>
+                        <title style={styles.myItemRight}>${this.state.pricePerTrailer} </title>
                     </div>
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Trailers: </title>
@@ -82,7 +82,7 @@ class MenuPage extends Component{
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Total: </title>
                         <hr style={styles.coloredLine} />
-                        <title style={styles.myItemRight}>${this.state.pricePerTrailer} </title>
+                        <title style={styles.myItemRight}>${this.state.total} </title>
                     </div>
                     <div style={styles.myRow}>
                         <title style={styles.myItem}>Qty: </title>
