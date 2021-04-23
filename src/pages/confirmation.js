@@ -13,6 +13,7 @@ class ConfirmationPage extends Component{
         this.state = {
             quantity: 0,
             total: 0,
+            pricePerTrailer: 0,
         }
     }
     resetUser = (props, user, switchScreen) => {
@@ -25,6 +26,8 @@ class ConfirmationPage extends Component{
         const { user } = this.props.state;
         this.state.quantity = user.quantity;
         this.state.total = user.total();
+        this.state.pricePerTrailer = user.pricePerTrailer;
+
         return(
             <Container className="main" component="main" maxWidth="xs">
                 <div className="player">
@@ -35,7 +38,7 @@ class ConfirmationPage extends Component{
                         <div style={styles.myRow}>
                             <title style={styles.myItemLeft}>Cost per Trailer: </title>
                             <hr style={styles.coloredLine} />
-                            <title style={styles.myItemRight}>$20 </title>
+                            <title style={styles.myItemRight}>${this.state.pricePerTrailer} </title>
                         </div>
                         <div style={styles.myRow}>
                             <title style={styles.myItemLeft}>Qty: </title>

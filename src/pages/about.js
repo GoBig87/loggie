@@ -35,7 +35,7 @@ class AboutPage extends Component {
                     <body style={styles.myBody}>
                         Loggie uses a bike trailer to deliver firewood that can handle a
                         little over 2 cubic feet of firewood per delivery.  Loggie charges
-                        $20 per trailer delivery. Store bought bundles of wood are around
+                        $25 per trailer delivery. Store bought bundles of wood are around
                         0.75 cubic feet of wood and can range anywhere between $6-$9 per bundle.
                     </body>
                     <text style={styles.mySubtitle}>

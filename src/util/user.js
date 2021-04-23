@@ -12,9 +12,10 @@ class User {
         this.pitNum = null;
         this.orders = [];
         this.order = null;
+        this.pricePerTrailer = 25
     }
     total = () => {
-        return parseInt(this.quantity)*20;
+        return parseInt(this.quantity)*this.pricePerTrailer;
     }
     resetCart = () => {
         this.lat = '33.333';

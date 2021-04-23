@@ -18,7 +18,8 @@ class MenuPage extends Component{
         super(props);
         this.state = {
             quantity: 0,
-            total: 0
+            total: 0,
+            pricePerTrailer: 0,
         }
     }
     addQuantity(user){
@@ -37,7 +38,7 @@ class MenuPage extends Component{
     updateQuantity(user) {
         this.setState({
             quantity: user.quantity,
-            total: user.quantity*10
+            total: user.quantity*user.pricePerTrailer
         })
     };
 
@@ -54,7 +55,8 @@ class MenuPage extends Component{
 
         const { user } = this.props.state;
         this.state.quantity = user.quantity;
-        this.state.total = user.quantity*20;
+        this.state.total = user.quantity*user.pricePerTrailer;
+        this.state.pricePerTrailer = user.pricePerTrailer;
 
         const handleClose = () => {
             this.setState({open: false});
@@ -70,7 +72,7 @@ class MenuPage extends Component{
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Cost Per Trailer  (2 cu ft): </title>
                         <hr style={styles.coloredLine} />
-                        <title style={styles.myItemRight}>$20 </title>
+                        <title style={styles.myItemRight}>${this.} </title>
                     </div>
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Trailers: </title>
@@ -80,7 +82,7 @@ class MenuPage extends Component{
                     <div style={styles.myRow}>
                         <title style={styles.myItemLeft}>Total: </title>
                         <hr style={styles.coloredLine} />
-                        <title style={styles.myItemRight}>${this.state.total} </title>
+                        <title style={styles.myItemRight}>${this.state.pricePerTrailer} </title>
                     </div>
                     <div style={styles.myRow}>
                         <title style={styles.myItem}>Qty: </title>
