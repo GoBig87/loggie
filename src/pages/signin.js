@@ -1,67 +1,156 @@
 import React, { Component, useState } from "react";
-import Fireplace from "../assets/videos/Fireplace.mp4"
+import BackGroundVideo from '../components/backGroundVideo'
 import logo from "../assets/images/logo.png"
-import google from "../assets/images/google.svg"
 import {IconButton, InputBase, TextField, InputAdornment, Button} from '@material-ui/core';
 import Container from '@material-ui/core/Container';
+import {Email, Visibility, ArrowBack, Person, VisibilityOff} from '@material-ui/icons';
+import GoogleLoginButton from "../components/googleLoginButton";
+import AppleLoginButton from "../components/appleLoginButton";
+import FacebookLoginButton from "../components/facebookLoginButton";
+import axios from "axios";
+import sjcl from 'sjcl';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import {Facebook, Apple, Email, Visibility, ArrowBack} from '@material-ui/icons';
+
+const client_side_salt = 'my_client_side_salt_string_to_increase_complexity_this_is_hashed_again_server_side'
+
+const mdStyles = theme => ({
+    textField: {
+        width: '90%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        paddingBottom: 0,
+        marginTop: 0,
+        fontWeight: 500
+    },
+    input: {
+        color: 'white'
+    }
+});
 
 
 class SigninPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            icon: 'facebook',
-            settings:  {
-                clientId: 'com.react.apple.login',
-                redirectURI: 'https://redirectUrl.com',
-                scope: '',
-                state: '',
-                responseType: 'code',
-                responseMode: 'query',
-                nonce: '',
-                designProp: {
-                    height: 30,
-                    width: 140,
-                    color: 'black',
-                    border: false,
-                    type: 'sign-in',
-                    border_radius: 25,
-                    scale: 1,
-                    locale: 'en_US',
-                    alignItems:"center",
-                    justifyContent:"center",
-                    position: 'relative'
-                }
-            }
-
+            amount: '',
+            password: '',
+            weight: '',
+            weightRange: '',
+            showPassword: false,
+            open: false,
+            allowClose: false,
+            dialogMessage: 'Logging In...'
+        };
+        this.user = this.props.state.user;
+    };
+    setParentState = (key) => {
+        this.setState(key)
+    }
+    // Email account creation
+    signIn = (email, password) => {
+        this.setState({open: true})
+        this.user.email = email
+        let myBitArray = sjcl.hash.sha256.hash(password.concat(client_side_salt));
+        let hashedPassword = sjcl.codec.hex.fromBits(myBitArray);
+        let data = {
+            'email': email,
+            'username': email,
+            'password': hashedPassword
         }
+        axios
+            .post("https://loggie.app/api/rest-auth/login/", data)
+            .then(res => this.signInRsp(res.data))
+            .catch(err => this.signinRspErr(err));
     };
-    switchScreen = (params) => {
-        console.log('switching screen')
-        console.log(params)
-        this.props.history.push(params);
+    signinRspErr = (err) => {
+        console.log(err)
+        this.setState({
+            dialogMessage: 'Failed to Log in',
+            allowClose: true
+            }
+        )
+    }
+    // Handles rsp for email account creation
+    signInRsp = (response) => {
+        this.user.token = response.key;
+        this.user.tokenType = "Token"
+        localStorage.setItem('token', this.user.token);
+        localStorage.setItem('tokenType', "Token");
+        localStorage.setItem('email', this.user.email);
+        this.user.loggedIn = true;
+        this.getOrders();
     };
-    render() {
-        const { user } = this.props.state;
+    getOrders = () => {
+        const config = this.user.config();
+        axios
+            .get("https://loggie.app/api/order/", config)
+            .then(res => this.getOrdersRsp(res.data))
+            .catch(err => this.getOrdersRspErr(err));
+    };
+    getOrdersRsp = (response) => {
+        this.setState({
+                dialogMessage: 'Successfully Signed in',
+                allowClose: true,
+                open: false,
+            }
+        )
+        this.user.orders = response;
         const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home');
+    };
+    getOrdersRspErr = (err) => {
+        console.log(err)
+        this.user.orders = [];
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home');
+    }
+    render() {
+        const { switchScreen } = this.props.state;
+
+        // Handles Text input UI
+        const handleChange = (prop) => (event) => {
+            this.setState({
+                [prop]: event.target.value,
+            })
+        }
+        // Toggles Password Text input to show/hide pw
+        const handleClickShowPassword = () => {
+            this.setState(
+                {
+                    showPassword: !this.state.showPassword
+                }
+            )
+        };
+
+        const handleMouseDownPassword = (event) => {
+            event.preventDefault();
+        };
+
+        const handleClose = () => {
+            if(this.state.allowClose){
+                this.setState({open: false})
+            }
+        };
+
         return(
             <Container component="main" maxWidth="xs">
                 <div className="App" >
-                    <video autoPlay muted loop muted style={styles.myVideo}>
-                        <source src={Fireplace} type="video/mp4"/>
-                    </video>
-                    <IconButton aria-label="back" style={styles.myBack} onClick={() => switchScreen(this.props, '/home')}>
-                        <ArrowBack/>
-                    </IconButton>
-                    <img src={logo} style={styles.myImage} />
+                    <BackGroundVideo/>
                     <title style={styles.myTitle}>
                         Sign in
                     </title>
                     <InputBase
                         style={styles.textField}
-                        InputProps={{ 'aria-label': 'naked' }}
+                        value={this.state.email}
+                        onChange={handleChange('email')}
+                        inputProps={{
+                            style: { textAlign: 'left', padding: 20 },
+                        }}
+                        InputProps={{ 'aria-label': 'Email Address' }}
+                        placeholder="Email Address"
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
@@ -73,44 +162,57 @@ class SigninPage extends Component{
                         }/>
                     <InputBase
                         style={styles.textField}
-                        InputProps={{ 'aria-label': 'naked' }}
+                        type={this.state.showPassword ? 'text' : 'password'}
+                        value={this.state.password}
+                        onChange={handleChange('password')}
+                        inputProps={{
+                            style: { textAlign: 'left', padding: 20 },
+                        }}
+                        InputProps={{ 'aria-label': 'Password'}}
+                        placeholder="Password"
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
                                     aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
                                 >
-                                    <Visibility />
+                                    {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
                                 </IconButton>
                             </InputAdornment>
                         }
                     />
-                    <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle'}}>
-                        <Button color="secondary" style={styles.learnBtn}>
+                    <IconButton style={styles.loginBtn}
+                                onClick={() => this.signIn(this.state.email, this.state.password)}>
+                        <Person style={styles.icon}/>
+                        Sign In With Email
+                    </IconButton>
+                    <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle', marginBottom: 10}}>
+                        <Button color="secondary" style={styles.learnBtn} onClick={() => switchScreen(this.props, '/signup')}>
                             Create Account
                         </Button>
-                        <Button color="secondary" style={styles.learnBtn}>
+                        <Button color="secondary"
+                                style={styles.learnBtn}
+                                onClick={() => switchScreen(this.props, '/reset')}>
                             Forgot Password
                         </Button>
                     </div>
                     <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle'}}>
                         <hr style={styles.coloredLine} />
-                        <body style={styles.myTitle}>
+                        <body style={styles.myOrTitle}>
                         OR
                         </body>
                         <hr style={styles.coloredLine} />
                     </div>
-                    <IconButton className="button" style={styles.googleBtn}>
-                        <img src={google} style={styles.icon} />
-                        <span className="buttonText">Sign in with Google</span>
-                    </IconButton>
-                    <IconButton style={styles.appleBtn} onClick={() => this.switchScreen('/home')}>
-                        <Apple style={styles.icon}/>
-                        Sign in with Apple
-                    </IconButton>
-                    <IconButton style={styles.facebookBtn} onClick={() => this.switchScreen('/home')}>
-                        <Facebook style={styles.icon}/>
-                        Login with Facebook
-                    </IconButton>
+                    <GoogleLoginButton setParentState={this.setParentState} state={this.state} {...this.props}/>
+                    <AppleLoginButton setParentState={this.setParentState} state={this.state} {...this.props}/>
+                    <FacebookLoginButton setParentState={this.setParentState} state={this.state} {...this.props}/>
+                    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>
+                        <DialogTitle>{this.state.dialogMessage}</DialogTitle>
+                        <div style={{position: 'relative', margin: 'auto', marginBottom: 10}}>
+                            <CircularProgress />
+                        </div>
+                    </Dialog>
                 </div>
             </Container>
         );
@@ -120,6 +222,12 @@ class SigninPage extends Component{
 export default SigninPage;
 
 let styles = {
+    phoneDiv: {
+        position: 'relative',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        width: "90%",
+    },
     myVideo: {
         objectFit: 'cover',
         position: 'fixed',
@@ -128,24 +236,18 @@ let styles = {
         top: 0,
         left: 0
     },
-    myBack: {
-        position: 'fixed',
-        color: 'white',
-        left: 0,
-        top: 0,
-    },
-    myImage:{
+    myImage: {
         position: 'relative',
-        width: "50%",
-        height: "50%",
-        top: 0,
-        marginTop:0,
-        marginBottom:50
+        width: "35%",
+        height: "35%",
+        top: 10,
+        marginTop: 7,
+        marginBottom: 7
     },
     textField: {
-        marginTop:10,
-        marginBottom:10,
-        height: 50,
+        marginTop: 7,
+        marginBottom: 7,
+        height: 40,
         backgroundColor: 'rgba(255,255,255,0.5)',
         borderRadius: 25,
         width: '100%',
@@ -155,78 +257,78 @@ let styles = {
         outline: 'none',
         width: '100%',
         backgroundColor: 'rgba(255,255,255,0.5)',
-        height: 50,
+        height: 30,
         borderRadius: 25,
         position: 'relative',
-        marginTop:10,
-        marginBottom:10,
+        marginTop: 7,
+        marginBottom: 7,
         fontSize: 20
+    },
+    learnBtn:{
+        alignItems:"center",
+        justifyContent:"center",
+        marginTop:0,
+        marginBottom:20,
+        color: "#FFFFFF",
+        textDecorationLine: 'underline'
     },
     coloredLine: {
         position: 'relative',
-        marginTop: 25,
         width: "40%",
         color: 'white',
         backgroundColor: 'white',
         marginRight: 10,
         marginLeft: 10,
+        marginBottom: 20,
         height: 1
     },
     loginBtn: {
-        width:"100%",
-        backgroundColor:"#fb5b5a",
-        borderRadius:25,
-        height:50,
-        alignItems:"center",
-        justifyContent:"center",
-        marginTop:10,
-        marginBottom:10
+        width: "100%",
+        backgroundColor: "#fff59d",
+        borderRadius: 25,
+        height: 40,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 7,
+        marginBottom: 7
     },
     icon: {
-        fontSize: 40,
+        fontSize: 30,
         marginLeft:-50,
         marginRight:20,
-        height:50,
+        height:30,
         marginTop:-15,
         marginBottom:-15
     },
     googleBtn: {
         text: "Login with Facebook",
         color: 'white',
-        backgroundColor:"#4285F4",
-        borderRadius:25,
-        height:50,
-        width:"100%",
-        marginTop:10,
-        marginBottom:10
+        backgroundColor: "#4285F4",
+        borderRadius: 25,
+        height: 40,
+        width: "100%",
+        marginTop: 10,
+        marginBottom: 10
     },
     facebookBtn: {
         text: "Login with Facebook",
         color: 'white',
-        backgroundColor:"#3b5998",
-        borderRadius:25,
-        height:50,
-        width:"100%",
-        marginTop:10,
-        marginBottom:10
+        backgroundColor: "#3b5998",
+        borderRadius: 25,
+        height: 40,
+        width: "100%",
+        marginTop: 10,
+        marginBottom: 10
     },
-    appleBtn:{
+    appleBtn: {
         text: "Login with Facebook",
         color: 'black',
-        backgroundColor:"#FFFFFF",
-        borderRadius:25,
-        height:50,
-        width:"100%",
-        marginTop:10,
-        marginBottom:10
-    },
-    learnBtn:{
-        alignItems:"center",
-        justifyContent:"center",
-        marginLeft:30,
-        marginTop:1,
-        marginBottom:1,
-        textDecorationLine: 'underline'
+        backgroundColor: "#FFFFFF",
+        borderRadius: 25,
+        height: 40,
+        width: "100%",
+        marginTop: 10,
+        marginBottom: 10
     },
     myTitle: {
         flexDirection: "row",
@@ -236,10 +338,24 @@ let styles = {
         alignItems: 'center',
         justifyContent: 'center',
         color: 'white',
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
         textTransform: 'uppercase',
-        marginTop:10,
-        marginBottom:10
+        marginTop: 40,
+        marginBottom: 40
+    },
+    myOrTitle: {
+        flexDirection: "row",
+        position: 'relative',
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: 25,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        marginTop: -5,
+        marginBottom: 20
     }
 }

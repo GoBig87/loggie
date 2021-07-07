@@ -1,89 +1,166 @@
-import React, { Component, useState } from "react";
-import Fireplace from "../assets/videos/Fireplace.mp4"
+import React, { Component } from "react";
+import BackGroundVideo from '../components/backGroundVideo'
 import logo from "../assets/images/logo.png"
-import google from "../assets/images/google.svg"
 import { IconButton, InputBase, InputAdornment } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
+import {Email, Visibility, PersonAdd, ArrowBack, VisibilityOff} from '@material-ui/icons';
+import axios from "axios";
+import sjcl from "sjcl";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from '@material-ui/lab/Alert';
 
-import {Facebook, Apple, Email, Visibility, ArrowBack} from '@material-ui/icons';
-import { GoogleLogin } from 'react-google-login';
-import FacebookAuth from 'react-facebook-auth';
+const client_side_salt = 'my_client_side_salt_string_to_increase_complexity_this_is_hashed_again_server_side';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
 
 
 class SignupPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            foo: '',
-            icon: 'facebook',
-            settings:  {
-                clientId: 'com.react.apple.login',
-                redirectURI: 'https://redirectUrl.com',
-                scope: '',
-                state: '',
-                responseType: 'code',
-                responseMode: 'query',
-                nonce: '',
-                designProp: {
-                    height: 30,
-                    width: 140,
-                    color: 'black',
-                    border: false,
-                    type: 'sign-in',
-                    border_radius: 25,
-                    scale: 1,
-                    locale: 'en_US',
-                    alignItems:"center",
-                    justifyContent:"center",
-                    position: 'relative'
-                }
-            }
+            amount: '',
+            password1: '',
+            password2: '',
+            weight: '',
+            weightRange: '',
+            showPassword1: false,
+            showPassword2: false,
+            open: false,
+            alertOpen: false,
+            allowClose: false,
+            dialogMessage: 'Creating Account...'
+        };
+        this.user = this.props.state.user;
+    };
 
+    // Email account creation
+    createAccount = (email, password1, password2) => {
+        if(password1 != password2){
+            this.setState({alertOpen: true});
+        }else {
+            this.setState({open: true})
+            this.user.email = email;
+            let myBitArray1 = sjcl.hash.sha256.hash(password1.concat(client_side_salt));
+            let hashedPassword1 = sjcl.codec.hex.fromBits(myBitArray1);
+            let myBitArray2 = sjcl.hash.sha256.hash(password2.concat(client_side_salt));
+            let hashedPassword2 = sjcl.codec.hex.fromBits(myBitArray2);
+            let data = {
+                'email': email,
+                'username': email,
+                'password1': hashedPassword1,
+                'password2': hashedPassword2
+            }
+            axios
+                .post("https://loggie.app/api/rest-auth/registration/", data)
+                .then(res => this.accountRsp(res.data))
+                .catch(err => this.accountErr(err));
         }
     };
-    // Google sign in
-    responseGoogleSuccess = (response) => {
-        console.log('Success')
+    // Handles rsp for email account creation
+    accountRsp = (response) => {
         console.log(response)
-    }
-    responseGoogleFailure = (response) => {
-        console.log('Failure')
-        console.log(response)
-    }
-    // Facebook sign in
-    myFacebookButton = ({ onClick }) => (
-        <IconButton style={styles.facebookBtn} onClick={onClick}>
-            <Facebook style={styles.icon}/>
-            Login with Facebook
-        </IconButton>
-    );
-    myFacebookAuthenticate = (response) => {
-        console.log(response);
-        // Api call to server so we can validate the token
+        this.setState({
+                dialogMessage: 'Successfully Signed in',
+                allowClose: true,
+                open: false,
+            }
+        )
+        this.user.token = response.key;
+        this.user.tokenType = "Token"
+        localStorage.setItem('token', this.user.token);
+        localStorage.setItem('email', this.user.email);
+        localStorage.setItem('tokenType', "Token");
+        this.user.loggedIn = true;
+        this.createCustomer();
     };
-
-    // Apple Sign in
-
-
+    createCustomer = () => {
+        const data = {'foo':'bar'};
+        const config = this.user.config();
+        axios
+            .post("https://loggie.app/api/customer/", data, config)
+            .then(res => this.createCustomerRsp(res.data))
+            .catch(err => this.authErr(err));
+    };
+    createCustomerRsp = (response) => {
+        console.log(response);
+        const { switchScreen } = this.props.state;
+        switchScreen(this.props, '/home')
+    };
+    accountErr = (err) => {
+        console.log(err)
+        this.setState({
+                dialogMessage: 'Failed to Create Account',
+                allowClose: true
+            }
+        )
+    }
+    // Start Webpage layout
     render() {
         const { user } = this.props.state;
         const { switchScreen } = this.props.state;
+
+        // Handles Text input UI
+        const handleChange = (prop) => (event) => {
+            this.setState({
+                [prop]: event.target.value,
+            })
+        }
+        // Toggles Password Text input to show/hide pw
+        const handleClickShowPassword1 = () => {
+            this.setState(
+                {
+                    showPassword1: !this.state.showPassword1
+                }
+            )
+        };
+        // Toggles Password Text input to show/hide pw
+        const handleClickShowPassword2 = () => {
+            this.setState(
+                {
+                    showPassword2: !this.state.showPassword2
+                }
+            )
+        };
+
+        const handleMouseDownPassword = (event) => {
+            event.preventDefault();
+        };
+
+        const handleClose = () => {
+            if(this.state.allowClose){
+                this.setState({open: false})
+            }
+        };
+
+        const handleAlertClose = () => {
+            this.setState({
+                alertOpen: false,
+                password1: '',
+                password2: '',
+            });
+        };
+
         return(
             <Container component="main" maxWidth="xs">
                 <div className="App" >
-                    <video autoPlay muted loop muted style={styles.myVideo}>
-                        <source src={Fireplace} type="video/mp4"/>
-                    </video>
-                    <IconButton aria-label="back" style={styles.myBack} onClick={() => switchScreen(this.props, '/home')}>
-                        <ArrowBack/>
-                    </IconButton>
-                    <img src={logo} style={styles.myImage} />
+                    <BackGroundVideo/>
                     <title style={styles.myTitle}>
                         Create Account
                     </title>
                     <InputBase
                         style={styles.textField}
-                        InputProps={{ 'aria-label': 'naked' }}
+                        value={this.state.email}
+                        onChange={handleChange('email')}
+                        InputProps={{ 'aria-label': 'Email Address' }}
+                        placeholder="Email Address"
+                        inputProps={{
+                            style: { textAlign: 'left', padding: 20 },
+                        }}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
@@ -93,48 +170,66 @@ class SignupPage extends Component{
                                 </IconButton>
                             </InputAdornment>
                         }/>
-                    {/*<input style={styles.field}>*/}
-                    {/*</input>*/}
                     <InputBase
                         style={styles.textField}
-                        InputProps={{ 'aria-label': 'naked' }}
+                        type={this.state.showPassword1 ? 'text' : 'password'}
+                        value={this.state.password1}
+                        onChange={handleChange('password1')}
+                        InputProps={{ 'aria-label': 'Password' }}
+                        placeholder="Password"
+                        inputProps={{
+                            style: { textAlign: 'left', padding: 20 },
+                        }}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
                                     aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword1}
+                                    onMouseDown={handleMouseDownPassword}
                                 >
-                                    <Visibility />
+                                    {this.state.showPassword1 ? <Visibility /> : <VisibilityOff />}
                                 </IconButton>
                             </InputAdornment>
                         }
                     />
-                <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle'}}>
-                    <hr style={styles.coloredLine} />
-                    <body style={styles.myTitle}>
-                        OR
-                    </body>
-                    <hr style={styles.coloredLine} />
-                </div>
-                    <div style={styles.phoneDiv}>
-                    <GoogleLogin
-                        theme='dark'
-                        style={{width: '200%'}}
-                        clientId="613632797540-u18o915kcsju9oj57u7c3m0o6ru0t78q.apps.googleusercontent.com"
-                        buttonText="Sign In With Google"
-                        onSuccess={this.responseGoogleSuccess}
-                        onFailure={this.responseGoogleFailure}
-                        cookiePolicy={'single_host_origin'}
+                    <InputBase
+                        style={styles.textField}
+                        type={this.state.showPassword2 ? 'text' : 'password'}
+                        value={this.state.password2}
+                        onChange={handleChange('password2')}
+                        InputProps={{ 'aria-label': 'Confirm Password' }}
+                        placeholder="Confirm Password"
+                        inputProps={{
+                            style: { textAlign: 'left', padding: 20 },
+                        }}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword2}
+                                    onMouseDown={handleMouseDownPassword}
+                                >
+                                    {this.state.showPassword2 ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>
+                        }
                     />
-                    </div>
-                    <IconButton style={styles.appleBtn} onClick={() => this.switchScreen('/home')}>
-                        <Apple style={styles.icon}/>
-                        Sign in with Apple
+                    <IconButton style={styles.loginBtn}
+                                onClick={() => this.createAccount(this.state.email, this.state.password1, this.state.password2)}>
+                        <PersonAdd style={styles.icon}/>
+                        Create Account
                     </IconButton>
-                    <FacebookAuth
-                        appId="<app-id>"
-                        callback={this.myFacebookAuthenticate}
-                        component={this.myFacebookButton}
-                    />
+                    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>
+                        <DialogTitle>{this.state.dialogMessage}</DialogTitle>
+                        <div style={{position: 'relative', margin: 'auto', marginBottom: 10}}>
+                            <CircularProgress />
+                        </div>
+                    </Dialog>
+                    <Snackbar open={this.state.alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
+                        <Alert onClose={handleClose} severity="error">
+                            Passwords do not match!
+                        </Alert>
+                    </Snackbar>
                 </div>
             </Container>
         );
@@ -158,12 +253,6 @@ let styles = {
         top: 0,
         left: 0
     },
-    myBack: {
-        position: 'fixed',
-        color: 'white',
-        left: 0,
-        top: 0,
-    },
     myImage:{
         position: 'relative',
         width: "50%",
@@ -175,7 +264,7 @@ let styles = {
     textField: {
         marginTop:10,
         marginBottom:10,
-        height: 50,
+        height: 40,
         backgroundColor: 'rgba(255,255,255,0.5)',
         borderRadius: 25,
         width: '100%',
@@ -185,7 +274,7 @@ let styles = {
         outline: 'none',
         width: '100%',
         backgroundColor: 'rgba(255,255,255,0.5)',
-        height: 50,
+        height: 40,
         borderRadius: 25,
         position: 'relative',
         marginTop:10,
@@ -204,52 +293,23 @@ let styles = {
     },
     loginBtn: {
         width:"100%",
-        backgroundColor:"#fb5b5a",
+        backgroundColor:"#fff59d",
         borderRadius:25,
-        height:50,
+        height:40,
         alignItems:"center",
         justifyContent:"center",
         marginTop:10,
         marginBottom:10
     },
     icon: {
-        fontSize: 40,
+        fontSize: 30,
         marginLeft:-50,
         marginRight:20,
-        height:50,
+        height:30,
         marginTop:-15,
         marginBottom:-15
     },
-    googleBtn: {
-        text: "Login with Facebook",
-        color: 'white',
-        backgroundColor:"#4285F4",
-        borderRadius:25,
-        height:50,
-        width:"100%",
-        marginTop:10,
-        marginBottom:10
-    },
-    facebookBtn: {
-        text: "Login with Facebook",
-        color: 'white',
-        backgroundColor:"#3b5998",
-        borderRadius:25,
-        height:50,
-        width:"100%",
-        marginTop:10,
-        marginBottom:10
-    },
-    appleBtn:{
-        text: "Login with Facebook",
-        color: 'black',
-        backgroundColor:"#FFFFFF",
-        borderRadius:25,
-        height:50,
-        width:"100%",
-        marginTop:10,
-        marginBottom:10
-    },
+
     myTitle: {
         flexDirection: "row",
         position: 'relative',
@@ -261,7 +321,7 @@ let styles = {
         fontSize: 30,
         fontWeight: 'bold',
         textTransform: 'uppercase',
-        marginTop:10,
-        marginBottom:10
+        marginTop:20,
+        marginBottom:60
     }
 }

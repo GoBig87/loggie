@@ -1,8 +1,8 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import { IconButton, Button } from "@material-ui/core";
 import { ArrowBack } from "@material-ui/icons";
 import Container from "@material-ui/core/Container";
-import Fireplace from "../assets/videos/Fireplace.mp4";
+import BackGroundVideo from '../components/backGroundVideo'
 import 'react-phone-input-2/lib/style.css'
 import './menu.css'
 
@@ -11,45 +11,46 @@ class ConfirmationPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            render: true
+            quantity: 0,
+            total: 0,
         }
+    }
+    resetUser = (props, user, switchScreen) => {
+        user.resetCart()
+        switchScreen(props, '/home')
     }
 
     render() {
         const { switchScreen } = this.props.state;
         const { user } = this.props.state;
+        this.state.quantity = user.quantity;
+        this.state.total = user.total();
         return(
             <Container className="main" component="main" maxWidth="xs">
                 <div className="player">
-                    <video autoPlay muted loop className="video">
-                        <source src={Fireplace} type="video/mp4"/>
-                    </video>
-                    <IconButton aria-label="back" style={styles.myBack} >
-                        <ArrowBack/>
-                    </IconButton>
+                    <BackGroundVideo/>
                     <div className="wrap">
                         <title className="firewood" style={styles.myTitle}> Thank You!</title>
+                        <text style={styles.myText}>Check your spam folder for confirmation email</text>
                         <div style={styles.myRow}>
-                            <title style={styles.myItemLeft}>Bundles: </title>
+                            <title style={styles.myItemLeft}>Cost per Trailer: </title>
                             <hr style={styles.coloredLine} />
-                            <title style={styles.myItemRight}>$10 </title>
+                            <title style={styles.myItemRight}>$20 </title>
                         </div>
                         <div style={styles.myRow}>
                             <title style={styles.myItemLeft}>Qty: </title>
                             <hr style={styles.coloredLine} />
-                            <title style={styles.myItemRight}>x1</title>
+                            <title style={styles.myItemRight}>x{this.state.quantity}</title>
                         </div>
                         <div style={styles.myRow}>
                             <title style={styles.myItemLeft}>Total: </title>
                             <hr style={styles.coloredLine} />
-                            <title style={styles.myItemRight}>$10</title>
+                            <title style={styles.myItemRight}>${this.state.total}</title>
                         </div>
-                        <div style={styles.myRow}>
-                            <Button style={styles.myButton} onClick={() => switchScreen(this.props, '/home')}>
-                                Return Home
-                            </Button>
-                        </div>
-
+                        <Button style={styles.myButton}
+                                onClick={() => this.resetUser(this.props, user, switchScreen)}>
+                            Return Home
+                        </Button>
                     </div>
                 </div>
             </Container>
@@ -61,9 +62,6 @@ class ConfirmationPage extends Component{
 export default ConfirmationPage;
 
 let styles = {
-    myPhone: {
-      width: "80%"
-    },
     myVideo: {
         objectFit: 'cover',
         position: 'fixed',
@@ -72,24 +70,14 @@ let styles = {
         top: 0,
         left: 0
     },
-    myCart: {
-        position: 'fixed',
-        color: 'white',
-        right: 0,
-        top: 0,
-    },
-    myBack: {
-        position: 'fixed',
-        color: 'white',
-        left: 0,
-        top: 0,
-    },
     myRow: {
         flexDirection:'row',
         display: 'flex',
         margin: 'auto',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginLeft: 20,
+        marginRight: 20
     },
     icon: {
         fontSize: 40,
@@ -98,11 +86,6 @@ let styles = {
         height:50,
         marginTop:-15,
         marginBottom:-15
-    },
-    myIcon: {
-        flexDirection:'row',
-        position: 'relative',
-        color: 'white',
     },
     myTitle: {
         flexDirection: "row",
@@ -118,6 +101,16 @@ let styles = {
         marginTop:30,
         marginBottom:10
     },
+    myText: {
+        flexDirection: "row",
+        position: 'relative',
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: 12,
+    },
     myItemLeft: {
         flexDirection: "row",
         textAlign: 'center',
@@ -127,7 +120,8 @@ let styles = {
         fontWeight: 'bold',
         marginLeft:10,
         marginTop:5,
-        marginBottom:5
+        marginBottom:5,
+        whiteSpace: 'nowrap',
     },
     myItemRight: {
         flexDirection: "row",
@@ -138,7 +132,8 @@ let styles = {
         fontWeight: 'bold',
         marginRight:10,
         marginTop:5,
-        marginBottom:5
+        marginBottom:5,
+        whiteSpace: 'nowrap',
     },
     coloredLine: {
         position: 'relative',
@@ -151,18 +146,15 @@ let styles = {
         height: 1
     },
     myButton: {
-        position: 'fixed',
-        bottom: 0,
-        width:"80%",
-        backgroundColor:"#FFFFFF",
+        position: 'absolute',
+        bottom: 25,
+        width: "80%",
+        backgroundColor:"#fff59d",
         borderRadius:25,
         height:50,
-        alignItems:"center",
-        justifyContent:"center",
-        marginTop:50,
-        marginBottom:50
-    },
-    pos: {
-        marginBottom: 12,
+        left: 0,
+        right: 0,
+        marginRight: 'auto',
+        marginLeft: 'auto',
     },
 }

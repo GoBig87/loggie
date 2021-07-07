@@ -1,124 +1,97 @@
-import React, { Component, useState } from "react";
-import firewood from "../assets/images/firewood.png"
-import { IconButton, Button, Card } from "@material-ui/core";
-import {Remove, Add, Apple, ShoppingCart, ArrowBack} from "@material-ui/icons";
+import React, { Component } from 'react';
 import Container from "@material-ui/core/Container";
-import Fireplace from "../assets/videos/Fireplace.mp4";
-import './menu.css'
-import google from "../assets/images/google.svg";
-import { TextField } from "@material-ui/core";
-import { FieldSet, InputField } from 'fannypack';
-import { usePaymentInputs } from 'react-payment-inputs';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+import BackGroundVideo from '../components/backGroundVideo'
+import InjectedCheckoutForm from "../components/creditCardForm";
+import PaymentRequestButton from "../components/paymentRequestButton"
+import {IconButton} from "@material-ui/core";
+import {ArrowBack} from "@material-ui/icons";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
+const ELEMENTS_OPTIONS = {
+    fonts: [
+        {
+            cssSrc: 'https://fonts.googleapis.com/css?family=Roboto',
+        },
+    ],
+};
 
-function PaymentInputs() {
-    const {
-        meta,
-        getCardNumberProps,
-        getExpiryDateProps,
-        getCVCProps
-    } = usePaymentInputs();
-    const { erroredInputs, touchedInputs } = meta;
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+const stripePromise = loadStripe("pk_live_51HsCWHK9gEiACSgM7xuMlzJ7yU9I0VAwnoWzQSzNVdQPeMKPzSKsCIlYhHuZfvxVz01e4oxCYIU5ATydsPdgBhwP00zwHF0b3o",
+    {apiVersion: "2020-08-27"});
 
-    return (
-        <FieldSet isVertical>
-            <InputField
-                // Here is where React Payment Inputs injects itself into the input element.
-                {...getCardNumberProps()}
-                placeholder="0000 0000 0000 0000"
-                label="Card number"
-                inputRef={getCardNumberProps().ref}
-                // You can retrieve error state by making use of the error & touched attributes in `meta`.
-                state={erroredInputs.cardNumber && touchedInputs.cardNumber ? 'danger' : undefined}
-                validationText={touchedInputs.cardNumber && erroredInputs.cardNumber}
-                maxWidth="16rem"
-                margin='auto'
-                marginBottom="1rem"
-                color="white"
-            />
-            <FieldSet isHorizontal marginBottom="1rem">
-            <InputField
-                {...getExpiryDateProps()}
-                label="Expiry date"
-                inputRef={getExpiryDateProps().ref}
-                state={erroredInputs.expiryDate && touchedInputs.expiryDate ? 'danger' : undefined}
-                validationText={touchedInputs.expiryDate && erroredInputs.expiryDate}
-                maxWidth="8rem"
-                margin='auto'
-                color="white"
-
-            />
-            <InputField
-                {...getCVCProps()}
-                placeholder="123"
-                label="CVC"
-                inputRef={getCVCProps().ref}
-                state={erroredInputs.cvc && touchedInputs.cvc ? 'danger' : undefined}
-                validationText={touchedInputs.cvc && erroredInputs.cvc}
-                maxWidth="5rem"
-                margin='auto'
-                color="white"
-            />
-            </FieldSet>
-        </FieldSet>
-    );
-}
-
-class PaymentPage extends Component{
+class PaymentPage extends Component {
     constructor(props) {
         super(props);
+        this.user = this.props.state.user
         this.state = {
-            render: true
+            render: true,
+            open: false,
+            allowClose: false,
+            dialogMessage: 'Processing Payment...'
         }
+    };
+
+    setParentState = (key) => {
+        this.setState(key)
     }
 
     render() {
-        const { switchScreen } = this.props.state;
-        const { user } = this.props.state;
-        return(
-            <Container className="main" component="main" maxWidth="xs">
-                <div className="player">
-                    <video autoPlay muted loop className="video">
-                        <source src={Fireplace} type="video/mp4"/>
-                    </video>
-                    <IconButton aria-label="back"
-                                style={styles.myBack}
-                                onClick={() => switchScreen(this.props, '/delivery')}>
-                        <ArrowBack/>
-                    </IconButton>
-                    <div className="wrap">
-                        <title className="firewood" style={styles.myTitle}> Payment</title>
-                        <></>
-                        <PaymentInputs/>
-                        <Button style={styles.myButton} onClick={() => switchScreen(this.props, '/confirmation')}>
-                            Proceed
-                        </Button>
-                        <div style={{display:'flex', flexDirection: 'row', verticalAlign: 'middle'}}>
-                            <hr style={styles.coloredLine} />
-                            <body style={styles.myTitle}>
+        const {switchScreen, user} = this.props.state;
+
+        const handleClose = () => {
+            if(this.state.allowClose){
+                this.setState({open: false})
+            }
+        };
+
+        if(user.quantity == 0){
+          switchScreen(this.props, '/menu')
+        };
+
+        return (
+            <Container  maxWidth="s">
+                <BackGroundVideo/>
+                <title className="firewood"
+                       style={styles.myTitle}>
+                    Payment
+                </title>
+                <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+                    <InjectedCheckoutForm setParentState={this.setParentState} {...this.props}/>
+                     <div style={styles.myDiv}>
+                         <hr style={styles.coloredLine} />
+                         <body style={styles.myTitle}>
                             OR
-                            </body>
-                            <hr style={styles.coloredLine} />
-                        </div>
-                        <IconButton style={styles.appleBtn} onClick={() => switchScreen(this.props, '/home')}>
-                            <Apple style={styles.icon}/>
-                            Apple Pay
-                        </IconButton>
-                        <IconButton className="button" style={styles.googleBtn}>
-                            <img src={google} style={styles.icon} />
-                            <span className="buttonText">Google Pay</span>
-                        </IconButton>
+                         </body>
+                         <hr style={styles.coloredLine}confirmCardPayment />
+                     </div>
+                    <body style={styles.myBody}>Use Google or Apple Pay (if available)</body>
+                    <PaymentRequestButton setParentState={this.setParentState} {...this.props}/>
+                </Elements>
+                <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>
+                    <DialogTitle>{this.state.dialogMessage}</DialogTitle>
+                    <div style={{position: 'relative', margin: 'auto', marginBottom: 10}}>
+                        <CircularProgress />
                     </div>
-                </div>
+                </Dialog>
             </Container>
         );
     }
-
 }
 
 export default PaymentPage;
 
 let styles = {
+    myDiv: {
+        display:'flex',
+        flexDirection: 'row',
+        verticalAlign: 'middle',
+        horizontalAlign: 'center',
+    },
     myVideo: {
         objectFit: 'cover',
         position: 'fixed',
@@ -126,25 +99,6 @@ let styles = {
         height: "100%",
         top: 0,
         left: 0
-    },
-    myCart: {
-        position: 'fixed',
-        color: 'white',
-        right: 0,
-        top: 0,
-    },
-    myBack: {
-        position: 'fixed',
-        color: 'white',
-        left: 0,
-        top: 0,
-    },
-    myRow: {
-        flexDirection:'row',
-        display: 'flex',
-        margin: 'auto',
-        alignItems: 'center',
-        justifyContent: 'center'
     },
     icon: {
         fontSize: 40,
@@ -158,6 +112,18 @@ let styles = {
         flexDirection:'row',
         position: 'relative',
         color: 'white',
+    },
+    myBody: {
+        flexDirection: "row",
+        position: 'relative',
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: 15,
+        marginTop:10,
+        marginBottom:10
     },
     myTitle: {
         flexDirection: "row",
@@ -173,64 +139,12 @@ let styles = {
         marginTop:10,
         marginBottom:10
     },
-    appleBtn:{
-        color: 'black',
-        backgroundColor:"#FFFFFF",
-        borderRadius:25,
-        height:50,
-        width:"80%",
-        marginTop:10,
-        marginBottom: 10,
-        marginRight: 30,
-        marginLeft: 30,
-    },
-    googleBtn: {
-        position: 'relative',
-        textAlign: 'center',
-        display: 'flex',
-        color: 'white',
-        backgroundColor:"#4285F4",
-        borderRadius:25,
-        height:50,
-        width:"80%",
-        marginTop:10,
-        marginBottom:10,
-        marginRight: 30,
-        marginLeft: 30,
-    },
-    myItem: {
-        flexDirection: "row",
-        textAlign: 'center',
-        display: 'flex',
-        color: 'white',
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginRight:15,
-        marginTop:5,
-        marginBottom:5
-    },
-    frostedBox: {
-        display: 'inline-block',
-        position: 'relative',
-        marginTop: 50,
-        marginBottom: 50,
-        width: "100%",
-        height: "100%",
-        alignItemstems: 'center',
-        justifyContent: 'center',
-        opacity: 0.66,
-        backgroundColor: '#708090',
-        filter: 'blur(6px)',
-        overflow: 'hidden',
-    },
     coloredLine: {
         position: 'relative',
         marginTop: 25,
         width: "40%",
         color: 'white',
         backgroundColor: 'white',
-        marginRight: 10,
-        marginLeft: 10,
         height: 1
     },
     myButton: {
@@ -242,8 +156,5 @@ let styles = {
         justifyContent:"center",
         marginTop:50,
         marginBottom:50
-    },
-    pos: {
-        marginBottom: 12,
     },
 }
